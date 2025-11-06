@@ -96,9 +96,9 @@
         background: transparent;
         color: var(--text-secondary);
         border: 1px solid var(--border);
-        padding: 8px 12px;
+        padding: 10px 16px;
         border-radius: var(--border-radius);
-        font-size: 12px;
+        font-size: 14px;
         font-weight: 400;
         transition: var(--transition);
         display: flex;
@@ -207,9 +207,9 @@
         background: transparent;
         color: var(--text-secondary);
         border: 1px solid var(--border);
-        padding: 12px;
+        padding: 14px;
         border-radius: var(--border-radius);
-        font-size: 16px;
+        font-size: 18px;
         transition: var(--transition);
         display: flex;
         align-items: center;
@@ -319,7 +319,7 @@
         background: transparent;
         color: var(--text-secondary);
         border: 1px solid var(--border);
-        padding: 12px 24px;
+        padding: 14px 28px;
         border-radius: var(--border-radius);
         transition: var(--transition);
         display: flex;
@@ -417,9 +417,9 @@
         background: var(--gradient);
         color: var(--text-primary);
         border: none;
-        padding: 16px 32px;
+        padding: 20px 40px;
         border-radius: var(--border-radius);
-        font-size: 16px;
+        font-size: 18px;
         font-weight: 400;
         transition: var(--transition);
         display: inline-flex;
@@ -436,14 +436,14 @@
       .grid-container {
         flex: 1;
         display: grid;
-        gap: var(--gap);
+        gap: 0;
         width: 100%;
         padding: 0;
         transition: var(--transition);
         margin: 0 auto;
         height: 100%;
         overflow: hidden;
-        align-content: start;
+        align-content: stretch;
         will-change: transform;
       }
       .chat-container {
@@ -502,10 +502,10 @@
         position: relative;
         aspect-ratio: 16/9;
         border-radius: var(--border-radius);
-        box-shadow: var(--shadow);
+        box-shadow: none;
         overflow: hidden;
         background: transparent;
-        border: 1px solid var(--border);
+        border: none;
         transition: var(--transition);
         min-width: 0;
         display: flex;
@@ -514,6 +514,8 @@
         box-sizing: border-box;
         cursor: pointer;
         will-change: transform;
+        width: 100%;
+        height: 100%;
       }
       .live-wrapper:hover {
         box-shadow: var(--neon-glow);
@@ -535,6 +537,7 @@
         width: 100%;
         height: 100%;
         border: none;
+        border-radius: var(--border-radius);
       }
       .menu-toggle {
         position: absolute;
@@ -703,10 +706,7 @@
         background: rgba(10, 10, 10, 0.95);
         backdrop-filter: blur(10px);
         border-top: 1px solid var(--border);
-        padding: 10px 0;
-        text-align: center;
-        color: var(--text-secondary);
-        font-size: 12px;
+        padding: 10px 20px;
         position: fixed;
         bottom: 0;
         left: 0;
@@ -716,11 +716,30 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 16px;
         transition: var(--transition);
       }
       footer.hidden {
         transform: translateY(100%);
+      }
+      .footer-content {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        text-align: center;
+        color: var(--text-secondary);
+        font-size: 12px;
+        font-weight: 400;
+        letter-spacing: 0.5px;
+      }
+      .footer-link {
+        color: var(--accent);
+        text-decoration: none;
+        font-weight: 600;
+        transition: var(--transition);
+      }
+      .footer-link:hover {
+        color: var(--accent-hover);
+        text-shadow: 0 0 8px rgba(0, 208, 132, 0.5);
       }
       @media (max-width: 768px) {
         .header-custom {
@@ -747,7 +766,7 @@
           height: auto;
           display: grid;
           grid-template-columns: 1fr !important;
-          gap: var(--gap);
+          gap: 0;
           padding: 0;
         }
         #chat-selector {
@@ -791,6 +810,14 @@
           font-size: 12px;
           right: 0;
         }
+        footer {
+          padding: 10px 16px;
+          font-size: 11px;
+        }
+        .footer-content {
+          gap: 2px;
+          font-size: 11px;
+        }
       }
     </style>
   </head>
@@ -822,7 +849,7 @@
     <div id="overlay" class="overlay"></div>
 
     <div id="mobile-menu" class="mobile-menu">
-      <button id="close-menu" class="close-btn">&times;</button>
+      <button id="close-menu" class="close-btn"><i class="ph ph-x"></i></button>
       <button id="mobile-add-live-btn" class="mobile-btn">
         <i class="ph ph-plus"></i> Adicionar Live
       </button>
@@ -889,132 +916,124 @@
       </section>
       <div id="main-content">
         <section id="grid-section" class="grid-container"></section>
-        <aside id="chat-section" class="chat-container">
-          <div id="chat-selector">
-          </div>
-          <div id="chat-placeholder" class="chat-placeholder">
-            Conteúdo do Chat aqui...
-          </div>
-        </aside>
+        <section id="chat-section" class="chat-container">
+          <div id="chat-selector"></div>
+          <div id="chat-placeholder" class="chat-placeholder">Selecione uma live para ver o chat.</div>
+        </section>
       </div>
     </main>
 
     <footer id="main-footer">
-      <p>&copy; 2025 TELAZONA. Todos os direitos reservados.</p>
+      <div class="footer-content">
+        Copyright © 2025 TELAZONA feito por <a href="https://www.instagram.com/michelsantnasc/" class="footer-link" target="_blank">Santnasc</a>
+      </div>
     </footer>
 
     <script>
-      const domain = window.location.hostname || "localhost";
-      let lives = JSON.parse(localStorage.getItem("telazona-lives") || "[]");
-      let liveMinimized = JSON.parse(
-        localStorage.getItem("telazona-minimized") || "{}"
-      );
+      const domain = window.location.hostname || 'localhost';
+      const header = document.getElementById('main-header');
+      const footer = document.getElementById('main-footer');
+      const main = document.getElementById('main');
+      const hero = document.getElementById('hero-section');
+      const mainContent = document.getElementById('main-content');
+      const grid = document.getElementById('grid-section');
+      const chatSection = document.getElementById('chat-section');
+      const chatSelector = document.getElementById('chat-selector');
+      const chatPlaceholder = document.getElementById('chat-placeholder');
+      const minimizedBar = document.getElementById('minimized-bar');
+      const toggleBtn = document.getElementById('toggle-header-footer');
+      const toggleChatBtn = document.getElementById('toggle-chat');
+      const mobileToggleChatBtn = document.getElementById('mobile-toggle-chat');
+      const toggleMinimizedBtn = document.getElementById('toggle-minimized');
+      const mobileToggleMinimizedBtn = document.getElementById('mobile-toggle-minimized');
+      const heroAddBtn = document.getElementById('hero-add-btn');
+      const addLiveBtn = document.getElementById('add-live-btn');
+      const mobileAddLiveBtn = document.getElementById('mobile-add-live-btn');
+      const submitAddBtn = document.getElementById('submit-add');
+      const cancelAddBtn = document.getElementById('cancel-add');
+      const liveUrlInput = document.getElementById('live-url');
+      const minCountSpan = document.getElementById('min-count');
+      const mobileMinCountSpan = document.getElementById('mobile-min-count');
+      const hamburger = document.getElementById('hamburger');
+      const mobileMenu = document.getElementById('mobile-menu');
+      const closeMenuBtn = document.getElementById('close-menu');
+      const overlay = document.getElementById('overlay');
+      const addModal = document.getElementById('add-modal');
+      const loadingSection = document.getElementById('loading-section');
+      const btnGroup = document.querySelector('.btn-group');
+
+      let lives = JSON.parse(localStorage.getItem('telazona-lives') || '[]');
+      let liveMinimized = JSON.parse(localStorage.getItem('telazona-minimized') || '{}');
       let deleteConfirmations = {};
       let currentSelected = -1;
-      let minimizedElements = {};
-      let minimizedBarVisible = false;
       let chatVisible = false;
-      const header = document.getElementById("main-header");
-      const footer = document.getElementById("main-footer");
-      const minimizedBar = document.getElementById("minimized-bar");
-      const main = document.getElementById("main");
-      const toggleBtn = document.getElementById("toggle-header-footer");
-      const toggleMinimizedBtn = document.getElementById("toggle-minimized");
-      const minCountSpan = document.getElementById("min-count");
-      const toggleChatBtn = document.getElementById("toggle-chat");
-      const chatSection = document.getElementById("chat-section");
-      const mainContent = document.getElementById("main-content");
-      const hero = document.getElementById("hero-section");
-      const grid = document.getElementById("grid-section");
-      const mobileToggleChatBtn = document.getElementById("mobile-toggle-chat");
-      const mobileToggleMinimizedBtn = document.getElementById(
-        "mobile-toggle-minimized"
-      );
-      const mobileMinCountSpan = document.getElementById("mobile-min-count");
-      const chatPlaceholder = document.getElementById("chat-placeholder");
-      const chatSelector = document.getElementById("chat-selector");
-      const iframeObserver = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-              const iframe = entry.target.querySelector("iframe");
-              if (iframe.dataset.src) {
-                iframe.src = iframe.dataset.src;
-                delete iframe.dataset.src;
-              }
-              iframeObserver.unobserve(entry.target);
+      let minimizedBarVisible = false;
+      let minimizedElements = {};
+      let iframeObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const iframe = entry.target.querySelector('.live-frame');
+            if (iframe && iframe.dataset.src) {
+              iframe.src = iframe.dataset.src;
+              delete iframe.dataset.src;
             }
-          });
-        },
-        { threshold: 0.1 }
-      );
-      if (lives.length > 0) {
-        lives = lives.map((item, i) => {
-          if (typeof item === "string") {
-            const chatEmbedUrl = generateChatEmbed(item);
-            const videoId = extractYouTubeId(item);
-            const twitchChannel = extractTwitchChannel(item);
-            const kickChannel = extractKickChannel(item);
-            let platform = null;
-            if (videoId) platform = "youtube";
-            else if (twitchChannel) platform = "twitch";
-            else if (kickChannel) platform = "kick";
-            return {
-              embed: item,
-              chatEmbed: chatEmbedUrl,
-              platform: platform,
-              channel: extractChannelName(item, platform),
-            };
           }
-          return item;
         });
-        localStorage.setItem("telazona-lives", JSON.stringify(lives));
+      }, { threshold: 0.1 });
+
+      function getText(key) {
+        const texts = {
+          'selectLive': 'Selecione uma live para ver o chat.',
+          'noKickChat': 'Chat não disponível para Kick.',
+          'noChat': 'Chat não disponível para esta live.',
+          'chatPlaceholder': 'Chat oculto. Clique em "Mostrar Chat" para ativar.',
+          'hideChat': 'Ocultar Chat',
+          'showChat': 'Mostrar Chat',
+          'hideUI': 'Ocultar UI',
+          'showUI': 'Mostrar UI',
+          'minimizedLives': 'Lives Minimizadas',
+          'restore': 'Restaurar',
+          'minimize': 'Minimizar',
+          'delete': 'Deletar',
+          'confirmDelete': 'Confirmar Deleção',
+          'invalidUrl': 'URL inválida. Suporte apenas para YouTube, Twitch e Kick.',
+          'saveError': 'Erro ao salvar. Tente novamente.'
+        };
+        return texts[key] || key;
       }
-      for (let i = 0; i < lives.length; i++) {
-        if (deleteConfirmations[i] === undefined) deleteConfirmations[i] = 0;
-        if (liveMinimized[i] === undefined) liveMinimized[i] = false;
+
+      function updateTexts() {
+        // Atualiza textos dinâmicos se necessário
       }
-      let resizeTimer;
-      function debounce(fn, delay) {
-        let timer;
-        return (...args) => {
-          clearTimeout(timer);
-          timer = setTimeout(() => fn(...args), delay);
+
+      function debounce(func, wait) {
+        let timeout;
+        return function executedFunction(...args) {
+          const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+          };
+          clearTimeout(timeout);
+          timeout = setTimeout(later, wait);
         };
       }
-      function extractChannelName(url, platform) {
-        if (platform === "youtube") {
-          const videoId = extractYouTubeId(url);
-          return videoId
-            ? `YouTube - ${videoId.substring(0, 8)}...`
-            : "YouTube Live";
-        } else if (platform === "twitch") {
-          const channel = extractTwitchChannel(url);
-          return channel ? `Twitch - ${channel}` : "Twitch Live";
-        } else if (platform === "kick") {
-          const channel = extractKickChannel(url);
-          return channel ? `Kick - ${channel}` : "Kick Live";
-        }
-        return "Live Desconhecida";
-      }
+
       function updateMinimizedCount() {
-        const count = Object.values(liveMinimized).filter(
-          (m) => m === true
-        ).length;
-        minCountSpan.textContent = count;
-        mobileMinCountSpan.textContent = count;
-        toggleMinimizedBtn.style.display = count > 0 ? "flex" : "none";
-        mobileToggleMinimizedBtn.style.display = count > 0 ? "flex" : "none";
-        if (count === 0) {
-          minimizedBarVisible = false;
-          minimizedBar.style.display = "none";
+        const count = Object.values(liveMinimized).filter(m => m).length;
+        toggleMinimizedBtn.style.display = count > 0 ? 'flex' : 'none';
+        mobileToggleMinimizedBtn.style.display = count > 0 ? 'flex' : 'none';
+        if (count > 0) {
+          toggleMinimizedBtn.innerHTML = `<i class="ph ph-arrows-down-up-left-right"></i> Lives Minimizadas (${count})`;
+          mobileToggleMinimizedBtn.innerHTML = `<i class="ph ph-arrows-down-up-left-right"></i> Lives Minimizadas (${count})`;
         }
       }
+
       function toggleMinimizedBar() {
         minimizedBarVisible = !minimizedBarVisible;
         minimizedBar.style.display = minimizedBarVisible ? "flex" : "none";
         updateLayoutPositions();
       }
+
       function populateChatSelect(visibleIndices) {
         chatSelector.innerHTML = "";
         visibleIndices.forEach((i) => {
@@ -1033,22 +1052,24 @@
           chatSelector.appendChild(btn);
         });
       }
+
       function updateChat() {
         if (currentSelected < 0 || !lives[currentSelected]) {
-          chatPlaceholder.innerHTML = "Selecione uma live para ver o chat.";
+          chatPlaceholder.innerHTML = getText('selectLive');
           return;
         }
         if (lives[currentSelected].platform === "kick") {
-          chatPlaceholder.innerHTML = "Chat não disponível para Kick.";
+          chatPlaceholder.innerHTML = getText('noKickChat');
           return;
         }
         const chatEmbed = lives[currentSelected].chatEmbed;
         if (!chatEmbed) {
-          chatPlaceholder.innerHTML = "Chat não disponível para esta live.";
+          chatPlaceholder.innerHTML = getText('noChat');
           return;
         }
         chatPlaceholder.innerHTML = `<iframe src="${chatEmbed}" style="width:100%;height:100%;border:none;" allow="fullscreen"></iframe>`;
       }
+
       function updateMainContentLayout(isMobile) {
         if (isMobile && chatVisible) {
           mainContent.style.flexDirection = "column";
@@ -1083,6 +1104,7 @@
           chatSection.style.marginTop = "0";
         }
       }
+
       function toggleChat() {
         chatVisible = !chatVisible;
         const icon = '<i class="ph ph-chat-text"></i>';
@@ -1096,19 +1118,20 @@
           populateChatSelect(visibleIndices);
           chatSelector.style.display = "flex";
           updateChat();
-          toggleChatBtn.innerHTML = `${icon} Ocultar Chat`;
-          mobileToggleChatBtn.innerHTML = `${icon} Ocultar Chat`;
+          toggleChatBtn.innerHTML = `${icon} ${getText('hideChat')}`;
+          mobileToggleChatBtn.innerHTML = `${icon} ${getText('hideChat')}`;
           updateMainContentLayout(isMobile);
         } else {
-          chatPlaceholder.innerHTML = "Conteúdo do Chat aqui...";
+          chatPlaceholder.innerHTML = getText('chatPlaceholder');
           chatSection.style.display = "none";
           mainContent.style.flexDirection = "row";
-          toggleChatBtn.innerHTML = `${icon} Mostrar Chat`;
-          mobileToggleChatBtn.innerHTML = `${icon} Mostrar Chat`;
+          toggleChatBtn.innerHTML = `${icon} ${getText('showChat')}`;
+          mobileToggleChatBtn.innerHTML = `${icon} ${getText('showChat')}`;
           updateMainContentLayout(isMobile);
         }
         updateLayoutPositions();
       }
+
       function selectLive(index) {
         currentSelected = index;
         document
@@ -1129,12 +1152,13 @@
           updateChat();
         }
       }
+
       function showHeaderAndFooter() {
         header.classList.remove("hidden");
         footer.classList.remove("hidden");
         header.appendChild(toggleBtn);
         updateLayoutPositions();
-        toggleBtn.innerHTML = '<i class="ph ph-eye-slash"></i> Ocultar UI';
+        toggleBtn.innerHTML = `<i class="ph ph-eye-slash"></i> ${getText('hideUI')}`;
         toggleBtn.classList.remove("fixed");
         toggleBtn.style.position = "absolute";
         toggleBtn.style.top = "auto";
@@ -1142,12 +1166,13 @@
         toggleBtn.style.left = "24px";
         renderLives();
       }
+
       function hideHeaderAndFooter() {
         header.classList.add("hidden");
         footer.classList.add("hidden");
         document.body.appendChild(toggleBtn);
         updateLayoutPositions();
-        toggleBtn.innerHTML = '<i class="ph ph-eye"></i> Mostrar UI';
+        toggleBtn.innerHTML = `<i class="ph ph-eye"></i> ${getText('showUI')}`;
         toggleBtn.classList.add("fixed");
         toggleBtn.style.position = "fixed";
         toggleBtn.style.top = "10px";
@@ -1155,6 +1180,7 @@
         toggleBtn.style.left = "24px";
         renderLives();
       }
+
       function toggleHeaderFooter() {
         if (header.classList.contains("hidden")) {
           showHeaderAndFooter();
@@ -1162,6 +1188,7 @@
           hideHeaderAndFooter();
         }
       }
+
       function updateLayoutPositions() {
         const headerVisible = !header.classList.contains("hidden");
         const footerVisible = !footer.classList.contains("hidden");
@@ -1171,6 +1198,7 @@
         main.style.marginTop = `${headerH}px`;
         main.style.height = `calc(100vh - ${headerH + footerH + barH}px)`;
       }
+
       function appendParams(base, isMini) {
         let params;
         if (base.includes("youtube.com/embed")) {
@@ -1190,12 +1218,14 @@
         const separator = base.includes("?") ? "&" : "?";
         return base + separator + params;
       }
+
       function extractYouTubeId(url) {
         const regExp =
           /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=|live\/)([^#&?]*).*/;
         const match = url.match(regExp);
         return match && match[2].length === 11 ? match[2] : null;
       }
+
       function extractTwitchChannel(url) {
         let match = url.match(/twitch\.tv\/([a-zA-Z0-9_]+)/i);
         if (!match) {
@@ -1203,6 +1233,7 @@
         }
         return match ? match[1] : null;
       }
+
       function extractKickChannel(url) {
         let match = url.match(/kick\.com\/([a-zA-Z0-9_]+)/i);
         if (!match) {
@@ -1210,6 +1241,20 @@
         }
         return match ? match[1] : null;
       }
+
+      function extractChannelName(url, platform) {
+        if (platform === 'youtube') return 'YouTube Live';
+        if (platform === 'twitch') {
+          const channel = extractTwitchChannel(url);
+          return channel ? `@${channel}` : 'Twitch Live';
+        }
+        if (platform === 'kick') {
+          const channel = extractKickChannel(url);
+          return channel ? `@${channel}` : 'Kick Live';
+        }
+        return 'Live';
+      }
+
       function generateLiveEmbed(url) {
         const videoId = extractYouTubeId(url);
         if (videoId) return `https://www.youtube.com/embed/${videoId}`;
@@ -1228,6 +1273,7 @@
         }
         return null;
       }
+
       function generateChatEmbed(url) {
         const videoId = extractYouTubeId(url);
         if (videoId)
@@ -1236,19 +1282,22 @@
         if (twitchChannel)
           return `https://www.twitch.tv/embed/${twitchChannel}/chat?darkpopout&parent=${domain}`;
         const kickChannel = extractKickChannel(url);
-        if (kickChannel) return null; // Remove chat para Kick
+        if (kickChannel) return null;
         return null;
       }
+
       function toggleMobileMenu() {
-        document.getElementById("hamburger").classList.toggle("active");
-        document.getElementById("mobile-menu").classList.toggle("active");
-        document.getElementById("overlay").classList.toggle("active");
+        hamburger.classList.toggle("active");
+        mobileMenu.classList.toggle("active");
+        overlay.classList.toggle("active");
       }
+
       function closeMobileMenu() {
-        document.getElementById("hamburger").classList.remove("active");
-        document.getElementById("mobile-menu").classList.remove("active");
-        document.getElementById("overlay").classList.remove("active");
+        hamburger.classList.remove("active");
+        mobileMenu.classList.remove("active");
+        overlay.classList.remove("active");
       }
+
       function updateLayout(visibleLives, isUIHidden) {
         if (window.innerWidth <= 768) {
           grid.style.gridTemplateColumns = "1fr";
@@ -1271,7 +1320,7 @@
           grid.style.alignContent = "center";
           return;
         }
-        grid.style.gap = "var(--gap)";
+        grid.style.gap = "0";
         grid.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
         if (cols === 2 && isUIHidden) {
           const rows = Math.ceil(visibleLives / cols);
@@ -1282,6 +1331,7 @@
           grid.style.alignContent = "start";
         }
       }
+
       function toggleMinimize(i) {
         if (liveMinimized[i]) {
           if (minimizedElements[i]) {
@@ -1327,6 +1377,7 @@
         updateLayoutPositions();
         renderLives();
       }
+
       function performDelete(i, contextMenu = null, isMinimizedClose = false) {
         try {
           const wasSelected = currentSelected === i;
@@ -1378,6 +1429,7 @@
           console.error("Erro ao deletar:", e);
         }
       }
+
       function closeContextMenus(e) {
         if (
           !e.target.closest(".menu-toggle") &&
@@ -1388,6 +1440,7 @@
             .forEach((m) => m.classList.remove("active"));
         }
       }
+
       function renderLives() {
         const visibleIndices = Object.keys(liveMinimized)
           .filter((k) => !liveMinimized[k])
@@ -1458,24 +1511,24 @@
           const minimizeItem = document.createElement("button");
           minimizeItem.className = "context-item";
           minimizeItem.innerHTML = liveMinimized[i]
-            ? '<i class="ph ph-plus"></i> Restaurar'
-            : '<i class="ph ph-minus"></i> Minimizar';
+            ? `<i class="ph ph-plus"></i> ${getText('restore')}`
+            : `<i class="ph ph-minus"></i> ${getText('minimize')}`;
           minimizeItem.addEventListener("click", () => {
             toggleMinimize(i);
             contextMenu.classList.remove("active");
           });
           const deleteItem = document.createElement("button");
           deleteItem.className = "context-item";
-          deleteItem.innerHTML = '<i class="ph ph-trash"></i> Excluir';
+          deleteItem.innerHTML = `<i class="ph ph-trash"></i> ${getText('delete')}`;
           let confTimer;
           deleteItem.addEventListener("click", () => {
             const conf = deleteConfirmations[i] || 0;
             if (conf === 0) {
               deleteConfirmations[i] = 1;
-              deleteItem.innerHTML = '<i class="ph ph-trash"></i> Confirmar?';
+              deleteItem.innerHTML = `<i class="ph ph-trash"></i> ${getText('confirmDelete')}`;
               confTimer = setTimeout(() => {
                 deleteConfirmations[i] = 0;
-                deleteItem.innerHTML = '<i class="ph ph-trash"></i> Excluir';
+                deleteItem.innerHTML = `<i class="ph ph-trash"></i> ${getText('delete')}`;
               }, 3000);
             } else {
               clearTimeout(confTimer);
@@ -1507,21 +1560,24 @@
         document.removeEventListener("click", closeContextMenus, true);
         document.addEventListener("click", closeContextMenus, true);
       }
+
       function showAddModal() {
-        document.getElementById("add-modal").classList.add("active");
-        document.getElementById("overlay").classList.add("active");
-        document.getElementById("live-url").focus();
+        addModal.classList.add("active");
+        overlay.classList.add("active");
+        liveUrlInput.focus();
         closeMobileMenu();
       }
+
       function closeAddModal() {
-        document.getElementById("add-modal").classList.remove("active");
-        document.getElementById("overlay").classList.remove("active");
-        document.getElementById("live-url").value = "";
+        addModal.classList.remove("active");
+        overlay.classList.remove("active");
+        liveUrlInput.value = "";
       }
+
       async function addLive() {
-        const url = document.getElementById("live-url").value.trim();
+        const url = liveUrlInput.value.trim();
         if (!url) return;
-        const loading = document.getElementById("loading-section");
+        const loading = loadingSection;
         const btnGroup = document.querySelector(".btn-group");
         loading.classList.add("active");
         btnGroup.classList.remove("active");
@@ -1529,7 +1585,7 @@
         if (!embedUrl) {
           loading.classList.remove("active");
           btnGroup.classList.add("active");
-          return alert("URL inválida! Suporta YouTube, Twitch e Kick.");
+          return alert(getText('invalidUrl'));
         }
         try {
           const chatEmbedUrl = generateChatEmbed(url);
@@ -1572,61 +1628,39 @@
           }
         } catch (e) {
           console.error("Erro ao adicionar:", e);
-          alert("Erro ao salvar. Tente recarregar.");
+          alert(getText('saveError'));
         } finally {
           loading.classList.remove("active");
           btnGroup.classList.add("active");
         }
       }
-      document
-        .getElementById("add-live-btn")
-        .addEventListener("click", showAddModal);
-      document
-        .getElementById("mobile-add-live-btn")
-        .addEventListener("click", () => {
-          showAddModal();
-          closeMobileMenu();
-        });
-      document
-        .getElementById("hero-add-btn")
-        .addEventListener("click", showAddModal);
-      document.getElementById("submit-add").addEventListener("click", addLive);
-      document
-        .getElementById("cancel-add")
-        .addEventListener("click", closeAddModal);
-      document.getElementById("live-url").addEventListener("keypress", (e) => {
+
+      // Event Listeners
+      addLiveBtn.addEventListener("click", showAddModal);
+      mobileAddLiveBtn.addEventListener("click", () => {
+        showAddModal();
+        closeMobileMenu();
+      });
+      heroAddBtn.addEventListener("click", showAddModal);
+      submitAddBtn.addEventListener("click", addLive);
+      cancelAddBtn.addEventListener("click", closeAddModal);
+      liveUrlInput.addEventListener("keypress", (e) => {
         if (e.key === "Enter") addLive();
       });
-      document
-        .getElementById("hamburger")
-        .addEventListener("click", toggleMobileMenu);
-      document
-        .getElementById("close-menu")
-        .addEventListener("click", closeMobileMenu);
-      document
-        .getElementById("overlay")
-        .addEventListener("click", closeMobileMenu);
-      document
-        .getElementById("toggle-header-footer")
-        .addEventListener("click", toggleHeaderFooter);
-      document
-        .getElementById("toggle-minimized")
-        .addEventListener("click", toggleMinimizedBar);
-      document
-        .getElementById("toggle-chat")
-        .addEventListener("click", toggleChat);
-      document
-        .getElementById("mobile-toggle-chat")
-        .addEventListener("click", () => {
-          toggleChat();
-          closeMobileMenu();
-        });
-      document
-        .getElementById("mobile-toggle-minimized")
-        .addEventListener("click", () => {
-          toggleMinimizedBar();
-          closeMobileMenu();
-        });
+      hamburger.addEventListener("click", toggleMobileMenu);
+      closeMenuBtn.addEventListener("click", closeMobileMenu);
+      overlay.addEventListener("click", closeMobileMenu);
+      toggleBtn.addEventListener("click", toggleHeaderFooter);
+      toggleMinimizedBtn.addEventListener("click", toggleMinimizedBar);
+      toggleChatBtn.addEventListener("click", toggleChat);
+      mobileToggleChatBtn.addEventListener("click", () => {
+        toggleChat();
+        closeMobileMenu();
+      });
+      mobileToggleMinimizedBtn.addEventListener("click", () => {
+        toggleMinimizedBar();
+        closeMobileMenu();
+      });
       window.addEventListener(
         "resize",
         debounce(() => {
@@ -1643,6 +1677,9 @@
           }
         }, 100)
       );
+
+      // Inicialização
+      updateTexts();
       updateMinimizedCount();
       updateLayoutPositions();
       renderLives();
