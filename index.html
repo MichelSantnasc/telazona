@@ -1549,10 +1549,13 @@
           contextMenu.appendChild(deleteItem);
           menuToggle.addEventListener("click", (e) => {
             e.stopPropagation();
+            const wasActive = contextMenu.classList.contains("active");
             document
               .querySelectorAll(".context-menu.active")
               .forEach((m) => m.classList.remove("active"));
-            contextMenu.classList.toggle("active");
+            if (!wasActive) {
+              contextMenu.classList.add("active");
+            }
           });
           wrapper.appendChild(menuToggle);
           wrapper.appendChild(contextMenu);
