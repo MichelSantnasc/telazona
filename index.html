@@ -913,7 +913,7 @@
       const loadingSection = document.getElementById('loading-section');
       const btnGroup = document.querySelector('.btn-group');
 
-      let lives = JSON.parse(localStorage.getItem('telazona-lives') || '[]');
+      let lives = JSON.parse(sessionStorage.getItem('telazona-lives') || '[]');
       let deleteConfirmations = {};
       let currentSelected = -1;
       let chatVisible = false;
@@ -1296,8 +1296,12 @@
           lives.forEach((_, newIdx) => {
             deleteConfirmations[newIdx] = oldConf[newIdx] || 0;
           });
-          localStorage.setItem("telazona-lives", JSON.stringify(lives));
+          sessionStorage.setItem("telazona-lives", JSON.stringify(lives));
           updateLayoutPositions();
+          if (lives.length === 0) {
+            location.reload();
+            return;
+          }
           renderLives();
           if (contextMenu) contextMenu.classList.remove("active");
           if (chatVisible) {
@@ -1483,7 +1487,7 @@
           });
           deleteConfirmations[newIndex] = 0;
           currentSelected = newIndex;
-          localStorage.setItem("telazona-lives", JSON.stringify(lives));
+          sessionStorage.setItem("telazona-lives", JSON.stringify(lives));
           closeAddModal();
           renderLives();
           if (lives.length === 1 && !chatVisible) {
