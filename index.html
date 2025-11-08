@@ -3,13 +3,31 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>TELAZONA</title>
+    <title>TELAZONA - Assista Múltiplas Lives Simultaneamente</title>
+    <meta name="description" content="Assista lives do YouTube, Twitch e Kick em uma única tela. Multistreaming simples e responsivo para mobile e desktop." />
+    <meta name="keywords" content="lives, streaming, multistream, YouTube, Twitch, Kick, telazona" />
+    <meta property="og:title" content="TELAZONA - Multilives" />
+    <meta property="og:description" content="Assista múltiplas lives simultaneamente em uma única tela. Suporta YouTube, Twitch e Kick." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://telazona.com/" />
+    <link rel="canonical" href="https://telazona.com/" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&family=Inter:wght@400&display=swap"
       rel="stylesheet"
     />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "TELAZONA",
+        "description": "Plataforma para assistir múltiplas lives simultaneamente",
+        "url": "https://telazona.com/",
+        "applicationCategory": "MultimediaApplication",
+        "operatingSystem": "Web"
+      }
+    </script>
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <style>
       :root {
@@ -24,11 +42,7 @@
         --shadow: 0 8px 32px rgba(0, 208, 132, 0.3);
         --shadow-light: 0 4px 16px rgba(0, 0, 0, 0.4);
         --neon-glow: 0 0 20px rgba(0, 208, 132, 0.6);
-        --gradient: linear-gradient(
-          135deg,
-          var(--accent) 0%,
-          var(--accent-hover) 100%
-        );
+        --gradient: linear-gradient(135deg,var(--accent) 0%,var(--accent-hover) 100%);
         --border-radius: 12px;
         --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         --header-height: 60px;
@@ -146,6 +160,46 @@
         top: 10px;
         left: 24px;
         bottom: auto;
+        padding: 8px;
+        min-width: 200px;
+      }
+      .toggle-btn.fixed .controls-flex {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        justify-content: center;
+      }
+      .toggle-btn.fixed button {
+        padding: 6px 12px;
+        border-radius: 6px;
+        font-size: 12px;
+        font-weight: 400;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        transition: var(--transition);
+        border: none;
+        white-space: nowrap;
+      }
+      .toggle-btn.fixed .show-ui-btn {
+        background: var(--gradient);
+        color: var(--text-primary);
+      }
+      .toggle-btn.fixed .show-ui-btn:hover {
+        box-shadow: var(--neon-glow);
+        transform: translateY(-1px);
+      }
+      .toggle-btn.fixed .chat-toggle-btn {
+        background: transparent;
+        color: var(--text-primary);
+        border: 1px solid var(--border);
+      }
+      .toggle-btn.fixed .chat-toggle-btn:hover {
+        background: var(--gradient);
+        border-color: var(--accent);
+        color: var(--text-primary);
+        box-shadow: var(--neon-glow);
       }
       .hamburger {
         display: none;
@@ -600,94 +654,8 @@
         color: var(--text-primary);
         box-shadow: var(--neon-glow);
       }
-      #minimized-bar {
-        position: fixed;
-        bottom: var(--footer-height);
-        left: 0;
-        width: 100%;
-        background: rgba(10, 10, 10, 0.95);
-        backdrop-filter: blur(20px);
-        border-top: 1px solid var(--border);
-        display: flex;
-        gap: 12px;
-        padding: 8px;
-        overflow-x: auto;
-        z-index: 99;
-        transition: var(--transition);
-        display: none;
-      }
-      .minimized-live-wrapper {
-        position: relative;
-        width: 200px;
-        height: 90px;
-        background: transparent;
-        border-radius: var(--border-radius);
-        overflow: hidden;
-        flex-shrink: 0;
-        box-shadow: var(--shadow-light);
-        border: 1px solid var(--border);
-        transition: var(--transition);
-        box-sizing: border-box;
-      }
-      .minimized-live-wrapper:hover {
-        transform: scale(1.05);
-        box-shadow: var(--shadow);
-      }
-      .minimized-frame {
-        width: 100%;
-        height: 100%;
-        border: none;
-      }
-      .minimize-restore {
-        position: absolute;
-        top: 4px;
-        right: 32px;
-        background: rgba(0, 208, 132, 0.8);
-        color: var(--text-primary);
-        border: none;
-        padding: 4px;
-        border-radius: 50%;
-        cursor: pointer;
-        font-size: 14px;
-        z-index: 10;
-        width: 24px;
-        height: 24px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: var(--transition);
-      }
-      .minimize-close {
-        position: absolute;
-        top: 4px;
-        right: 4px;
-        background: rgba(255, 0, 0, 0.8);
-        color: var(--text-primary);
-        border: none;
-        padding: 4px;
-        border-radius: 50%;
-        cursor: pointer;
-        font-size: 14px;
-        z-index: 10;
-        width: 24px;
-        height: 24px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: var(--transition);
-      }
-      .minimize-restore:hover,
-      .minimize-close:hover {
-        opacity: 0.9;
-        transform: scale(1.1);
-      }
       .skeleton {
-        background: linear-gradient(
-          90deg,
-          var(--bg-secondary) 25%,
-          var(--bg-tertiary) 50%,
-          var(--bg-secondary) 75%
-        );
+        background: linear-gradient(90deg,var(--bg-secondary) 25%,var(--bg-tertiary) 50%,var(--bg-secondary) 75%);
         background-size: 200% 100%;
         animation: shimmer 1.5s infinite;
         border-radius: var(--border-radius);
@@ -791,22 +759,12 @@
         }
         .toggle-btn.fixed {
           left: 16px;
+          padding: 6px;
+          min-width: 180px;
         }
-        .minimized-live-wrapper {
-          width: 140px;
-          height: 70px;
-        }
-        .minimize-restore {
-          width: 20px;
-          height: 20px;
-          font-size: 12px;
-          right: 24px;
-        }
-        .minimize-close {
-          width: 20px;
-          height: 20px;
-          font-size: 12px;
-          right: 0;
+        .toggle-btn.fixed button {
+          padding: 4px 8px;
+          font-size: 11px;
         }
         footer {
           padding: 10px 16px;
@@ -823,68 +781,59 @@
           left: 8px;
         }
       }
+      @media (prefers-reduced-motion: reduce) {
+        *, *::before, *::after {
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.01ms !important;
+        }
+      }
     </style>
   </head>
   <body>
     <header class="header-custom" id="main-header">
       <div class="logo silkscreen-regular">TELAZONA</div>
-      <button id="toggle-header-footer" class="toggle-btn">
-        <i class="ph ph-eye-slash"></i> Ocultar Interface
+      <button id="toggle-header-footer" class="toggle-btn" aria-label="Ocultar/Mostrar Interface">
+        <i class="ph ph-eye-slash" aria-hidden="true"></i> Ocultar Interface
       </button>
       <div class="header-right">
-        <button id="add-live-btn" class="btn-header">
-          <i class="ph ph-plus"></i> Adicionar Live
+        <button id="add-live-btn" class="btn-header" aria-label="Adicionar Nova Live">
+          <i class="ph ph-plus" aria-hidden="true"></i> Adicionar Live
         </button>
-        <button id="toggle-minimized" class="btn-header" style="display: none">
-          <i class="ph ph-arrows-down-up-left-right"></i> Lives Minimizadas
-          (<span id="min-count">0</span>)
+        <button id="toggle-chat" class="btn-header" aria-label="Mostrar/Ocultar Chat">
+          <i class="ph ph-chat-text" aria-hidden="true"></i> Mostrar Chat
         </button>
-        <button id="toggle-chat" class="btn-header">
-          <i class="ph ph-chat-text"></i> Mostrar Chat
-        </button>
-        <div class="hamburger" id="hamburger">
+        <div class="hamburger" id="hamburger" role="button" aria-label="Abrir menu mobile" aria-expanded="false">
           <span></span><span></span><span></span>
         </div>
       </div>
     </header>
 
-    <div id="minimized-bar"></div>
-
     <div id="overlay" class="overlay"></div>
 
     <div id="mobile-menu" class="mobile-menu">
-      <button id="close-menu" class="close-btn"><i class="ph ph-x"></i></button>
-      <button id="mobile-add-live-btn" class="mobile-btn">
-        <i class="ph ph-plus"></i> Adicionar Live
+      <button id="close-menu" class="close-btn" aria-label="Fechar menu"><i class="ph ph-x" aria-hidden="true"></i></button>
+      <button id="mobile-add-live-btn" class="mobile-btn" aria-label="Adicionar Nova Live">
+        <i class="ph ph-plus" aria-hidden="true"></i> Adicionar Live
       </button>
-      <button id="mobile-toggle-chat" class="mobile-btn">
-        <i class="ph ph-chat-text"></i> Mostrar Chat
-      </button>
-      <button
-        id="mobile-toggle-minimized"
-        class="mobile-btn"
-        style="display: none"
-      >
-        <i class="ph ph-arrows-down-up-left-right"></i> Lives Minimizadas (<span
-          id="mobile-min-count"
-          >0</span
-        >)
+      <button id="mobile-toggle-chat" class="mobile-btn" aria-label="Mostrar/Ocultar Chat">
+        <i class="ph ph-chat-text" aria-hidden="true"></i> Mostrar Chat
       </button>
     </div>
 
-    <div id="add-modal" class="add-modal">
-      <h2>Adicionar Live (YouTube, Twitch ou Kick)</h2>
+    <div id="add-modal" class="add-modal" role="dialog" aria-labelledby="modal-title" aria-hidden="true">
+      <h2 id="modal-title">Adicionar Live (YouTube, Twitch ou Kick)</h2>
       <div class="platforms">
         <div class="platform-item">
-          <i class="ph ph-youtube-logo"></i>
+          <i class="ph ph-youtube-logo" aria-hidden="true"></i>
           <div>YouTube</div>
         </div>
         <div class="platform-item">
-          <i class="ph ph-twitch-logo"></i>
+          <i class="ph ph-twitch-logo" aria-hidden="true"></i>
           <div>Twitch</div>
         </div>
         <div class="platform-item">
-          <i class="ph ph-fire"></i>
+          <i class="ph ph-fire" aria-hidden="true"></i>
           <div>Kick</div>
         </div>
       </div>
@@ -892,17 +841,20 @@
         type="url"
         id="live-url"
         placeholder="Cole a URL da live aqui... (ex: youtube.com/watch?v=ID, youtube.com/live/ID, twitch.tv/canal, kick.com/canal)"
+        pattern="https?://.*"
+        required
+        aria-label="URL da Live"
       />
       <div id="loading-section" class="loading">
         <div class="loading-spinner"></div>
         <p>Validando live...</p>
       </div>
       <div class="btn-group active">
-        <button id="cancel-add" class="btn-modal btn-secondary-modal">
-          <i class="ph ph-x"></i> Cancelar
+        <button id="cancel-add" class="btn-modal btn-secondary-modal" aria-label="Cancelar adição">
+          <i class="ph ph-x" aria-hidden="true"></i> Cancelar
         </button>
-        <button id="submit-add" class="btn-modal btn-primary-modal">
-          <i class="ph ph-check"></i> Adicionar
+        <button id="submit-add" class="btn-modal btn-primary-modal" aria-label="Adicionar Live">
+          <i class="ph ph-check" aria-hidden="true"></i> Adicionar
         </button>
       </div>
     </div>
@@ -914,13 +866,13 @@
           Assista múltiplas lives simultaneamente em uma única tela. Suporta
           YouTube, Twitch e Kick.
         </p>
-        <button id="hero-add-btn" class="hero-btn">
-          <i class="ph ph-play-circle"></i> Adicionar Primeira Live
+        <button id="hero-add-btn" class="hero-btn" aria-label="Adicionar Primeira Live">
+          <i class="ph ph-play-circle" aria-hidden="true"></i> Adicionar Primeira Live
         </button>
       </section>
       <div id="main-content">
-        <section id="grid-section" class="grid-container"></section>
-        <section id="chat-section" class="chat-container">
+        <section id="grid-section" class="grid-container" aria-label="Grade de Lives"></section>
+        <section id="chat-section" class="chat-container" aria-label="Seção de Chat">
           <div id="chat-selector"></div>
           <div id="chat-placeholder" class="chat-placeholder">Selecione uma live para ver o chat.</div>
         </section>
@@ -929,7 +881,7 @@
 
     <footer id="main-footer">
       <div class="footer-content">
-        Copyright © 2025 TELAZONA feito por <a href="https://www.instagram.com/michelsantnasc/" class="footer-link" target="_blank">Santnasc</a>
+        Copyright © 2025 TELAZONA feito por <a href="https://www.instagram.com/michelsantnasc/" class="footer-link" target="_blank" rel="noopener noreferrer">Santnasc</a>
       </div>
     </footer>
 
@@ -944,20 +896,15 @@
       const chatSection = document.getElementById('chat-section');
       const chatSelector = document.getElementById('chat-selector');
       const chatPlaceholder = document.getElementById('chat-placeholder');
-      const minimizedBar = document.getElementById('minimized-bar');
       const toggleBtn = document.getElementById('toggle-header-footer');
       const toggleChatBtn = document.getElementById('toggle-chat');
       const mobileToggleChatBtn = document.getElementById('mobile-toggle-chat');
-      const toggleMinimizedBtn = document.getElementById('toggle-minimized');
-      const mobileToggleMinimizedBtn = document.getElementById('mobile-toggle-minimized');
       const heroAddBtn = document.getElementById('hero-add-btn');
       const addLiveBtn = document.getElementById('add-live-btn');
       const mobileAddLiveBtn = document.getElementById('mobile-add-live-btn');
       const submitAddBtn = document.getElementById('submit-add');
       const cancelAddBtn = document.getElementById('cancel-add');
       const liveUrlInput = document.getElementById('live-url');
-      const minCountSpan = document.getElementById('min-count');
-      const mobileMinCountSpan = document.getElementById('mobile-min-count');
       const hamburger = document.getElementById('hamburger');
       const mobileMenu = document.getElementById('mobile-menu');
       const closeMenuBtn = document.getElementById('close-menu');
@@ -967,12 +914,9 @@
       const btnGroup = document.querySelector('.btn-group');
 
       let lives = JSON.parse(localStorage.getItem('telazona-lives') || '[]');
-      let liveMinimized = JSON.parse(localStorage.getItem('telazona-minimized') || '{}');
       let deleteConfirmations = {};
       let currentSelected = -1;
       let chatVisible = false;
-      let minimizedBarVisible = false;
-      let minimizedElements = {};
       let iframeObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
@@ -988,16 +932,13 @@
       function getText(key) {
         const texts = {
           'selectLive': 'Selecione uma live para ver o chat.',
-          'noKickChat': 'Chat não disponível para Kick.',
+          'noKickChat': 'Chat não disponível para Kick. Acesse o site oficial para interagir.',
           'noChat': 'Chat não disponível para esta live.',
           'chatPlaceholder': 'Chat oculto. Clique em "Mostrar Chat" para ativar.',
           'hideChat': 'Ocultar Chat',
           'showChat': 'Mostrar Chat',
           'hideUI': 'Ocultar Interface',
           'showUI': 'Mostrar Interface',
-          'minimizedLives': 'Lives Minimizadas',
-          'restore': 'Restaurar',
-          'minimize': 'Minimizar',
           'delete': 'Deletar',
           'confirmDelete': 'Confirmar Deleção',
           'invalidUrl': 'URL inválida. Suporte apenas para YouTube, Twitch e Kick.',
@@ -1006,9 +947,7 @@
         return texts[key] || key;
       }
 
-      function updateTexts() {
-        // Atualiza textos dinâmicos se necessário
-      }
+      function updateTexts() {}
 
       function debounce(func, wait) {
         let timeout;
@@ -1020,22 +959,6 @@
           clearTimeout(timeout);
           timeout = setTimeout(later, wait);
         };
-      }
-
-      function updateMinimizedCount() {
-        const count = Object.values(liveMinimized).filter(m => m).length;
-        toggleMinimizedBtn.style.display = count > 0 ? 'flex' : 'none';
-        mobileToggleMinimizedBtn.style.display = count > 0 ? 'flex' : 'none';
-        if (count > 0) {
-          toggleMinimizedBtn.innerHTML = `<i class="ph ph-arrows-down-up-left-right"></i> Lives Minimizadas (${count})`;
-          mobileToggleMinimizedBtn.innerHTML = `<i class="ph ph-arrows-down-up-left-right"></i> Lives Minimizadas (${count})`;
-        }
-      }
-
-      function toggleMinimizedBar() {
-        minimizedBarVisible = !minimizedBarVisible;
-        minimizedBar.style.display = minimizedBarVisible ? "flex" : "none";
-        updateLayoutPositions();
       }
 
       function populateChatSelect(visibleIndices) {
@@ -1071,7 +994,7 @@
           chatPlaceholder.innerHTML = getText('noChat');
           return;
         }
-        chatPlaceholder.innerHTML = `<iframe src="${chatEmbed}" style="width:100%;height:100%;border:none;" allow="fullscreen"></iframe>`;
+        chatPlaceholder.innerHTML = `<iframe src="${chatEmbed}" style="width:100%;height:100%;border:none;" allow="fullscreen" title="Chat da Live ${lives[currentSelected].channel}"></iframe>`;
       }
 
       function updateMainContentLayout(isMobile) {
@@ -1114,14 +1037,11 @@
 
       function toggleChat() {
         chatVisible = !chatVisible;
-        const icon = '<i class="ph ph-chat-text"></i>';
+        const icon = '<i class="ph ph-chat-text" aria-hidden="true"></i>';
         const isMobile = window.innerWidth <= 768;
         if (chatVisible) {
           chatSection.style.display = "flex";
-          const visibleIndices = Object.keys(liveMinimized)
-            .filter((k) => !liveMinimized[k])
-            .map(Number)
-            .sort((a, b) => a - b);
+          const visibleIndices = lives.map((_, idx) => idx);
           populateChatSelect(visibleIndices);
           chatSelector.style.display = "flex";
           updateChat();
@@ -1165,7 +1085,7 @@
         footer.classList.remove("hidden");
         header.appendChild(toggleBtn);
         updateLayoutPositions();
-        toggleBtn.innerHTML = `<i class="ph ph-eye-slash"></i> ${getText('hideUI')}`;
+        toggleBtn.innerHTML = `<i class="ph ph-eye-slash" aria-hidden="true"></i> ${getText('hideUI')}`;
         toggleBtn.classList.remove("fixed");
         toggleBtn.style.position = "absolute";
         toggleBtn.style.top = "auto";
@@ -1179,13 +1099,33 @@
         footer.classList.add("hidden");
         document.body.appendChild(toggleBtn);
         updateLayoutPositions();
-        toggleBtn.innerHTML = `<i class="ph ph-eye"></i> ${getText('showUI')}`;
+        const chatIconClass = chatVisible ? 'x' : 'chat-text';
+        const chatText = chatVisible ? getText('hideChat') : getText('showChat');
+        toggleBtn.innerHTML = `
+          <div class="controls-flex">
+            <button class="show-ui-btn" onclick="showHeaderAndFooter(); event.stopPropagation();">
+              <i class="ph ph-eye" aria-hidden="true"></i> ${getText('showUI')}
+            </button>
+            <button class="chat-toggle-btn fixed-chat-toggle" onclick="handleFixedChatToggle(event);">
+              <i class="ph ph-${chatIconClass}" aria-hidden="true"></i> ${chatText}
+            </button>
+          </div>
+        `;
         toggleBtn.classList.add("fixed");
         toggleBtn.style.position = "fixed";
         toggleBtn.style.top = "10px";
         toggleBtn.style.bottom = "auto";
         toggleBtn.style.left = "24px";
         renderLives();
+      }
+
+      function handleFixedChatToggle(e) {
+        e.stopPropagation();
+        const fixedChatToggle = e.target.closest('.fixed-chat-toggle') || e.target;
+        toggleChat();
+        const chatIconClass = chatVisible ? 'x' : 'chat-text';
+        const chatText = chatVisible ? getText('hideChat') : getText('showChat');
+        fixedChatToggle.innerHTML = `<i class="ph ph-${chatIconClass}" aria-hidden="true"></i> ${chatText}`;
       }
 
       function toggleHeaderFooter() {
@@ -1201,9 +1141,8 @@
         const footerVisible = !footer.classList.contains("hidden");
         const headerH = headerVisible ? 60 : 0;
         const footerH = footerVisible ? 30 : 0;
-        const barH = minimizedBarVisible ? minimizedBar.offsetHeight || 110 : 0;
         main.style.marginTop = `${headerH}px`;
-        main.style.height = `calc(100vh - ${headerH + footerH + barH}px)`;
+        main.style.height = `calc(100vh - ${headerH + footerH}px)`;
       }
 
       function appendParams(base, isMini) {
@@ -1294,13 +1233,16 @@
       }
 
       function toggleMobileMenu() {
+        const isActive = hamburger.classList.contains("active");
         hamburger.classList.toggle("active");
+        hamburger.setAttribute("aria-expanded", !isActive);
         mobileMenu.classList.toggle("active");
         overlay.classList.toggle("active");
       }
 
       function closeMobileMenu() {
         hamburger.classList.remove("active");
+        hamburger.setAttribute("aria-expanded", "false");
         mobileMenu.classList.remove("active");
         overlay.classList.remove("active");
       }
@@ -1339,96 +1281,27 @@
         }
       }
 
-      function toggleMinimize(i) {
-        if (liveMinimized[i]) {
-          if (minimizedElements[i]) {
-            minimizedElements[i].remove();
-            delete minimizedElements[i];
-          }
-          liveMinimized[i] = false;
-        } else {
-          liveMinimized[i] = true;
-          const miniWrapper = document.createElement("div");
-          miniWrapper.className = "minimized-live-wrapper";
-          miniWrapper.dataset.index = i;
-          const iframe = document.createElement("iframe");
-          iframe.className = "minimized-frame";
-          iframe.src = appendParams(lives[i].embed, true);
-          iframe.allow = "autoplay; encrypted-media; fullscreen";
-          iframe.loading = "lazy";
-          miniWrapper.appendChild(iframe);
-          const restoreBtn = document.createElement("button");
-          restoreBtn.className = "minimize-restore";
-          restoreBtn.innerHTML = '<i class="ph ph-arrow-up"></i>';
-          restoreBtn.addEventListener("click", (e) => {
-            e.stopPropagation();
-            toggleMinimize(i);
-          });
-          const closeBtn = document.createElement("button");
-          closeBtn.className = "minimize-close";
-          closeBtn.innerHTML = '<i class="ph ph-x"></i>';
-          closeBtn.addEventListener("click", (e) => {
-            e.stopPropagation();
-            performDelete(i, null, true);
-          });
-          miniWrapper.appendChild(restoreBtn);
-          miniWrapper.appendChild(closeBtn);
-          minimizedBar.appendChild(miniWrapper);
-          minimizedElements[i] = miniWrapper;
-        }
-        localStorage.setItem(
-          "telazona-minimized",
-          JSON.stringify(liveMinimized)
-        );
-        updateMinimizedCount();
-        updateLayoutPositions();
-        renderLives();
-      }
-
-      function performDelete(i, contextMenu = null, isMinimizedClose = false) {
+      function performDelete(i, contextMenu = null) {
         try {
           const wasSelected = currentSelected === i;
           lives.splice(i, 1);
-          delete liveMinimized[i];
           delete deleteConfirmations[i];
-          if (minimizedElements[i]) {
-            minimizedElements[i].remove();
-            delete minimizedElements[i];
-          }
           if (wasSelected) {
             currentSelected = lives.length > 0 ? lives.length - 1 : -1;
           } else if (currentSelected > i) {
             currentSelected--;
           }
-          const oldMinimized = { ...liveMinimized };
-          const oldElements = { ...minimizedElements };
           const oldConf = { ...deleteConfirmations };
-          liveMinimized = {};
           deleteConfirmations = {};
-          minimizedElements = {};
           lives.forEach((_, newIdx) => {
-            liveMinimized[newIdx] = oldMinimized[newIdx] || false;
             deleteConfirmations[newIdx] = oldConf[newIdx] || 0;
-            if (oldElements[newIdx]) {
-              minimizedElements[newIdx] = oldElements[newIdx];
-              oldElements[newIdx].dataset.index = newIdx;
-              delete oldElements[newIdx];
-            }
           });
           localStorage.setItem("telazona-lives", JSON.stringify(lives));
-          localStorage.setItem(
-            "telazona-minimized",
-            JSON.stringify(liveMinimized)
-          );
-          updateMinimizedCount();
           updateLayoutPositions();
           renderLives();
           if (contextMenu) contextMenu.classList.remove("active");
           if (chatVisible) {
-            const visibleIndices = Object.keys(liveMinimized)
-              .filter((k) => !liveMinimized[k])
-              .map(Number)
-              .sort((a, b) => a - b);
+            const visibleIndices = lives.map((_, idx) => idx);
             populateChatSelect(visibleIndices);
             updateChat();
           }
@@ -1450,11 +1323,7 @@
       }
 
       function renderLives() {
-        const visibleIndices = Object.keys(liveMinimized)
-          .filter((k) => !liveMinimized[k])
-          .map(Number)
-          .sort((a, b) => a - b);
-        const visibleLives = visibleIndices.length;
+        const visibleLives = lives.length;
         const isUIHidden =
           header.classList.contains("hidden") &&
           footer.classList.contains("hidden");
@@ -1484,8 +1353,7 @@
           return;
         }
         grid.innerHTML = "";
-        visibleIndices.forEach((i) => {
-          const live = lives[i];
+        lives.forEach((live, i) => {
           const wrapper = document.createElement("div");
           wrapper.dataset.index = i;
           let className = "live-wrapper";
@@ -1502,6 +1370,8 @@
           iframe.dataset.src = appendParams(live.embed, false);
           iframe.allow = "autoplay; encrypted-media; fullscreen";
           iframe.loading = "lazy";
+          iframe.title = `Live: ${live.channel}`;
+          iframe.sandbox = "allow-scripts allow-same-origin allow-popups";
           wrapper.appendChild(iframe);
           wrapper.addEventListener("click", (e) => {
             if (
@@ -1513,39 +1383,30 @@
           });
           const menuToggle = document.createElement("button");
           menuToggle.className = "menu-toggle";
-          menuToggle.innerHTML = '<i class="ph ph-dots-three"></i>';
+          menuToggle.innerHTML = '<i class="ph ph-dots-three" aria-hidden="true"></i>';
+          menuToggle.setAttribute("aria-label", "Opções da Live");
           const contextMenu = document.createElement("div");
           contextMenu.className = "context-menu";
-          const minimizeItem = document.createElement("button");
-          minimizeItem.className = "context-item";
-          minimizeItem.innerHTML = liveMinimized[i]
-            ? `<i class="ph ph-plus"></i> ${getText('restore')}`
-            : `<i class="ph ph-minus"></i> ${getText('minimize')}`;
-          minimizeItem.addEventListener("click", (e) => {
-            e.stopPropagation();
-            toggleMinimize(i);
-            contextMenu.classList.remove("active");
-          });
           const deleteItem = document.createElement("button");
           deleteItem.className = "context-item";
-          deleteItem.innerHTML = `<i class="ph ph-trash"></i> ${getText('delete')}`;
+          deleteItem.innerHTML = `<i class="ph ph-trash" aria-hidden="true"></i> ${getText('delete')}`;
+          deleteItem.setAttribute("aria-label", "Deletar Live");
           let confTimer;
           deleteItem.addEventListener("click", (e) => {
             e.stopPropagation();
             const conf = deleteConfirmations[i] || 0;
             if (conf === 0) {
               deleteConfirmations[i] = 1;
-              deleteItem.innerHTML = `<i class="ph ph-trash"></i> ${getText('confirmDelete')}`;
+              deleteItem.innerHTML = `<i class="ph ph-trash" aria-hidden="true"></i> ${getText('confirmDelete')}`;
               confTimer = setTimeout(() => {
                 deleteConfirmations[i] = 0;
-                deleteItem.innerHTML = `<i class="ph ph-trash"></i> ${getText('delete')}`;
+                deleteItem.innerHTML = `<i class="ph ph-trash" aria-hidden="true"></i> ${getText('delete')}`;
               }, 3000);
             } else {
               clearTimeout(confTimer);
               performDelete(i, contextMenu);
             }
           });
-          contextMenu.appendChild(minimizeItem);
           contextMenu.appendChild(deleteItem);
           menuToggle.addEventListener("click", (e) => {
             e.stopPropagation();
@@ -1567,6 +1428,7 @@
         });
         if (chatVisible) {
           const isMobile = window.innerWidth <= 768;
+          const visibleIndices = lives.map((_, idx) => idx);
           populateChatSelect(visibleIndices);
           updateMainContentLayout(isMobile);
         }
@@ -1576,6 +1438,7 @@
 
       function showAddModal() {
         addModal.classList.add("active");
+        addModal.setAttribute("aria-hidden", "false");
         overlay.classList.add("active");
         liveUrlInput.focus();
         closeMobileMenu();
@@ -1583,6 +1446,7 @@
 
       function closeAddModal() {
         addModal.classList.remove("active");
+        addModal.setAttribute("aria-hidden", "true");
         overlay.classList.remove("active");
         liveUrlInput.value = "";
       }
@@ -1617,24 +1481,16 @@
             platform: platform,
             channel: channelName,
           });
-          liveMinimized[newIndex] = false;
           deleteConfirmations[newIndex] = 0;
           currentSelected = newIndex;
           localStorage.setItem("telazona-lives", JSON.stringify(lives));
-          localStorage.setItem(
-            "telazona-minimized",
-            JSON.stringify(liveMinimized)
-          );
           closeAddModal();
           renderLives();
           if (lives.length === 1 && !chatVisible) {
             toggleChat();
           } else if (chatVisible) {
             const isMobile = window.innerWidth <= 768;
-            const visibleIndices = Object.keys(liveMinimized)
-              .filter((k) => !liveMinimized[k])
-              .map(Number)
-              .sort((a, b) => a - b);
+            const visibleIndices = lives.map((_, idx) => idx);
             populateChatSelect(visibleIndices);
             updateChat();
             updateMainContentLayout(isMobile);
@@ -1648,7 +1504,6 @@
         }
       }
 
-      // Event Listeners
       addLiveBtn.addEventListener("click", showAddModal);
       mobileAddLiveBtn.addEventListener("click", () => {
         showAddModal();
@@ -1663,15 +1518,15 @@
       hamburger.addEventListener("click", toggleMobileMenu);
       closeMenuBtn.addEventListener("click", closeMobileMenu);
       overlay.addEventListener("click", closeMobileMenu);
-      toggleBtn.addEventListener("click", toggleHeaderFooter);
-      toggleMinimizedBtn.addEventListener("click", toggleMinimizedBar);
+      toggleBtn.addEventListener("click", (e) => {
+        if (toggleBtn.classList.contains('fixed')) {
+          return;
+        }
+        toggleHeaderFooter();
+      });
       toggleChatBtn.addEventListener("click", toggleChat);
       mobileToggleChatBtn.addEventListener("click", () => {
         toggleChat();
-        closeMobileMenu();
-      });
-      mobileToggleMinimizedBtn.addEventListener("click", () => {
-        toggleMinimizedBar();
         closeMobileMenu();
       });
       window.addEventListener(
@@ -1682,18 +1537,13 @@
           if (chatVisible) {
             const isMobile = window.innerWidth <= 768;
             updateMainContentLayout(isMobile);
-            const visibleIndices = Object.keys(liveMinimized)
-              .filter((k) => !liveMinimized[k])
-              .map(Number)
-              .sort((a, b) => a - b);
+            const visibleIndices = lives.map((_, idx) => idx);
             populateChatSelect(visibleIndices);
           }
         }, 100)
       );
 
-      // Inicialização
       updateTexts();
-      updateMinimizedCount();
       updateLayoutPositions();
       renderLives();
       showHeaderAndFooter();
