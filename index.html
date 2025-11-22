@@ -4,13 +4,22 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>TELAZONA - Assista Múltiplas Lives Simultaneamente</title>
-    <meta name="description" content="Assista lives do YouTube, Twitch e Kick em uma única tela. Multistreaming simples e responsivo para mobile e desktop." />
-    <meta name="keywords" content="lives, streaming, multistream, YouTube, Twitch, Kick, telazona" />
+    <meta
+      name="description"
+      content="Assista lives do YouTube, Twitch e Kick em uma única tela. Multistreaming simples e responsivo para mobile e desktop."
+    />
+    <meta
+      name="keywords"
+      content="lives, streaming, multistream, YouTube, Twitch, Kick, telazona"
+    />
     <meta property="og:title" content="TELAZONA - Multilives" />
-    <meta property="og:description" content="Assista múltiplas lives simultaneamente em uma única tela. Suporta YouTube, Twitch e Kick." />
+    <meta
+      property="og:description"
+      content="Assista múltiplas lives simultaneamente em uma única tela. Suporta YouTube, Twitch e Kick."
+    />
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://telazona.com/" />
-    <link rel="canonical" href="https://telazona.com/" />
+    <meta property="og:url" content="https://telazona.live/" />
+    <link rel="canonical" href="https://telazona.live/" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -30,7 +39,7 @@
     </script>
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <style>
-    :root {
+      :root {
         --bg-primary: #0a0a0a;
         --bg-secondary: #1a1a1a;
         --bg-tertiary: #242424;
@@ -42,7 +51,11 @@
         --shadow: 0 8px 32px rgba(0, 208, 132, 0.3);
         --shadow-light: 0 4px 16px rgba(0, 0, 0, 0.4);
         --neon-glow: 0 0 20px rgba(0, 208, 132, 0.6);
-        --gradient: linear-gradient(135deg,var(--accent) 0%,var(--accent-hover) 100%);
+        --gradient: linear-gradient(
+          135deg,
+          var(--accent) 0%,
+          var(--accent-hover) 100%
+        );
         --border-radius: 12px;
         --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         --header-height: 60px;
@@ -656,7 +669,12 @@
         box-shadow: var(--neon-glow);
       }
       .skeleton {
-        background: linear-gradient(90deg,var(--bg-secondary) 25%,var(--bg-tertiary) 50%,var(--bg-secondary) 75%);
+        background: linear-gradient(
+          90deg,
+          var(--bg-secondary) 25%,
+          var(--bg-tertiary) 50%,
+          var(--bg-secondary) 75%
+        );
         background-size: 200% 100%;
         animation: shimmer 1.5s infinite;
         border-radius: var(--border-radius);
@@ -729,7 +747,7 @@
         }
         /* Ocultar botões que agora estão no hamburger */
         .header-right .btn-header {
-          display: none; 
+          display: none;
         }
         .hamburger {
           display: flex;
@@ -790,7 +808,9 @@
         }
       }
       @media (prefers-reduced-motion: reduce) {
-        *, *::before, *::after {
+        *,
+        *::before,
+        *::after {
           animation-duration: 0.01ms !important;
           animation-iteration-count: 1 !important;
           transition-duration: 0.01ms !important;
@@ -801,23 +821,52 @@
   <body>
     <header class="header-custom" id="main-header">
       <div class="logo silkscreen-regular">TELAZONA</div>
-      <button id="toggle-header-footer" class="toggle-btn" aria-label="Ocultar/Mostrar Interface">
+      <button
+        id="toggle-header-footer"
+        class="toggle-btn"
+        aria-label="Ocultar/Mostrar Interface"
+      >
         <i class="ph ph-eye-slash" aria-hidden="true"></i> Ocultar Interface
       </button>
       <div class="header-right">
-        <button id="add-live-btn" class="btn-header desktop-only" aria-label="Adicionar Nova Live">
+        <button
+          id="add-live-btn"
+          class="btn-header desktop-only"
+          aria-label="Adicionar Nova Live"
+        >
           <i class="ph ph-plus" aria-hidden="true"></i> Adicionar Live
         </button>
-        <button id="toggle-chat" class="btn-header desktop-only" aria-label="Mostrar/Ocultar Chat">
+        <button
+          id="toggle-chat"
+          class="btn-header desktop-only"
+          aria-label="Mostrar/Ocultar Chat"
+        >
           <i class="ph ph-chat-text" aria-hidden="true"></i> Mostrar Chat
         </button>
-        <button id="help-btn" class="btn-header desktop-only" title="Reabrir tutorial">
+        <button
+          id="help-btn"
+          class="btn-header desktop-only"
+          title="Reabrir tutorial"
+        >
           <i class="ph ph-question"></i> Ajuda
         </button>
-        <a href="https://picpay.me/seuusuario" target="_blank" rel="noopener" class="btn-header desktop-only" title="Doar pro TELAZONA" style="text-decoration:none;">
-          <i class="ph ph-heart" style="color:#ff6b6b;"></i> Doar
+        <a
+          href="https://picpay.me/seuusuario"
+          target="_blank"
+          rel="noopener"
+          class="btn-header desktop-only"
+          title="Doar pro TELAZONA"
+          style="text-decoration: none"
+        >
+          <i class="ph ph-heart" style="color: #ff6b6b"></i> Doar
         </a>
-        <div class="hamburger" id="hamburger" role="button" aria-label="Abrir menu mobile" aria-expanded="false">
+        <div
+          class="hamburger"
+          id="hamburger"
+          role="button"
+          aria-label="Abrir menu mobile"
+          aria-expanded="false"
+        >
           <span></span><span></span><span></span>
         </div>
       </div>
@@ -842,13 +891,24 @@
         <i class="ph ph-question"></i> Ajuda / Tutorial
       </button>
 
-      <a href="https://picpay.me/seuusuario" target="_blank" rel="noopener" class="mobile-btn" 
-        style="border:2px solid var(--accent); color:var(--text-primary);">
-        <i class="ph ph-heart" style="color:#ff4444;"></i> Doar pro TELAZONA
+      <a
+        href="https://picpay.me/seuusuario"
+        target="_blank"
+        rel="noopener"
+        class="mobile-btn"
+        style="border: 2px solid var(--accent); color: var(--text-primary)"
+      >
+        <i class="ph ph-heart" style="color: #ff4444"></i> Doar pro TELAZONA
       </a>
     </div>
 
-    <div id="add-modal" class="add-modal" role="dialog" aria-labelledby="modal-title" aria-hidden="true">
+    <div
+      id="add-modal"
+      class="add-modal"
+      role="dialog"
+      aria-labelledby="modal-title"
+      aria-hidden="true"
+    >
       <h2 id="modal-title">Adicionar Live (YouTube, Twitch ou Kick)</h2>
       <div class="platforms">
         <div class="platform-item">
@@ -877,10 +937,18 @@
         <p>Validando live...</p>
       </div>
       <div class="btn-group active">
-        <button id="cancel-add" class="btn-modal btn-secondary-modal" aria-label="Cancelar adição">
+        <button
+          id="cancel-add"
+          class="btn-modal btn-secondary-modal"
+          aria-label="Cancelar adição"
+        >
           <i class="ph ph-x" aria-hidden="true"></i> Cancelar
         </button>
-        <button id="submit-add" class="btn-modal btn-primary-modal" aria-label="Adicionar Live">
+        <button
+          id="submit-add"
+          class="btn-modal btn-primary-modal"
+          aria-label="Adicionar Live"
+        >
           <i class="ph ph-check" aria-hidden="true"></i> Adicionar
         </button>
       </div>
@@ -893,161 +961,376 @@
           Assista múltiplas lives simultaneamente em uma única tela. Suporta
           YouTube, Twitch e Kick.
         </p>
-        <button id="hero-add-btn" class="hero-btn" aria-label="Adicionar Primeira Live">
-          <i class="ph ph-play-circle" aria-hidden="true"></i> Adicionar Primeira Live
+        <button
+          id="hero-add-btn"
+          class="hero-btn"
+          aria-label="Adicionar Primeira Live"
+        >
+          <i class="ph ph-play-circle" aria-hidden="true"></i> Adicionar
+          Primeira Live
         </button>
       </section>
       <div id="main-content">
-        <section id="grid-section" class="grid-container" aria-label="Grade de Lives"></section>
-        <section id="chat-section" class="chat-container" aria-label="Seção de Chat">
+        <section
+          id="grid-section"
+          class="grid-container"
+          aria-label="Grade de Lives"
+        ></section>
+        <section
+          id="chat-section"
+          class="chat-container"
+          aria-label="Seção de Chat"
+        >
           <div id="chat-selector"></div>
-          <div id="chat-placeholder" class="chat-placeholder">Selecione uma live para ver o chat.</div>
+          <div id="chat-placeholder" class="chat-placeholder">
+            Selecione uma live para ver o chat.
+          </div>
         </section>
       </div>
     </main>
 
     <footer id="main-footer">
       <div class="footer-content">
-        Copyright © 2025 TELAZONA feito por <a href="https://www.instagram.com/michelsantnasc/" class="footer-link" target="_blank" rel="noopener noreferrer">Santnasc</a>
+        Copyright © 2025 TELAZONA feito por
+        <a
+          href="https://www.instagram.com/michelsantnasc/"
+          class="footer-link"
+          target="_blank"
+          rel="noopener noreferrer"
+          >Santnasc</a
+        >
       </div>
     </footer>
 
-    <div id="welcome-modal" class="add-modal" style="display:none; max-width:520px; padding:36px 28px; max-height:95vh; overflow-y:auto;">
-      <button id="close-welcome" style="position:absolute; top:12px; right:12px; background:none; border:none; color:#aaa; font-size:28px; cursor:pointer;">
+    <div
+      id="welcome-modal"
+      class="add-modal"
+      style="
+        display: none;
+        max-width: 520px;
+        padding: 36px 28px;
+        max-height: 95vh;
+        overflow-y: auto;
+      "
+    >
+      <button
+        id="close-welcome"
+        style="
+          position: absolute;
+          top: 12px;
+          right: 12px;
+          background: none;
+          border: none;
+          color: #aaa;
+          font-size: 28px;
+          cursor: pointer;
+        "
+      >
         <i class="ph ph-x"></i>
       </button>
 
-      <h2 style="font-size:2.1rem; text-align:center; color:var(--accent); margin:0 0 16px;">
+      <h2
+        style="
+          font-size: 2.1rem;
+          text-align: center;
+          color: var(--accent);
+          margin: 0 0 16px;
+        "
+      >
         Bem-vindo ao TELAZONA!
       </h2>
-      <p style="text-align:center; color:#ccc; font-size:1.05rem; margin-bottom:32px;">
+      <p
+        style="
+          text-align: center;
+          color: #ccc;
+          font-size: 1.05rem;
+          margin-bottom: 32px;
+        "
+      >
         Assista várias lives ao mesmo tempo
       </p>
 
-      <div style="display:grid; gap:36px;">
+      <div style="display: grid; gap: 36px">
+        <div style="display: flex; gap: 20px; align-items: flex-start">
+          <div
+            style="
+              background: var(--gradient);
+              color: white;
+              width: 48px;
+              height: 48px;
+              border-radius: 50%;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              flex-shrink: 0;
+              font-weight: bold;
+              font-size: 1.2rem;
+            "
+          >
+            1
+          </div>
+          <div style="width: 100%">
+            <strong style="font-size: 1.15rem">Copie o link da live</strong>
 
-        <div style="display:flex; gap:20px; align-items:flex-start;">
-          <div style="background:var(--gradient); color:white; width:48px; height:48px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-weight:bold; font-size:1.2rem;">1</div>
-          <div style="width:100%;">
-            <strong style="font-size:1.15rem;">Copie o link da live</strong>
-
-            <div style="margin-top:24px; display:flex; flex-direction:column; gap:28px; align-items:center;">
-
-              <div style="text-align:center; width:100%;">
-                <img src="https://i.ibb.co/1t0nHJSD/msedge-Lw0-RNd9h-H0.png" alt="YouTube"
-                    style="width:100%; max-width:560px; border-radius:24px; box-shadow:0 20px 70px rgba(0,0,0,0.95); border:6px solid var(--accent);">
-                <div style="margin-top:16px; font-weight:800; font-size:1.3rem; color:var(--accent); text-shadow:0 0 20px rgba(0,208,132,0.8);">YouTube → Compartilhar</div>
+            <div
+              style="
+                margin-top: 24px;
+                display: flex;
+                flex-direction: column;
+                gap: 28px;
+                align-items: center;
+              "
+            >
+              <div style="text-align: center; width: 100%">
+                <img
+                  src="https://i.ibb.co/1t0nHJSD/msedge-Lw0-RNd9h-H0.png"
+                  alt="YouTube"
+                  style="
+                    width: 100%;
+                    max-width: 560px;
+                    border-radius: 24px;
+                    box-shadow: 0 20px 70px rgba(0, 0, 0, 0.95);
+                    border: 6px solid var(--accent);
+                  "
+                />
+                <div
+                  style="
+                    margin-top: 16px;
+                    font-weight: 800;
+                    font-size: 1.3rem;
+                    color: var(--accent);
+                    text-shadow: 0 0 20px rgba(0, 208, 132, 0.8);
+                  "
+                >
+                  YouTube → Compartilhar
+                </div>
               </div>
 
-              <div style="text-align:center; width:100%;">
-                <img src="https://i.ibb.co/BHG6p2mR/msedge-Wdm4-XIkx-J7.png" alt="Twitch"
-                    style="width:100%; max-width:560px; border-radius:24px; box-shadow:0 20px 70px rgba(0,0,0,0.95); border:6px solid var(--accent);">
-                <div style="margin-top:16px; font-weight:800; font-size:1.3rem; color:var(--accent); text-shadow:0 0 20px rgba(0,208,132,0.8);">Twitch → Copie o link</div>
+              <div style="text-align: center; width: 100%">
+                <img
+                  src="https://i.ibb.co/BHG6p2mR/msedge-Wdm4-XIkx-J7.png"
+                  alt="Twitch"
+                  style="
+                    width: 100%;
+                    max-width: 560px;
+                    border-radius: 24px;
+                    box-shadow: 0 20px 70px rgba(0, 0, 0, 0.95);
+                    border: 6px solid var(--accent);
+                  "
+                />
+                <div
+                  style="
+                    margin-top: 16px;
+                    font-weight: 800;
+                    font-size: 1.3rem;
+                    color: var(--accent);
+                    text-shadow: 0 0 20px rgba(0, 208, 132, 0.8);
+                  "
+                >
+                  Twitch → Copie o link
+                </div>
               </div>
 
-              <div style="text-align:center; width:100%;">
-                <img src="https://i.ibb.co/xqFFfcnp/msedge-X5-Fm-Trj6-To.png" alt="Kick"
-                    style="width:100%; max-width:560px; border-radius:24px; box-shadow:0 20px 70px rgba(0,0,0,0.95); border:6px solid var(--accent);">
-                <div style="margin-top:16px; font-weight:800; font-size:1.3rem; color:var(--accent); text-shadow:0 0 20px rgba(0,208,132,0.8);">Kick → Copie o link</div>
+              <div style="text-align: center; width: 100%">
+                <img
+                  src="https://i.ibb.co/xqFFfcnp/msedge-X5-Fm-Trj6-To.png"
+                  alt="Kick"
+                  style="
+                    width: 100%;
+                    max-width: 560px;
+                    border-radius: 24px;
+                    box-shadow: 0 20px 70px rgba(0, 0, 0, 0.95);
+                    border: 6px solid var(--accent);
+                  "
+                />
+                <div
+                  style="
+                    margin-top: 16px;
+                    font-weight: 800;
+                    font-size: 1.3rem;
+                    color: var(--accent);
+                    text-shadow: 0 0 20px rgba(0, 208, 132, 0.8);
+                  "
+                >
+                  Kick → Copie o link
+                </div>
               </div>
-
             </div>
           </div>
         </div>
-      
-        <div style="display:flex; gap:20px; align-items:flex-start;">
-          <div style="background:var(--gradient); color:white; width:48px; height:48px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-weight:bold; font-size:1.2rem;">2</div>
+
+        <div style="display: flex; gap: 20px; align-items: flex-start">
+          <div
+            style="
+              background: var(--gradient);
+              color: white;
+              width: 48px;
+              height: 48px;
+              border-radius: 50%;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              flex-shrink: 0;
+              font-weight: bold;
+              font-size: 1.2rem;
+            "
+          >
+            2
+          </div>
           <div>
-            <strong style="font-size:1.15rem;">Cole aqui no TELAZONA</strong>
-            <div style="margin:24px auto 0; text-align:center;">
-              <img src="https://i.ibb.co/VGp2Wgd/msedge-wiwrl-YSKy2.png" alt="Colar link" 
-                  style="width:100%; max-width:460px; border-radius:18px; box-shadow:0 12px 50px rgba(0,0,0,0.8); border:3px solid var(--accent);">
+            <strong style="font-size: 1.15rem">Cole aqui no TELAZONA</strong>
+            <div style="margin: 24px auto 0; text-align: center">
+              <img
+                src="https://i.ibb.co/VGp2Wgd/msedge-wiwrl-YSKy2.png"
+                alt="Colar link"
+                style="
+                  width: 100%;
+                  max-width: 460px;
+                  border-radius: 18px;
+                  box-shadow: 0 12px 50px rgba(0, 0, 0, 0.8);
+                  border: 3px solid var(--accent);
+                "
+              />
             </div>
           </div>
         </div>
 
-        <div style="display:flex; gap:20px; align-items:flex-start;">
-          <div style="background:var(--gradient); color:white; width:48px; height:48px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-            <i class="ph ph-eye-slash" style="font-size:24px;"></i>
+        <div style="display: flex; gap: 20px; align-items: flex-start">
+          <div
+            style="
+              background: var(--gradient);
+              color: white;
+              width: 48px;
+              height: 48px;
+              border-radius: 50%;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              flex-shrink: 0;
+            "
+          >
+            <i class="ph ph-eye-slash" style="font-size: 24px"></i>
           </div>
           <div>
-            <strong style="font-size:1.15rem;">Modo tela cheia</strong><br>
-            <small style="color:#aaa;">Botão no canto superior esquerdo para ocultar interface (cabeçalho e rodapé).</small>
+            <strong style="font-size: 1.15rem">Modo tela cheia</strong><br />
+            <small style="color: #aaa"
+              >Botão no canto superior esquerdo para ocultar interface
+              (cabeçalho e rodapé).</small
+            >
           </div>
         </div>
       </div>
 
-      <div style="margin-top:40px; padding-top:24px; border-top:2px solid var(--accent); text-align:center;">
-        <label style="display:inline-flex; align-items:center; gap:12px; color:#ddd; cursor:pointer; font-size:1rem; font-weight:500;">
-          <input type="checkbox" id="dont-show-welcome" style="width:20px; height:20px; accent-color:var(--accent);">
+      <div
+        style="
+          margin-top: 40px;
+          padding-top: 24px;
+          border-top: 2px solid var(--accent);
+          text-align: center;
+        "
+      >
+        <label
+          style="
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            color: #ddd;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+          "
+        >
+          <input
+            type="checkbox"
+            id="dont-show-welcome"
+            style="width: 20px; height: 20px; accent-color: var(--accent)"
+          />
           Não mostrar novamente
         </label>
 
-        <div style="margin-top:24px;">
-          <button id="start-telazona" style="background:var(--gradient); color:white; border:none; padding:16px 60px; border-radius:14px; font-size:1.3rem; cursor:pointer; box-shadow:0 0 30px rgba(0,208,132,0.7); font-weight:600;">
+        <div style="margin-top: 24px">
+          <button
+            id="start-telazona"
+            style="
+              background: var(--gradient);
+              color: white;
+              border: none;
+              padding: 16px 60px;
+              border-radius: 14px;
+              font-size: 1.3rem;
+              cursor: pointer;
+              box-shadow: 0 0 30px rgba(0, 208, 132, 0.7);
+              font-weight: 600;
+            "
+          >
             Vamos lá!
           </button>
         </div>
       </div>
     </div>
     <script>
-    const domain = window.location.hostname || 'localhost';
-      const header = document.getElementById('main-header');
-      const footer = document.getElementById('main-footer');
-      const main = document.getElementById('main');
-      const hero = document.getElementById('hero-section');
-      const mainContent = document.getElementById('main-content');
-      const grid = document.getElementById('grid-section');
-      const chatSection = document.getElementById('chat-section');
-      const chatSelector = document.getElementById('chat-selector');
-      const chatPlaceholder = document.getElementById('chat-placeholder');
-      const toggleBtn = document.getElementById('toggle-header-footer');
-      const toggleChatBtn = document.getElementById('toggle-chat');
-      const mobileToggleChatBtn = document.getElementById('mobile-toggle-chat');
-      const heroAddBtn = document.getElementById('hero-add-btn');
-      const addLiveBtn = document.getElementById('add-live-btn');
-      const mobileAddLiveBtn = document.getElementById('mobile-add-live-btn');
-      const submitAddBtn = document.getElementById('submit-add');
-      const cancelAddBtn = document.getElementById('cancel-add');
-      const liveUrlInput = document.getElementById('live-url');
-      const hamburger = document.getElementById('hamburger');
-      const mobileMenu = document.getElementById('mobile-menu');
-      const closeMenuBtn = document.getElementById('close-menu');
-      const overlay = document.getElementById('overlay');
-      const addModal = document.getElementById('add-modal');
-      const loadingSection = document.getElementById('loading-section');
+      const domain = window.location.hostname || "localhost";
+      const header = document.getElementById("main-header");
+      const footer = document.getElementById("main-footer");
+      const main = document.getElementById("main");
+      const hero = document.getElementById("hero-section");
+      const mainContent = document.getElementById("main-content");
+      const grid = document.getElementById("grid-section");
+      const chatSection = document.getElementById("chat-section");
+      const chatSelector = document.getElementById("chat-selector");
+      const chatPlaceholder = document.getElementById("chat-placeholder");
+      const toggleBtn = document.getElementById("toggle-header-footer");
+      const toggleChatBtn = document.getElementById("toggle-chat");
+      const mobileToggleChatBtn = document.getElementById("mobile-toggle-chat");
+      const heroAddBtn = document.getElementById("hero-add-btn");
+      const addLiveBtn = document.getElementById("add-live-btn");
+      const mobileAddLiveBtn = document.getElementById("mobile-add-live-btn");
+      const submitAddBtn = document.getElementById("submit-add");
+      const cancelAddBtn = document.getElementById("cancel-add");
+      const liveUrlInput = document.getElementById("live-url");
+      const hamburger = document.getElementById("hamburger");
+      const mobileMenu = document.getElementById("mobile-menu");
+      const closeMenuBtn = document.getElementById("close-menu");
+      const overlay = document.getElementById("overlay");
+      const addModal = document.getElementById("add-modal");
+      const loadingSection = document.getElementById("loading-section");
       const btnGroup = document.querySelector(".btn-group");
 
-      let lives = JSON.parse(sessionStorage.getItem('telazona-lives') || '[]');
+      let lives = JSON.parse(sessionStorage.getItem("telazona-lives") || "[]");
       let deleteConfirmations = {};
       let currentSelected = -1;
       let chatVisible = false;
-      let iframeObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            const iframe = entry.target.querySelector('.live-frame');
-            if (iframe && iframe.dataset.src) {
-              iframe.src = iframe.dataset.src;
-              delete iframe.dataset.src;
+      let iframeObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              const iframe = entry.target.querySelector(".live-frame");
+              if (iframe && iframe.dataset.src) {
+                iframe.src = iframe.dataset.src;
+                delete iframe.dataset.src;
+              }
             }
-          }
-        });
-      }, { threshold: 0.1 });
+          });
+        },
+        { threshold: 0.1 }
+      );
 
       function getText(key) {
         const texts = {
-          'selectLive': 'Selecione uma live para ver o chat.',
-          'noKickChat': 'Chat não disponível para Kick. Acesse o site oficial para interagir.',
-          'noChat': 'Chat não disponível para esta live.',
-          'chatPlaceholder': 'Chat oculto. Clique em "Mostrar Chat" para ativar.',
-          'hideChat': 'Ocultar Chat',
-          'showChat': 'Mostrar Chat',
-          'hideUI': 'Ocultar Interface',
-          'showUI': 'Mostrar Interface',
-          'delete': 'Deletar',
-          'confirmDelete': 'Confirmar Deleção',
-          'invalidUrl': 'URL inválida. Suporte apenas para YouTube, Twitch e Kick.',
-          'saveError': 'Erro ao salvar. Tente novamente.'
+          selectLive: "Selecione uma live para ver o chat.",
+          noKickChat:
+            "Chat não disponível para Kick. Acesse o site oficial para interagir.",
+          noChat: "Chat não disponível para esta live.",
+          chatPlaceholder: 'Chat oculto. Clique em "Mostrar Chat" para ativar.',
+          hideChat: "Ocultar Chat",
+          showChat: "Mostrar Chat",
+          hideUI: "Ocultar Interface",
+          showUI: "Mostrar Interface",
+          delete: "Deletar",
+          confirmDelete: "Confirmar Deleção",
+          invalidUrl:
+            "URL inválida. Suporte apenas para YouTube, Twitch e Kick.",
+          saveError: "Erro ao salvar. Tente novamente.",
         };
         return texts[key] || key;
       }
@@ -1087,16 +1370,16 @@
 
       function updateChat() {
         if (currentSelected < 0 || !lives[currentSelected]) {
-          chatPlaceholder.innerHTML = getText('selectLive');
+          chatPlaceholder.innerHTML = getText("selectLive");
           return;
         }
         if (lives[currentSelected].platform === "kick") {
-          chatPlaceholder.innerHTML = getText('noKickChat');
+          chatPlaceholder.innerHTML = getText("noKickChat");
           return;
         }
         const chatEmbed = lives[currentSelected].chatEmbed;
         if (!chatEmbed) {
-          chatPlaceholder.innerHTML = getText('noChat');
+          chatPlaceholder.innerHTML = getText("noChat");
           return;
         }
         chatPlaceholder.innerHTML = `<iframe src="${chatEmbed}" style="width:100%;height:100%;border:none;" allow="fullscreen" title="Chat da Live ${lives[currentSelected].channel}"></iframe>`;
@@ -1114,7 +1397,8 @@
           chatSection.style.borderLeft = "none";
           chatSection.style.borderTop = "1px solid var(--border)";
           chatSection.style.marginTop = "0";
-          chatSection.style.height = "calc(100vh - var(--header-height) - var(--footer-height))";
+          chatSection.style.height =
+            "calc(100vh - var(--header-height) - var(--footer-height))";
           return;
         }
         if (isMobile) {
@@ -1150,15 +1434,15 @@
           populateChatSelect(visibleIndices);
           chatSelector.style.display = "flex";
           updateChat();
-          toggleChatBtn.innerHTML = `${icon} ${getText('hideChat')}`;
-          mobileToggleChatBtn.innerHTML = `${icon} ${getText('hideChat')}`;
+          toggleChatBtn.innerHTML = `${icon} ${getText("hideChat")}`;
+          mobileToggleChatBtn.innerHTML = `${icon} ${getText("hideChat")}`;
           updateMainContentLayout(isMobile);
         } else {
-          chatPlaceholder.innerHTML = getText('chatPlaceholder');
+          chatPlaceholder.innerHTML = getText("chatPlaceholder");
           chatSection.style.display = "none";
           mainContent.style.flexDirection = "row";
-          toggleChatBtn.innerHTML = `${icon} ${getText('showChat')}`;
-          mobileToggleChatBtn.innerHTML = `${icon} ${getText('showChat')}`;
+          toggleChatBtn.innerHTML = `${icon} ${getText("showChat")}`;
+          mobileToggleChatBtn.innerHTML = `${icon} ${getText("showChat")}`;
           updateMainContentLayout(isMobile);
         }
         updateLayoutPositions();
@@ -1188,16 +1472,17 @@
       function showHeaderAndFooter() {
         header.classList.remove("hidden");
         footer.classList.remove("hidden");
-        
+
         if (window.innerWidth > 768) {
-          const headerRight = document.querySelector('.header-right');
+          const headerRight = document.querySelector(".header-right");
           headerRight.parentNode.insertBefore(toggleBtn, headerRight);
         } else {
-          
           document.body.appendChild(toggleBtn);
         }
         updateLayoutPositions();
-        toggleBtn.innerHTML = `<i class="ph ph-eye-slash" aria-hidden="true"></i> ${getText('hideUI')}`;
+        toggleBtn.innerHTML = `<i class="ph ph-eye-slash" aria-hidden="true"></i> ${getText(
+          "hideUI"
+        )}`;
         toggleBtn.classList.remove("fixed");
         toggleBtn.style.position = "absolute";
         toggleBtn.style.top = "auto";
@@ -1209,14 +1494,16 @@
       function hideHeaderAndFooter() {
         header.classList.add("hidden");
         footer.classList.add("hidden");
-        document.body.appendChild(toggleBtn); 
+        document.body.appendChild(toggleBtn);
         updateLayoutPositions();
-        const chatIconClass = chatVisible ? 'x' : 'chat-text';
-        const chatText = chatVisible ? getText('hideChat') : getText('showChat');
+        const chatIconClass = chatVisible ? "x" : "chat-text";
+        const chatText = chatVisible
+          ? getText("hideChat")
+          : getText("showChat");
         toggleBtn.innerHTML = `
           <div class="controls-flex">
             <button class="show-ui-btn" onclick="showHeaderAndFooter(); event.stopPropagation();">
-              <i class="ph ph-eye" aria-hidden="true"></i> ${getText('showUI')}
+              <i class="ph ph-eye" aria-hidden="true"></i> ${getText("showUI")}
             </button>
             <button class="chat-toggle-btn fixed-chat-toggle" onclick="handleFixedChatToggle(event);">
               <i class="ph ph-${chatIconClass}" aria-hidden="true"></i> ${chatText}
@@ -1233,10 +1520,13 @@
 
       function handleFixedChatToggle(e) {
         e.stopPropagation();
-        const fixedChatToggle = e.target.closest('.fixed-chat-toggle') || e.target;
+        const fixedChatToggle =
+          e.target.closest(".fixed-chat-toggle") || e.target;
         toggleChat();
-        const chatIconClass = chatVisible ? 'x' : 'chat-text';
-        const chatText = chatVisible ? getText('hideChat') : getText('showChat');
+        const chatIconClass = chatVisible ? "x" : "chat-text";
+        const chatText = chatVisible
+          ? getText("hideChat")
+          : getText("showChat");
         fixedChatToggle.innerHTML = `<i class="ph ph-${chatIconClass}" aria-hidden="true"></i> ${chatText}`;
       }
 
@@ -1301,16 +1591,16 @@
       }
 
       function extractChannelName(url, platform) {
-        if (platform === 'youtube') return 'YouTube Live';
-        if (platform === 'twitch') {
+        if (platform === "youtube") return "YouTube Live";
+        if (platform === "twitch") {
           const channel = extractTwitchChannel(url);
-          return channel ? `@${channel}` : 'Twitch Live';
+          return channel ? `@${channel}` : "Twitch Live";
         }
-        if (platform === 'kick') {
+        if (platform === "kick") {
           const channel = extractKickChannel(url);
-          return channel ? `@${channel}` : 'Kick Live';
+          return channel ? `@${channel}` : "Kick Live";
         }
-        return 'Live';
+        return "Live";
       }
 
       function generateLiveEmbed(url) {
@@ -1321,7 +1611,8 @@
           return `https://player.twitch.tv/?channel=${twitchChannel}&parent=${domain}`;
         }
         const kickChannel = extractKickChannel(url);
-        if (kickChannel) return `https://player.kick.com/${kickChannel}?parent=${domain}`; // ⚠️ CORREÇÃO KICK: Adicionado o parent
+        if (kickChannel)
+          return `https://player.kick.com/${kickChannel}?parent=${domain}`; // ⚠️ CORREÇÃO KICK: Adicionado o parent
         if (
           url.includes("youtube.com/embed") ||
           url.includes("player.twitch.tv") ||
@@ -1350,31 +1641,29 @@
         hamburger.setAttribute("aria-expanded", !isActive);
         mobileMenu.classList.toggle("active");
         overlay.classList.toggle("active");
-        document.body.style.overflow = isActive ? '' : 'hidden'; 
+        document.body.style.overflow = isActive ? "" : "hidden";
       }
 
       function closeMobileMenu() {
         hamburger.classList.remove("active");
         hamburger.setAttribute("aria-expanded", "false");
         mobileMenu.classList.remove("active");
-        
-        if (!addModal.classList.contains('active')) {
-             overlay.classList.remove("active");
-             document.body.style.overflow = '';
+
+        if (!addModal.classList.contains("active")) {
+          overlay.classList.remove("active");
+          document.body.style.overflow = "";
         }
       }
-      
-      
+
       function handleOverlayClick() {
-          if (mobileMenu.classList.contains('active')) {
-              closeMobileMenu();
-          } else if (addModal.classList.contains('active')) {
-              closeAddModal();
-          }
+        if (mobileMenu.classList.contains("active")) {
+          closeMobileMenu();
+        } else if (addModal.classList.contains("active")) {
+          closeAddModal();
+        }
       }
-      
-      
-      overlay.addEventListener('click', handleOverlayClick);
+
+      overlay.addEventListener("click", handleOverlayClick);
 
       function updateLayout(visibleLives, isUIHidden) {
         if (window.innerWidth <= 768) {
@@ -1502,11 +1791,13 @@
           iframe.className = "live-frame";
           iframe.dataset.src = appendParams(live.embed, false);
           // 💡 CORREÇÃO 1: Adicionado o 'allow' completo para fullscreeen e mídia.
-          iframe.allow = "autoplay; encrypted-media; fullscreen; picture-in-picture; gyroscope"; 
+          iframe.allow =
+            "autoplay; encrypted-media; fullscreen; picture-in-picture; gyroscope";
           iframe.loading = "lazy";
           iframe.title = `Live: ${live.channel}`;
           // 💡 CORREÇÃO 2: Sandbox completo para resolver o erro 'allow-same-origin' e dar permissões essenciais.
-          iframe.sandbox = "allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"; 
+          iframe.sandbox =
+            "allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox";
           wrapper.appendChild(iframe);
           wrapper.addEventListener("click", (e) => {
             if (
@@ -1518,13 +1809,16 @@
           });
           const menuToggle = document.createElement("button");
           menuToggle.className = "menu-toggle";
-          menuToggle.innerHTML = '<i class="ph ph-dots-three" aria-hidden="true"></i>';
+          menuToggle.innerHTML =
+            '<i class="ph ph-dots-three" aria-hidden="true"></i>';
           menuToggle.setAttribute("aria-label", "Opções da Live");
           const contextMenu = document.createElement("div");
           contextMenu.className = "context-menu";
           const deleteItem = document.createElement("button");
           deleteItem.className = "context-item";
-          deleteItem.innerHTML = `<i class="ph ph-trash" aria-hidden="true"></i> ${getText('delete')}`;
+          deleteItem.innerHTML = `<i class="ph ph-trash" aria-hidden="true"></i> ${getText(
+            "delete"
+          )}`;
           deleteItem.setAttribute("aria-label", "Deletar Live");
           let confTimer;
           deleteItem.addEventListener("click", (e) => {
@@ -1532,10 +1826,14 @@
             const conf = deleteConfirmations[i] || 0;
             if (conf === 0) {
               deleteConfirmations[i] = 1;
-              deleteItem.innerHTML = `<i class="ph ph-trash" aria-hidden="true"></i> ${getText('confirmDelete')}`;
+              deleteItem.innerHTML = `<i class="ph ph-trash" aria-hidden="true"></i> ${getText(
+                "confirmDelete"
+              )}`;
               confTimer = setTimeout(() => {
                 deleteConfirmations[i] = 0;
-                deleteItem.innerHTML = `<i class="ph ph-trash" aria-hidden="true"></i> ${getText('delete')}`;
+                deleteItem.innerHTML = `<i class="ph ph-trash" aria-hidden="true"></i> ${getText(
+                  "delete"
+                )}`;
               }, 3000);
             } else {
               clearTimeout(confTimer);
@@ -1583,10 +1881,13 @@
       function closeAddModal() {
         addModal.classList.remove("active");
         addModal.setAttribute("aria-hidden", "true");
-        
-        if (!mobileMenu.classList.contains('active') && !welcomeModal.classList.contains('active')) {
-            overlay.classList.remove("active");
-            document.body.style.overflow = '';
+
+        if (
+          !mobileMenu.classList.contains("active") &&
+          !welcomeModal.classList.contains("active")
+        ) {
+          overlay.classList.remove("active");
+          document.body.style.overflow = "";
         }
         liveUrlInput.value = "";
       }
@@ -1602,7 +1903,7 @@
         if (!embedUrl) {
           loading.classList.remove("active");
           btnGroup.classList.add("active");
-          return alert(getText('invalidUrl'));
+          return alert(getText("invalidUrl"));
         }
         try {
           const chatEmbedUrl = generateChatEmbed(url);
@@ -1637,7 +1938,7 @@
           }
         } catch (e) {
           console.error("Erro ao adicionar:", e);
-          alert(getText('saveError'));
+          alert(getText("saveError"));
         } finally {
           loading.classList.remove("active");
           btnGroup.classList.add("active");
@@ -1653,26 +1954,25 @@
       });
       hamburger.addEventListener("click", toggleMobileMenu);
       closeMenuBtn.addEventListener("click", closeMobileMenu);
-      
+
       toggleBtn.addEventListener("click", (e) => {
-        if (toggleBtn.classList.contains('fixed')) {
+        if (toggleBtn.classList.contains("fixed")) {
           return;
         }
         toggleHeaderFooter();
       });
       toggleChatBtn.addEventListener("click", toggleChat);
 
-      
       mobileAddLiveBtn.addEventListener("click", () => {
-          closeMobileMenu();
-          showAddModal();
+        closeMobileMenu();
+        showAddModal();
       });
-      
+
       mobileToggleChatBtn.addEventListener("click", () => {
-          toggleChat();
-          closeMobileMenu();
+        toggleChat();
+        closeMobileMenu();
       });
-      
+
       window.addEventListener(
         "resize",
         debounce(() => {
@@ -1684,9 +1984,9 @@
             const visibleIndices = lives.map((_, idx) => idx);
             populateChatSelect(visibleIndices);
           }
-          
-          if (!header.classList.contains('hidden')) {
-              showHeaderAndFooter();
+
+          if (!header.classList.contains("hidden")) {
+            showHeaderAndFooter();
           }
         }, 100)
       );
@@ -1696,69 +1996,73 @@
       renderLives();
       showHeaderAndFooter();
 
-      
-      const welcomeModal = document.getElementById('welcome-modal');
-      const closeWelcome = document.getElementById('close-welcome');
-      const startBtn = document.getElementById('start-telazona');
-      const dontShow = document.getElementById('dont-show-welcome');
+      const welcomeModal = document.getElementById("welcome-modal");
+      const closeWelcome = document.getElementById("close-welcome");
+      const startBtn = document.getElementById("start-telazona");
+      const dontShow = document.getElementById("dont-show-welcome");
 
       function showWelcome() {
-        welcomeModal.style.display = 'flex';
-        overlay.classList.add('active');
-        document.body.style.overflow = 'hidden';
+        welcomeModal.style.display = "flex";
+        overlay.classList.add("active");
+        document.body.style.overflow = "hidden";
         welcomeModal.scrollTop = 0;
       }
 
       function hideWelcome() {
-        welcomeModal.style.display = 'none';
-        
-        if (!addModal.classList.contains('active') && !mobileMenu.classList.contains('active')) {
-             overlay.classList.remove('active');
-             document.body.style.overflow = '';
+        welcomeModal.style.display = "none";
+
+        if (
+          !addModal.classList.contains("active") &&
+          !mobileMenu.classList.contains("active")
+        ) {
+          overlay.classList.remove("active");
+          document.body.style.overflow = "";
         }
       }
 
-      
-      if (!localStorage.getItem('telazona-welcome-seen')) {
+      if (!localStorage.getItem("telazona-welcome-seen")) {
         setTimeout(showWelcome, 1000);
       }
 
-      
       closeWelcome.onclick = startBtn.onclick = () => {
-        if (dontShow.checked) localStorage.setItem('telazona-welcome-seen', 'true');
+        if (dontShow.checked)
+          localStorage.setItem("telazona-welcome-seen", "true");
         hideWelcome();
       };
 
-      
-      document.getElementById('help-btn')?.addEventListener('click', () => {
-        localStorage.removeItem('telazona-welcome-seen');
+      document.getElementById("help-btn")?.addEventListener("click", () => {
+        localStorage.removeItem("telazona-welcome-seen");
         showWelcome();
       });
 
-      
-      document.getElementById('mobile-help-btn')?.addEventListener('click', () => {
-        closeMobileMenu();
-        localStorage.removeItem('telazona-welcome-seen');
-        showWelcome();
-      });
+      document
+        .getElementById("mobile-help-btn")
+        ?.addEventListener("click", () => {
+          closeMobileMenu();
+          localStorage.removeItem("telazona-welcome-seen");
+          showWelcome();
+        });
 
-     
-      document.querySelectorAll('a[href*="picpay.me"]').forEach(link => {
-        link.addEventListener('click', () => {
-          closeMobileMenu(); 
+      document.querySelectorAll('a[href*="picpay.me"]').forEach((link) => {
+        link.addEventListener("click", () => {
+          closeMobileMenu();
         });
       });
-      
-   
+
       if (window.innerWidth > 768) {
-        document.querySelectorAll('#welcome-modal img').forEach(img => {
-          img.style.cursor = 'zoom-in';
-          img.addEventListener('mouseenter', () => img.style.transform = 'scale(1.08)');
-          img.addEventListener('mouseleave', () => img.style.transform = 'scale(1)');
-          img.style.transition = 'transform 0.5s ease';
+        document.querySelectorAll("#welcome-modal img").forEach((img) => {
+          img.style.cursor = "zoom-in";
+          img.addEventListener(
+            "mouseenter",
+            () => (img.style.transform = "scale(1.08)")
+          );
+          img.addEventListener(
+            "mouseleave",
+            () => (img.style.transform = "scale(1)")
+          );
+          img.style.transition = "transform 0.5s ease";
         });
-      }  
+      }
     </script>
   </body>
 </html>
-
