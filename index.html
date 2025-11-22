@@ -1361,6 +1361,12 @@
       const langToggleMobile = document.getElementById("mobile-lang-toggle");
       const langAbbrSpan = document.getElementById("lang-abbr");
 
+      // NOVAS REFERÊNCIAS AO MODAL DE BOAS VINDAS
+      const welcomeModal = document.getElementById("welcome-modal");
+      const closeWelcome = document.getElementById("close-welcome");
+      const startBtn = document.getElementById("start-telazona");
+      const dontShow = document.getElementById("dont-show-welcome");
+
       let lives = JSON.parse(sessionStorage.getItem("telazona-lives") || "[]");
       let deleteConfirmations = {};
       let currentSelected = -1;
@@ -1493,95 +1499,6 @@
 
       function getText(key) {
         return i18n[currentLang][key] || i18n["pt-BR"][key] || key;
-      }
-
-      function updateUI() {
-        // 1. Atualizar atributos data-i18n
-        document.querySelectorAll("[data-i18n]").forEach((el) => {
-          const key = el.getAttribute("data-i18n");
-          el.textContent = getText(key);
-        });
-
-        // 2. Atualizar atributos data-i18n-text (para botões que tem ícone + texto)
-        document.querySelectorAll("[data-i18n-text]").forEach((el) => {
-          const key = el.getAttribute("data-i18n-text");
-          const textNode = el.querySelector("i") ? el.lastChild : el;
-          if (textNode) {
-            const text = getText(key);
-            if (textNode.nodeType === 3) {
-              // Se for um nó de texto
-              textNode.nodeValue = text;
-            } else {
-              textNode.textContent = text;
-            }
-          }
-        });
-
-        // 3. Atualizar placeholders
-        document.querySelectorAll("[data-i18n-placeholder]").forEach((el) => {
-          const key = el.getAttribute("data-i18n-placeholder");
-          el.setAttribute("placeholder", getText(key));
-        });
-
-        // 4. Elementos específicos
-        document.title = getText("appTitle");
-        document
-          .querySelector('meta[name="description"]')
-          .setAttribute("content", getText("appDescription"));
-        document
-          .querySelector('meta[property="og:description"]')
-          .setAttribute("content", getText("appDescription"));
-
-        // 5. Botões de interface (que mudam de texto)
-        const chatIcon = '<i class="ph ph-chat-text" aria-hidden="true"></i>';
-        const eyeIcon = header.classList.contains("hidden")
-          ? '<i class="ph ph-eye" aria-hidden="true"></i>'
-          : '<i class="ph ph-eye-slash" aria-hidden="true"></i>';
-
-        toggleChatBtn.innerHTML = `${chatIcon} <span data-i18n="${
-          chatVisible ? "toggleChatBtnHide" : "toggleChatBtnShow"
-        }">${getText(
-          chatVisible ? "toggleChatBtnHide" : "toggleChatBtnShow"
-        )}</span>`;
-        mobileToggleChatBtn.innerHTML = `${chatIcon} <span data-i18n="${
-          chatVisible ? "toggleChatBtnHide" : "toggleChatBtnShow"
-        }">${getText(
-          chatVisible ? "toggleChatBtnHide" : "toggleChatBtnShow"
-        )}</span>`;
-
-        if (header.classList.contains("hidden")) {
-          // Atualiza o botão fixo com texto de Mostrar Interface e Chat
-          const chatIconFixed = chatVisible ? "x" : "chat-text";
-          const chatTextFixed = chatVisible
-            ? getText("toggleChatBtnHide")
-            : getText("toggleChatBtnShow");
-
-          toggleBtn.innerHTML = `
-              <div class="controls-flex">
-                <button class="show-ui-btn" onclick="showHeaderAndFooter(); event.stopPropagation();">
-                  <i class="ph ph-eye" aria-hidden="true"></i> ${getText(
-                    "showUI"
-                  )}
-                </button>
-                <button class="chat-toggle-btn fixed-chat-toggle" onclick="handleFixedChatToggle(event);">
-                  <i class="ph ph-${chatIconFixed}" aria-hidden="true"></i> ${chatTextFixed}
-                </button>
-              </div>
-            `;
-        } else {
-          toggleBtn.innerHTML = `${eyeIcon} ${getText("hideUI")}`;
-        }
-
-        // 6. Seletor de Idioma
-        langAbbrSpan.textContent = getText("langAbbr");
-        langToggleMobile.querySelector("span").textContent = getText("lang");
-
-        // 7. Placeholder de Chat
-        if (!chatVisible) {
-          chatPlaceholder.innerHTML = getText("chatHidden");
-        } else {
-          updateChat(); // Atualiza o chat, que usa getText
-        }
       }
 
       function setLanguage(lang) {
@@ -1913,7 +1830,15 @@
         hamburger.setAttribute("aria-expanded", !isActive);
         mobileMenu.classList.toggle("active");
         overlay.classList.toggle("active");
-        document.body.style.overflow = isActive ? "" : "hidden";
+
+        // CORREÇÃO: Garante o bloqueio de rolagem ao abrir. A função closeMobileMenu fará o trabalho de liberar a rolagem condicionalmente.
+        if (!isActive) {
+          // Abrindo o menu
+          document.body.style.overflow = "hidden";
+        } else {
+          // Fechando o menu
+          closeMobileMenu();
+        }
       }
 
       function closeMobileMenu() {
@@ -1921,10 +1846,11 @@
         hamburger.setAttribute("aria-expanded", "false");
         mobileMenu.classList.remove("active");
 
-        if (
-          !addModal.classList.contains("active") &&
-          welcomeModal.style.display !== "flex"
-        ) {
+        // CORREÇÃO: A overlay e o body.overflow só são desativados se NENHUM outro modal estiver ativo.
+        const addModalActive = addModal.classList.contains("active");
+        const welcomeModalVisible = welcomeModal.style.display === "flex";
+
+        if (!addModalActive && !welcomeModalVisible) {
           overlay.classList.remove("active");
           document.body.style.overflow = "";
         }
@@ -2148,6 +2074,7 @@
         addModal.classList.add("active");
         addModal.setAttribute("aria-hidden", "false");
         overlay.classList.add("active");
+        document.body.style.overflow = "hidden"; // CORREÇÃO #1: Adiciona o bloqueio de rolagem ao abrir.
         liveUrlInput.focus();
         closeMobileMenu();
       }
@@ -2156,12 +2083,13 @@
         addModal.classList.remove("active");
         addModal.setAttribute("aria-hidden", "true");
 
-        if (
-          !mobileMenu.classList.contains("active") &&
-          welcomeModal.style.display !== "flex"
-        ) {
+        // CORREÇÃO: A overlay e o body.overflow só são desativados se NENHUM outro modal estiver ativo.
+        const mobileMenuActive = mobileMenu.classList.contains("active");
+        const welcomeModalVisible = welcomeModal.style.display === "flex";
+
+        if (!mobileMenuActive && !welcomeModalVisible) {
           overlay.classList.remove("active");
-          document.body.style.overflow = "";
+          document.body.style.overflow = ""; // CORREÇÃO #2: Libera a rolagem condicionalmente.
         }
         liveUrlInput.value = "";
       }
@@ -2226,7 +2154,10 @@
       liveUrlInput.addEventListener("keypress", (e) => {
         if (e.key === "Enter") addLive();
       });
+
+      // REMOVIDA LÓGICA DE OVERFLOW INCORRETA. closeMobileMenu fará a limpeza.
       hamburger.addEventListener("click", toggleMobileMenu);
+
       closeMenuBtn.addEventListener("click", closeMobileMenu);
 
       toggleBtn.addEventListener("click", (e) => {
@@ -2271,28 +2202,28 @@
       renderLives();
       showHeaderAndFooter();
 
-      const welcomeModal = document.getElementById("welcome-modal");
-      const closeWelcome = document.getElementById("close-welcome");
-      const startBtn = document.getElementById("start-telazona");
-      const dontShow = document.getElementById("dont-show-welcome");
+      // LÓGICA DO WELCOME MODAL / TUTORIAL
 
       function showWelcome() {
         welcomeModal.style.display = "flex";
         overlay.classList.add("active");
         document.body.style.overflow = "hidden";
         welcomeModal.scrollTop = 0;
-        updateUI(); // Atualiza textos do modal de boas-vindas
+        updateUI();
+        closeMobileMenu(); // Garante que o menu mobile feche ao abrir o tutorial (apenas se estiver aberto)
+        closeAddModal(); // Garante que o modal de adicionar feche ao abrir o tutorial
       }
 
       function hideWelcome() {
         welcomeModal.style.display = "none";
 
-        if (
-          !addModal.classList.contains("active") &&
-          !mobileMenu.classList.contains("active")
-        ) {
+        // CORREÇÃO: A overlay e o body.overflow só são desativados se NENHUM outro modal estiver ativo.
+        const addModalActive = addModal.classList.contains("active");
+        const mobileMenuActive = mobileMenu.classList.contains("active");
+
+        if (!addModalActive && !mobileMenuActive) {
           overlay.classList.remove("active");
-          document.body.style.overflow = "";
+          document.body.style.overflow = ""; // CORREÇÃO #3: Libera a rolagem condicionalmente.
         }
       }
 
@@ -2305,6 +2236,9 @@
           localStorage.setItem("telazona-welcome-seen", "true");
         hideWelcome();
       };
+
+      // O evento click no overlay chamará handleOverlayClick, que por sua vez chama hideWelcome.
+      // Não precisa de um listener direto aqui.
 
       document.getElementById("help-btn")?.addEventListener("click", () => {
         localStorage.removeItem("telazona-welcome-seen");
