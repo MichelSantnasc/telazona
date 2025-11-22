@@ -800,28 +800,23 @@
   </head>
   <body>
     <header class="header-custom" id="main-header">
-      <div class="logo silkscreen-regular" data-text="siteTitle">TELAZONA</div>
+      <div class="logo silkscreen-regular">TELAZONA</div>
       <button id="toggle-header-footer" class="toggle-btn" aria-label="Ocultar/Mostrar Interface">
-        <i class="ph ph-eye-slash" aria-hidden="true"></i> <span data-text="hideUI">Ocultar Interface</span>
+        <i class="ph ph-eye-slash" aria-hidden="true"></i> Ocultar Interface
       </button>
       <div class="header-right">
         <button id="add-live-btn" class="btn-header desktop-only" aria-label="Adicionar Nova Live">
-          <i class="ph ph-plus" aria-hidden="true"></i> <span data-text="addLive">Adicionar Live</span>
+          <i class="ph ph-plus" aria-hidden="true"></i> Adicionar Live
         </button>
         <button id="toggle-chat" class="btn-header desktop-only" aria-label="Mostrar/Ocultar Chat">
-          <i class="ph ph-chat-text" aria-hidden="true"></i> <span data-text="toggleChatShow">Mostrar Chat</span>
+          <i class="ph ph-chat-text" aria-hidden="true"></i> Mostrar Chat
         </button>
         <button id="help-btn" class="btn-header desktop-only" title="Reabrir tutorial">
-          <i class="ph ph-question"></i> <span data-text="help">Ajuda</span>
+          <i class="ph ph-question"></i> Ajuda
         </button>
         <a href="https://picpay.me/seuusuario" target="_blank" rel="noopener" class="btn-header desktop-only" title="Doar pro TELAZONA" style="text-decoration:none;">
-          <i class="ph ph-heart" style="color:#ff6b6b;"></i> <span data-text="donate">Doar</span>
+          <i class="ph ph-heart" style="color:#ff6b6b;"></i> Doar
         </a>
-        
-        <button id="toggle-lang" class="btn-header desktop-only" onclick="toggleLanguage()" title="Switch Language">
-          <i class="ph ph-globe"></i> <span data-text="currentLangName">English</span>
-        </button>
-
         <div class="hamburger" id="hamburger" role="button" aria-label="Abrir menu mobile" aria-expanded="false">
           <span></span><span></span><span></span>
         </div>
@@ -836,29 +831,25 @@
       </button>
 
       <button id="mobile-add-live-btn" class="mobile-btn">
-        <i class="ph ph-plus"></i> <span data-text="addLive">Adicionar Live</span>
+        <i class="ph ph-plus"></i> Adicionar Live
       </button>
 
       <button id="mobile-toggle-chat" class="mobile-btn">
-        <i class="ph ph-chat-text"></i> <span data-text="toggleChatShow">Mostrar/Ocultar Chat</span>
+        <i class="ph ph-chat-text"></i> Mostrar/Ocultar Chat
       </button>
 
       <button id="mobile-help-btn" class="mobile-btn">
-        <i class="ph ph-question"></i> <span data-text="helpTutorial">Ajuda / Tutorial</span>
+        <i class="ph ph-question"></i> Ajuda / Tutorial
       </button>
 
       <a href="https://picpay.me/seuusuario" target="_blank" rel="noopener" class="mobile-btn" 
         style="border:2px solid var(--accent); color:var(--text-primary);">
-        <i class="ph ph-heart" style="color:#ff4444;"></i> <span data-text="donateMobile">Doar pro TELAZONA</span>
+        <i class="ph ph-heart" style="color:#ff4444;"></i> Doar pro TELAZONA
       </a>
-
-      <button id="mobile-toggle-lang" class="mobile-btn" onclick="toggleLanguageMobile()">
-        <i class="ph ph-globe"></i> <span data-text="currentLangNameMobile">Mudar Idioma</span>
-      </button>
     </div>
 
     <div id="add-modal" class="add-modal" role="dialog" aria-labelledby="modal-title" aria-hidden="true">
-      <h2 id="modal-title" data-text="modalTitle">Adicionar Live (YouTube, Twitch ou Kick)</h2>
+      <h2 id="modal-title">Adicionar Live (YouTube, Twitch ou Kick)</h2>
       <div class="platforms">
         <div class="platform-item">
           <i class="ph ph-youtube-logo" aria-hidden="true"></i>
@@ -876,7 +867,6 @@
       <input
         type="url"
         id="live-url"
-        data-text="pasteUrlPlaceholder"
         placeholder="Cole a URL da live aqui... (ex: youtube.com/watch?v=ID, youtube.com/live/ID, twitch.tv/canal, kick.com/canal)"
         pattern="https?://.*"
         required
@@ -884,41 +874,41 @@
       />
       <div id="loading-section" class="loading">
         <div class="loading-spinner"></div>
-        <p data-text="validatingLive">Validando live...</p>
+        <p>Validando live...</p>
       </div>
       <div class="btn-group active">
         <button id="cancel-add" class="btn-modal btn-secondary-modal" aria-label="Cancelar adição">
-          <i class="ph ph-x" aria-hidden="true"></i> <span data-text="cancel">Cancelar</span>
+          <i class="ph ph-x" aria-hidden="true"></i> Cancelar
         </button>
         <button id="submit-add" class="btn-modal btn-primary-modal" aria-label="Adicionar Live">
-          <i class="ph ph-check" aria-hidden="true"></i> <span data-text="add">Adicionar</span>
+          <i class="ph ph-check" aria-hidden="true"></i> Adicionar
         </button>
       </div>
     </div>
 
     <main id="main">
       <section id="hero-section" class="hero-section">
-        <h1 class="hero-title silkscreen-regular" data-text="siteTitle">TELAZONA</h1>
-        <p class="hero-subtitle" data-text="siteSubtitle">
+        <h1 class="hero-title silkscreen-regular">TELAZONA</h1>
+        <p class="hero-subtitle">
           Assista múltiplas lives simultaneamente em uma única tela. Suporta
           YouTube, Twitch e Kick.
         </p>
         <button id="hero-add-btn" class="hero-btn" aria-label="Adicionar Primeira Live">
-          <i class="ph ph-play-circle" aria-hidden="true"></i> <span data-text="addFirstLive">Adicionar Primeira Live</span>
+          <i class="ph ph-play-circle" aria-hidden="true"></i> Adicionar Primeira Live
         </button>
       </section>
       <div id="main-content">
         <section id="grid-section" class="grid-container" aria-label="Grade de Lives"></section>
         <section id="chat-section" class="chat-container" aria-label="Seção de Chat">
           <div id="chat-selector"></div>
-          <div id="chat-placeholder" class="chat-placeholder" data-text="selectLive">Selecione uma live para ver o chat.</div>
+          <div id="chat-placeholder" class="chat-placeholder">Selecione uma live para ver o chat.</div>
         </section>
       </div>
     </main>
 
     <footer id="main-footer">
       <div class="footer-content">
-        <span id="footer-content-text" data-text="copyright">Copyright © 2025 TELAZONA feito por</span> <a href="https://www.instagram.com/michelsantnasc/" class="footer-link" target="_blank" rel="noopener noreferrer">Santnasc</a>
+        Copyright © 2025 TELAZONA feito por <a href="https://www.instagram.com/michelsantnasc/" class="footer-link" target="_blank" rel="noopener noreferrer">Santnasc</a>
       </div>
     </footer>
 
@@ -927,10 +917,10 @@
         <i class="ph ph-x"></i>
       </button>
 
-      <h2 style="font-size:2.1rem; text-align:center; color:var(--accent); margin:0 0 16px;" data-text="welcomeTitle">
+      <h2 style="font-size:2.1rem; text-align:center; color:var(--accent); margin:0 0 16px;">
         Bem-vindo ao TELAZONA!
       </h2>
-      <p style="text-align:center; color:#ccc; font-size:1.05rem; margin-bottom:32px;" data-text="welcomeSubtitle">
+      <p style="text-align:center; color:#ccc; font-size:1.05rem; margin-bottom:32px;">
         Assista várias lives ao mesmo tempo
       </p>
 
@@ -939,26 +929,26 @@
         <div style="display:flex; gap:20px; align-items:flex-start;">
           <div style="background:var(--gradient); color:white; width:48px; height:48px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-weight:bold; font-size:1.2rem;">1</div>
           <div style="width:100%;">
-            <strong style="font-size:1.15rem;" data-text="step1">Copie o link da live</strong>
+            <strong style="font-size:1.15rem;">Copie o link da live</strong>
 
             <div style="margin-top:24px; display:flex; flex-direction:column; gap:28px; align-items:center;">
 
               <div style="text-align:center; width:100%;">
                 <img src="https://i.ibb.co/1t0nHJSD/msedge-Lw0-RNd9h-H0.png" alt="YouTube"
                     style="width:100%; max-width:560px; border-radius:24px; box-shadow:0 20px 70px rgba(0,0,0,0.95); border:6px solid var(--accent);">
-                <div style="margin-top:16px; font-weight:800; font-size:1.3rem; color:var(--accent); text-shadow:0 0 20px rgba(0,208,132,0.8);" data-text="youtubeShare">YouTube → Compartilhar</div>
+                <div style="margin-top:16px; font-weight:800; font-size:1.3rem; color:var(--accent); text-shadow:0 0 20px rgba(0,208,132,0.8);">YouTube → Compartilhar</div>
               </div>
 
               <div style="text-align:center; width:100%;">
                 <img src="https://i.ibb.co/BHG6p2mR/msedge-Wdm4-XIkx-J7.png" alt="Twitch"
                     style="width:100%; max-width:560px; border-radius:24px; box-shadow:0 20px 70px rgba(0,0,0,0.95); border:6px solid var(--accent);">
-                <div style="margin-top:16px; font-weight:800; font-size:1.3rem; color:var(--accent); text-shadow:0 0 20px rgba(0,208,132,0.8);" data-text="twitchCopy">Twitch → Copie o link</div>
+                <div style="margin-top:16px; font-weight:800; font-size:1.3rem; color:var(--accent); text-shadow:0 0 20px rgba(0,208,132,0.8);">Twitch → Copie o link</div>
               </div>
 
               <div style="text-align:center; width:100%;">
                 <img src="https://i.ibb.co/xqFFfcnp/msedge-X5-Fm-Trj6-To.png" alt="Kick"
                     style="width:100%; max-width:560px; border-radius:24px; box-shadow:0 20px 70px rgba(0,0,0,0.95); border:6px solid var(--accent);">
-                <div style="margin-top:16px; font-weight:800; font-size:1.3rem; color:var(--accent); text-shadow:0 0 20px rgba(0,208,132,0.8);" data-text="kickCopy">Kick → Copie o link</div>
+                <div style="margin-top:16px; font-weight:800; font-size:1.3rem; color:var(--accent); text-shadow:0 0 20px rgba(0,208,132,0.8);">Kick → Copie o link</div>
               </div>
 
             </div>
@@ -968,7 +958,7 @@
         <div style="display:flex; gap:20px; align-items:flex-start;">
           <div style="background:var(--gradient); color:white; width:48px; height:48px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-weight:bold; font-size:1.2rem;">2</div>
           <div>
-            <strong style="font-size:1.15rem;" data-text="step2">Cole aqui no TELAZONA</strong>
+            <strong style="font-size:1.15rem;">Cole aqui no TELAZONA</strong>
             <div style="margin:24px auto 0; text-align:center;">
               <img src="https://i.ibb.co/VGp2Wgd/msedge-wiwrl-YSKy2.png" alt="Colar link" 
                   style="width:100%; max-width:460px; border-radius:18px; box-shadow:0 12px 50px rgba(0,0,0,0.8); border:3px solid var(--accent);">
@@ -981,8 +971,8 @@
             <i class="ph ph-eye-slash" style="font-size:24px;"></i>
           </div>
           <div>
-            <strong style="font-size:1.15rem;" data-text="step3Title">Modo tela cheia</strong><br>
-            <small style="color:#aaa;" data-text="step3Desc">Botão no canto superior esquerdo para ocultar interface (cabeçalho e rodapé).</small>
+            <strong style="font-size:1.15rem;">Modo tela cheia</strong><br>
+            <small style="color:#aaa;">Botão no canto superior esquerdo para ocultar interface (cabeçalho e rodapé).</small>
           </div>
         </div>
       </div>
@@ -990,21 +980,18 @@
       <div style="margin-top:40px; padding-top:24px; border-top:2px solid var(--accent); text-align:center;">
         <label style="display:inline-flex; align-items:center; gap:12px; color:#ddd; cursor:pointer; font-size:1rem; font-weight:500;">
           <input type="checkbox" id="dont-show-welcome" style="width:20px; height:20px; accent-color:var(--accent);">
-          <span data-text="dontShowAgain">Não mostrar novamente</span>
+          Não mostrar novamente
         </label>
 
         <div style="margin-top:24px;">
-          <button id="start-telazona" style="background:var(--gradient); color:white; border:none; padding:16px 60px; border-radius:14px; font-size:1.3rem; cursor:pointer; box-shadow:0 0 30px rgba(0,208,132,0.7); font-weight:600;" data-text="letsGo">
+          <button id="start-telazona" style="background:var(--gradient); color:white; border:none; padding:16px 60px; border-radius:14px; font-size:1.3rem; cursor:pointer; box-shadow:0 0 30px rgba(0,208,132,0.7); font-weight:600;">
             Vamos lá!
           </button>
         </div>
       </div>
     </div>
     <script>
-      // Variável global para idioma, persistida no localStorage
-      let currentLang = localStorage.getItem('telazona-lang') || 'pt';
-
-      const domain = window.location.hostname || 'localhost';
+    const domain = window.location.hostname || 'localhost';
       const header = document.getElementById('main-header');
       const footer = document.getElementById('main-footer');
       const main = document.getElementById('main');
@@ -1029,11 +1016,7 @@
       const overlay = document.getElementById('overlay');
       const addModal = document.getElementById('add-modal');
       const loadingSection = document.getElementById('loading-section');
-      const btnGroup = document.querySelector('.btn-group');
-      const welcomeModal = document.getElementById('welcome-modal');
-      const closeWelcome = document.getElementById('close-welcome');
-      const startBtn = document.getElementById('start-telazona');
-      const dontShow = document.getElementById('dont-show-welcome');
+      const btnGroup = document.querySelector(".btn-group");
 
       let lives = JSON.parse(sessionStorage.getItem('telazona-lives') || '[]');
       let deleteConfirmations = {};
@@ -1051,173 +1034,25 @@
         });
       }, { threshold: 0.1 });
 
-      // Dicionário de Textos (Expandido com Português e Inglês)
       function getText(key) {
         const texts = {
-          'pt': {
-            'siteTitle': 'TELAZONA',
-            'siteTitleFull': 'TELAZONA - Assista Múltiplas Lives Simultaneamente',
-            'siteSubtitle': 'Assista múltiplas lives simultaneamente em uma única tela. Suporta YouTube, Twitch e Kick.',
-            'addFirstLive': 'Adicionar Primeira Live',
-            'addLive': 'Adicionar Live',
-            'toggleChatShow': 'Mostrar Chat',
-            'toggleChatHide': 'Ocultar Chat',
-            'help': 'Ajuda',
-            'helpTutorial': 'Ajuda / Tutorial',
-            'donate': 'Doar',
-            'donateMobile': 'Doar pro TELAZONA ❤️',
-            'hideUI': 'Ocultar Interface',
-            'showUI': 'Mostrar Interface',
-            'selectLive': 'Selecione uma live para ver o chat.',
-            'noKickChat': 'Chat não disponível para Kick. Acesse o site oficial para interagir.',
-            'noChat': 'Chat não disponível para esta live.',
-            'chatPlaceholder': 'Chat oculto. Clique em "Mostrar Chat" para ativar.',
-            'delete': 'Deletar',
-            'confirmDelete': 'Confirmar Deleção',
-            'invalidUrl': 'URL inválida. Suporte apenas para YouTube, Twitch e Kick.',
-            'saveError': 'Erro ao salvar. Tente novamente.',
-            'modalTitle': 'Adicionar Live (YouTube, Twitch ou Kick)',
-            'pasteUrl': 'Cole a URL da live aqui...',
-            'pasteUrlPlaceholder': 'Cole a URL da live aqui... (ex: youtube.com/watch?v=ID, youtube.com/live/ID, twitch.tv/canal, kick.com/canal)',
-            'cancel': 'Cancelar',
-            'add': 'Adicionar',
-            'validatingLive': 'Validando live...',
-            'copyright': 'Copyright © 2025 TELAZONA feito por',
-            'welcomeTitle': 'Bem-vindo ao TELAZONA!',
-            'welcomeSubtitle': 'Assista várias lives ao mesmo tempo',
-            'step1': 'Copie o link da live',
-            'step2': 'Cole aqui no TELAZONA',
-            'step3Title': 'Modo tela cheia',
-            'step3Desc': 'Botão no canto superior esquerdo para ocultar interface (cabeçalho e rodapé).',
-            'dontShowAgain': 'Não mostrar novamente',
-            'letsGo': 'Vamos lá!',
-            'youtubeShare': 'YouTube → Compartilhar',
-            'twitchCopy': 'Twitch → Copie o link',
-            'kickCopy': 'Kick → Copie o link',
-            'currentLangName': 'English',
-            'currentLangNameMobile': 'Mudar para Inglês',
-            'viewOnSite': 'Ver no Site Oficial'
-          },
-          'en': {
-            'siteTitle': 'TELAZONA',
-            'siteTitleFull': 'TELAZONA - Watch Multiple Streams Simultaneously',
-            'siteSubtitle': 'Watch multiple live streams simultaneously on a single screen. Supports YouTube, Twitch, and Kick.',
-            'addFirstLive': 'Add First Live Stream',
-            'addLive': 'Add Live',
-            'toggleChatShow': 'Show Chat',
-            'toggleChatHide': 'Hide Chat',
-            'help': 'Help',
-            'helpTutorial': 'Help / Tutorial',
-            'donate': 'Donate',
-            'donateMobile': 'Donate to TELAZONA ❤️',
-            'hideUI': 'Hide Interface',
-            'showUI': 'Show Interface',
-            'selectLive': 'Select a live stream to view the chat.',
-            'noKickChat': 'Chat not available for Kick. Access the official site to interact.',
-            'noChat': 'Chat not available for this stream.',
-            'chatPlaceholder': 'Chat hidden. Click "Show Chat" to activate.',
-            'delete': 'Delete',
-            'confirmDelete': 'Confirm Delete',
-            'invalidUrl': 'Invalid URL. Supports YouTube, Twitch, and Kick only.',
-            'saveError': 'Error saving. Try again.',
-            'modalTitle': 'Add Live Stream (YouTube, Twitch, or Kick)',
-            'pasteUrl': 'Paste the live stream URL here...',
-            'pasteUrlPlaceholder': 'Paste the live stream URL here... (e.g., youtube.com/watch?v=ID, youtube.com/live/ID, twitch.tv/channel, kick.com/channel)',
-            'cancel': 'Cancel',
-            'add': 'Add',
-            'validatingLive': 'Validating live...',
-            'copyright': 'Copyright © 2025 TELAZONA made by',
-            'welcomeTitle': 'Welcome to TELAZONA!',
-            'welcomeSubtitle': 'Watch multiple live streams simultaneously',
-            'step1': 'Copy the live stream link',
-            'step2': 'Paste it here on TELAZONA',
-            'step3Title': 'Full-screen mode',
-            'step3Desc': 'Button in the top left corner to hide interface (header and footer).',
-            'dontShowAgain': 'Do not show again',
-            'letsGo': "Let's Go!",
-            'youtubeShare': 'YouTube → Share',
-            'twitchCopy': 'Twitch → Copy link',
-            'kickCopy': 'Kick → Copy link',
-            'currentLangName': 'Português',
-            'currentLangNameMobile': 'Switch to Portuguese',
-            'viewOnSite': 'View on Official Site'
-          }
+          'selectLive': 'Selecione uma live para ver o chat.',
+          'noKickChat': 'Chat não disponível para Kick. Acesse o site oficial para interagir.',
+          'noChat': 'Chat não disponível para esta live.',
+          'chatPlaceholder': 'Chat oculto. Clique em "Mostrar Chat" para ativar.',
+          'hideChat': 'Ocultar Chat',
+          'showChat': 'Mostrar Chat',
+          'hideUI': 'Ocultar Interface',
+          'showUI': 'Mostrar Interface',
+          'delete': 'Deletar',
+          'confirmDelete': 'Confirmar Deleção',
+          'invalidUrl': 'URL inválida. Suporte apenas para YouTube, Twitch e Kick.',
+          'saveError': 'Erro ao salvar. Tente novamente.'
         };
-        return texts[currentLang][key] || texts['pt'][key] || key;
-      }
-      
-      // FUNÇÃO: Troca o idioma e salva
-      function toggleLanguage() {
-          currentLang = currentLang === 'pt' ? 'en' : 'pt';
-          localStorage.setItem('telazona-lang', currentLang);
-          updateTexts();
+        return texts[key] || key;
       }
 
-      // Função para fechar menu mobile e trocar idioma
-      function toggleLanguageMobile() {
-          toggleLanguage();
-          closeMobileMenu();
-      }
-
-      function updateTexts() {
-          const langAttr = currentLang === 'pt' ? 'pt-BR' : 'en';
-
-          // 1. Atualizar HTML e metadados globais
-          document.querySelector('html').lang = langAttr;
-          document.querySelector('title').textContent = getText('siteTitleFull');
-          document.querySelector('meta[name="description"]').content = getText('siteSubtitle');
-          document.querySelector('meta[property="og:description"]').content = getText('siteSubtitle');
-          
-          // Placeholder do input
-          document.getElementById('live-url').placeholder = getText('pasteUrlPlaceholder');
-          
-          // 2. Traduzir elementos com data-text
-          document.querySelectorAll('[data-text]').forEach(el => {
-              const key = el.getAttribute('data-text');
-              if (key) {
-                  if (el.hasAttribute('placeholder')) {
-                      return; 
-                  } else if (key === 'copyright') {
-                      el.innerHTML = getText(key) + ' '; 
-                  } else {
-                      el.textContent = getText(key);
-                  }
-              }
-          });
-
-          // 3. Re-renderizar texto dinâmico dos botões de controle
-          const chatIcon = '<i class="ph ph-chat-text" aria-hidden="true"></i>';
-          toggleChatBtn.innerHTML = chatVisible ? `${chatIcon} ${getText('toggleChatHide')}` : `${chatIcon} ${getText('toggleChatShow')}`;
-          
-          mobileToggleChatBtn.querySelector('span').textContent = chatVisible ? getText('toggleChatHide') : getText('toggleChatShow');
-          
-          const uiTextKey = header.classList.contains("hidden") ? 'showUI' : 'hideUI';
-          if (toggleBtn.querySelector('span')) { 
-              toggleBtn.querySelector('span').textContent = getText(uiTextKey);
-          }
-
-          // Se a interface estiver oculta, precisa recriar o botão fixo com o texto correto
-          if (toggleBtn.classList.contains('fixed')) {
-               const chatIconClass = chatVisible ? 'x' : 'chat-text';
-               const chatText = chatVisible ? getText('toggleChatHide') : getText('toggleChatShow');
-               toggleBtn.innerHTML = `
-                 <div class="controls-flex">
-                   <button class="show-ui-btn" onclick="showHeaderAndFooter(); event.stopPropagation();">
-                     <i class="ph ph-eye" aria-hidden="true"></i> ${getText('showUI')}
-                   </button>
-                   <button class="chat-toggle-btn fixed-chat-toggle" onclick="handleFixedChatToggle(event);">
-                     <i class="ph ph-${chatIconClass}" aria-hidden="true"></i> ${chatText}
-                   </button>
-                 </div>
-               `;
-          }
-
-          if (!chatVisible) {
-              chatPlaceholder.innerHTML = getText('chatPlaceholder');
-          } else if (currentSelected >= 0) {
-              updateChat();
-          }
-      }
+      function updateTexts() {}
 
       function debounce(func, wait) {
         let timeout;
@@ -1238,7 +1073,7 @@
           const btn = document.createElement("button");
           btn.className = `chat-btn ${i === currentSelected ? "active" : ""}`;
           btn.dataset.index = i.toString();
-          btn.textContent = lives[i].channel || `${getText('live')} ${i + 1}`;
+          btn.textContent = lives[i].channel || `Live ${i + 1}`;
           btn.addEventListener("click", () => {
             document
               .querySelectorAll(".chat-btn")
@@ -1315,15 +1150,15 @@
           populateChatSelect(visibleIndices);
           chatSelector.style.display = "flex";
           updateChat();
-          toggleChatBtn.innerHTML = `${icon} <span data-text="toggleChatHide">${getText('toggleChatHide')}</span>`;
-          mobileToggleChatBtn.innerHTML = `<i class="ph ph-chat-text"></i> <span data-text="toggleChatHide">${getText('toggleChatHide')}</span>`;
+          toggleChatBtn.innerHTML = `${icon} ${getText('hideChat')}`;
+          mobileToggleChatBtn.innerHTML = `${icon} ${getText('hideChat')}`;
           updateMainContentLayout(isMobile);
         } else {
           chatPlaceholder.innerHTML = getText('chatPlaceholder');
           chatSection.style.display = "none";
           mainContent.style.flexDirection = "row";
-          toggleChatBtn.innerHTML = `${icon} <span data-text="toggleChatShow">${getText('toggleChatShow')}</span>`;
-          mobileToggleChatBtn.innerHTML = `<i class="ph ph-chat-text"></i> <span data-text="toggleChatShow">${getText('toggleChatShow')}</span>`;
+          toggleChatBtn.innerHTML = `${icon} ${getText('showChat')}`;
+          mobileToggleChatBtn.innerHTML = `${icon} ${getText('showChat')}`;
           updateMainContentLayout(isMobile);
         }
         updateLayoutPositions();
@@ -1354,13 +1189,15 @@
         header.classList.remove("hidden");
         footer.classList.remove("hidden");
         
-        // CORREÇÃO: Insere o botão de volta no header antes do .header-right,
-        // garantindo que ele fique na posição correta, tanto no desktop quanto no mobile.
-        const headerRight = document.querySelector('.header-right');
-        header.insertBefore(toggleBtn, headerRight);
-        
+        if (window.innerWidth > 768) {
+          const headerRight = document.querySelector('.header-right');
+          headerRight.parentNode.insertBefore(toggleBtn, headerRight);
+        } else {
+          
+          document.body.appendChild(toggleBtn);
+        }
         updateLayoutPositions();
-        toggleBtn.innerHTML = `<i class="ph ph-eye-slash" aria-hidden="true"></i> <span data-text="hideUI">${getText('hideUI')}</span>`;
+        toggleBtn.innerHTML = `<i class="ph ph-eye-slash" aria-hidden="true"></i> ${getText('hideUI')}`;
         toggleBtn.classList.remove("fixed");
         toggleBtn.style.position = "absolute";
         toggleBtn.style.top = "auto";
@@ -1375,7 +1212,7 @@
         document.body.appendChild(toggleBtn); 
         updateLayoutPositions();
         const chatIconClass = chatVisible ? 'x' : 'chat-text';
-        const chatText = chatVisible ? getText('toggleChatHide') : getText('toggleChatShow');
+        const chatText = chatVisible ? getText('hideChat') : getText('showChat');
         toggleBtn.innerHTML = `
           <div class="controls-flex">
             <button class="show-ui-btn" onclick="showHeaderAndFooter(); event.stopPropagation();">
@@ -1399,7 +1236,7 @@
         const fixedChatToggle = e.target.closest('.fixed-chat-toggle') || e.target;
         toggleChat();
         const chatIconClass = chatVisible ? 'x' : 'chat-text';
-        const chatText = chatVisible ? getText('toggleChatHide') : getText('toggleChatShow');
+        const chatText = chatVisible ? getText('hideChat') : getText('showChat');
         fixedChatToggle.innerHTML = `<i class="ph ph-${chatIconClass}" aria-hidden="true"></i> ${chatText}`;
       }
 
@@ -1484,7 +1321,7 @@
           return `https://player.twitch.tv/?channel=${twitchChannel}&parent=${domain}`;
         }
         const kickChannel = extractKickChannel(url);
-        if (kickChannel) return `https://player.kick.com/${kickChannel}`;
+        if (kickChannel) return `https://player.kick.com/${kickChannel}?parent=${domain}`; // ⚠️ CORREÇÃO KICK: Adicionado o parent
         if (
           url.includes("youtube.com/embed") ||
           url.includes("player.twitch.tv") ||
@@ -1521,7 +1358,7 @@
         hamburger.setAttribute("aria-expanded", "false");
         mobileMenu.classList.remove("active");
         
-        if (!addModal.classList.contains('active') && !welcomeModal.style.display === 'flex') {
+        if (!addModal.classList.contains('active')) {
              overlay.classList.remove("active");
              document.body.style.overflow = '';
         }
@@ -1533,8 +1370,6 @@
               closeMobileMenu();
           } else if (addModal.classList.contains('active')) {
               closeAddModal();
-          } else if (welcomeModal.style.display === 'flex') {
-              hideWelcome();
           }
       }
       
@@ -1666,15 +1501,12 @@
           const iframe = document.createElement("iframe");
           iframe.className = "live-frame";
           iframe.dataset.src = appendParams(live.embed, false);
-          // Adiciona picture-in-picture e permite fullscreen
-          iframe.allow = "autoplay; encrypted-media; fullscreen; picture-in-picture"; 
+          // 💡 CORREÇÃO 1: Adicionado o 'allow' completo para fullscreeen e mídia.
+          iframe.allow = "autoplay; encrypted-media; fullscreen; picture-in-picture; gyroscope"; 
           iframe.loading = "lazy";
           iframe.title = `Live: ${live.channel}`;
-          
-          // CORREÇÃO: Restringe o sandbox para evitar que o player do YouTube navegue o top window.
-          // Isso resolve o erro ERR_BLOCKED_BY_RESPONSE.
-          iframe.sandbox = "allow-scripts allow-popups allow-presentation";
-          
+          // 💡 CORREÇÃO 2: Sandbox completo para resolver o erro 'allow-same-origin' e dar permissões essenciais.
+          iframe.sandbox = "allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"; 
           wrapper.appendChild(iframe);
           wrapper.addEventListener("click", (e) => {
             if (
@@ -1690,33 +1522,6 @@
           menuToggle.setAttribute("aria-label", "Opções da Live");
           const contextMenu = document.createElement("div");
           contextMenu.className = "context-menu";
-
-          // NOVO: ITEM "VER NO SITE OFICIAL" (solução segura para o problema de navegação)
-          const viewOnSiteItem = document.createElement("button");
-          viewOnSiteItem.className = "context-item";
-          viewOnSiteItem.innerHTML = `<i class="ph ph-arrow-square-out" aria-hidden="true"></i> ${getText('viewOnSite')}`;
-          viewOnSiteItem.setAttribute("aria-label", "Abrir live no site oficial");
-          viewOnSiteItem.addEventListener("click", (e) => {
-            e.stopPropagation();
-            
-            // Lógica para reconstruir a URL oficial de visualização
-            let urlToOpen = live.embed;
-            if (live.platform === 'youtube') {
-              const videoId = extractYouTubeId(urlToOpen);
-              urlToOpen = `https://www.youtube.com/watch?v=${videoId}`;
-            } else if (live.platform === 'twitch') {
-              const channel = extractTwitchChannel(urlToOpen);
-              urlToOpen = `https://www.twitch.tv/${channel}`;
-            } else if (live.platform === 'kick') {
-              const channel = extractKickChannel(urlToOpen);
-              urlToOpen = `https://www.kick.com/${channel}`;
-            }
-
-            window.open(urlToOpen, '_blank'); // Abre em nova aba de forma segura
-            contextMenu.classList.remove("active");
-          });
-          contextMenu.appendChild(viewOnSiteItem);
-          
           const deleteItem = document.createElement("button");
           deleteItem.className = "context-item";
           deleteItem.innerHTML = `<i class="ph ph-trash" aria-hidden="true"></i> ${getText('delete')}`;
@@ -1779,7 +1584,7 @@
         addModal.classList.remove("active");
         addModal.setAttribute("aria-hidden", "true");
         
-        if (!mobileMenu.classList.contains('active') && welcomeModal.style.display !== 'flex') {
+        if (!mobileMenu.classList.contains('active') && !welcomeModal.classList.contains('active')) {
             overlay.classList.remove("active");
             document.body.style.overflow = '';
         }
@@ -1886,7 +1691,17 @@
         }, 100)
       );
 
-      // Lógica do Modal de Boas-vindas (Welcome Modal)
+      updateTexts();
+      updateLayoutPositions();
+      renderLives();
+      showHeaderAndFooter();
+
+      
+      const welcomeModal = document.getElementById('welcome-modal');
+      const closeWelcome = document.getElementById('close-welcome');
+      const startBtn = document.getElementById('start-telazona');
+      const dontShow = document.getElementById('dont-show-welcome');
+
       function showWelcome() {
         welcomeModal.style.display = 'flex';
         overlay.classList.add('active');
@@ -1916,7 +1731,6 @@
 
       
       document.getElementById('help-btn')?.addEventListener('click', () => {
-        // Redefine o 'welcome-seen' para reabrir o tutorial
         localStorage.removeItem('telazona-welcome-seen');
         showWelcome();
       });
@@ -1924,7 +1738,6 @@
       
       document.getElementById('mobile-help-btn')?.addEventListener('click', () => {
         closeMobileMenu();
-        // Redefine o 'welcome-seen' para reabrir o tutorial
         localStorage.removeItem('telazona-welcome-seen');
         showWelcome();
       });
@@ -1944,13 +1757,7 @@
           img.addEventListener('mouseleave', () => img.style.transform = 'scale(1)');
           img.style.transition = 'transform 0.5s ease';
         });
-      }
-
-      // Chamada inicial para aplicar o idioma salvo
-      updateTexts();
-      updateLayoutPositions();
-      renderLives();
-      showHeaderAndFooter();
+      }  
     </script>
   </body>
 </html>
