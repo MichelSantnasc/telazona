@@ -1305,9 +1305,14 @@
           entries.forEach((entry) => {
             if (entry.isIntersecting) {
               const iframe = entry.target.querySelector(".live-frame");
-              if (iframe && iframe.dataset.src) {
+              // Remove a checagem extra se a src já foi setada, para prevenir recarregamentos desnecessários
+              if (iframe && iframe.dataset.src && !iframe.src) {
                 iframe.src = iframe.dataset.src;
                 delete iframe.dataset.src;
+
+                // Remove o skeleton logo após o iframe começar a carregar
+                const skeleton = entry.target.querySelector(".skeleton");
+                if (skeleton) skeleton.style.display = "none";
               }
             }
           });
@@ -1612,7 +1617,7 @@
         }
         const kickChannel = extractKickChannel(url);
         if (kickChannel)
-          return `https://player.kick.com/${kickChannel}?parent=${domain}`; // ⚠️ CORREÇÃO KICK: Adicionado o parent
+          return `https://player.kick.com/${kickChannel}?parent=${domain}`;
         if (
           url.includes("youtube.com/embed") ||
           url.includes("player.twitch.tv") ||
@@ -1660,6 +1665,8 @@
           closeMobileMenu();
         } else if (addModal.classList.contains("active")) {
           closeAddModal();
+        } else if (welcomeModal.style.display === "flex") {
+          hideWelcome();
         }
       }
 
@@ -1790,14 +1797,14 @@
           const iframe = document.createElement("iframe");
           iframe.className = "live-frame";
           iframe.dataset.src = appendParams(live.embed, false);
-          // 💡 CORREÇÃO 1: Adicionado o 'allow' completo para fullscreeen e mídia.
+          // 💡 Adicionado o 'allow' completo para fullscreeen e mídia.
           iframe.allow =
             "autoplay; encrypted-media; fullscreen; picture-in-picture; gyroscope";
           iframe.loading = "lazy";
           iframe.title = `Live: ${live.channel}`;
-          // 💡 CORREÇÃO 2: Sandbox completo para resolver o erro 'allow-same-origin' e dar permissões essenciais.
+          // 💡 CORREÇÃO FINAL: Sandbox completo incluindo 'allow-presentation' para Chromecast/Cast.
           iframe.sandbox =
-            "allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox";
+            "allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox allow-presentation";
           wrapper.appendChild(iframe);
           wrapper.addEventListener("click", (e) => {
             if (
@@ -1855,9 +1862,6 @@
           wrapper.appendChild(contextMenu);
           grid.appendChild(wrapper);
           iframeObserver.observe(wrapper);
-          setTimeout(() => {
-            skeleton.style.display = "none";
-          }, 500);
         });
         if (chatVisible) {
           const isMobile = window.innerWidth <= 768;
