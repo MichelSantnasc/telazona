@@ -27,7 +27,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&family=Inter:wght@400&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&family=Inter:wght=400&display=swap"
       rel="stylesheet"
     />
     <script type="application/ld+json">
@@ -322,7 +322,7 @@
         border-radius: var(--border-radius);
         box-shadow: var(--shadow);
         z-index: 1001;
-        display: none;
+        display: none; /* Por padrão, está escondido pelo CSS */
         flex-direction: column;
         width: 90%;
         max-width: 400px;
@@ -340,7 +340,7 @@
         }
       }
       .add-modal.active {
-        display: flex;
+        display: flex; /* Ativa a exibição */
       }
       .add-modal h2 {
         text-align: center;
@@ -1056,7 +1056,6 @@
       id="welcome-modal"
       class="add-modal"
       style="
-        display: none;
         max-width: 520px;
         padding: 36px 28px;
         max-height: 95vh;
@@ -1367,6 +1366,17 @@
       const startBtn = document.getElementById("start-telazona");
       const dontShow = document.getElementById("dont-show-welcome");
 
+      // *** CORREÇÃO: Incluída função debounce faltante ***
+      function debounce(func, wait) {
+        let timeout;
+        return function (...args) {
+          const context = this;
+          clearTimeout(timeout);
+          timeout = setTimeout(() => func.apply(context, args), wait);
+        };
+      }
+      // *************************************************
+
       let lives = JSON.parse(sessionStorage.getItem("telazona-lives") || "[]");
       let deleteConfirmations = {};
       let currentSelected = -1;
@@ -1499,6 +1509,27 @@
 
       function getText(key) {
         return i18n[currentLang][key] || i18n["pt-BR"][key] || key;
+      }
+
+      function updateUI() {
+        document.querySelectorAll("[data-i18n]").forEach((el) => {
+          const key = el.getAttribute("data-i18n");
+          el.textContent = getText(key);
+        });
+        document.querySelectorAll("[data-i18n-text]").forEach((el) => {
+          const key = el.getAttribute("data-i18n-text");
+          const originalContent = el.innerHTML;
+          // Esta lógica é para manter os ícones, trocando apenas o texto visível
+          const iconHtml = originalContent.match(/<i[^>]*><\/i>/)?.[0] || "";
+          el.innerHTML = `${iconHtml} ${getText(key)}`;
+        });
+        document.querySelectorAll("[data-i18n-placeholder]").forEach((el) => {
+          const key = el.getAttribute("data-i18n-placeholder");
+          el.placeholder = getText(key);
+        });
+        if (langAbbrSpan) {
+          langAbbrSpan.textContent = getText("langAbbr");
+        }
       }
 
       function setLanguage(lang) {
@@ -1848,7 +1879,7 @@
 
         // CORREÇÃO: A overlay e o body.overflow só são desativados se NENHUM outro modal estiver ativo.
         const addModalActive = addModal.classList.contains("active");
-        const welcomeModalVisible = welcomeModal.style.display === "flex";
+        const welcomeModalVisible = welcomeModal.classList.contains("active"); // MUDANÇA: Verifica a classe 'active'
 
         if (!addModalActive && !welcomeModalVisible) {
           overlay.classList.remove("active");
@@ -1861,7 +1892,8 @@
           closeMobileMenu();
         } else if (addModal.classList.contains("active")) {
           closeAddModal();
-        } else if (welcomeModal.style.display === "flex") {
+        } else if (welcomeModal.classList.contains("active")) {
+          // MUDANÇA: Verifica a classe 'active'
           hideWelcome();
         }
       }
@@ -2085,7 +2117,7 @@
 
         // CORREÇÃO: A overlay e o body.overflow só são desativados se NENHUM outro modal estiver ativo.
         const mobileMenuActive = mobileMenu.classList.contains("active");
-        const welcomeModalVisible = welcomeModal.style.display === "flex";
+        const welcomeModalVisible = welcomeModal.classList.contains("active"); // MUDANÇA: Verifica a classe 'active'
 
         if (!mobileMenuActive && !welcomeModalVisible) {
           overlay.classList.remove("active");
@@ -2193,29 +2225,26 @@
           if (!header.classList.contains("hidden")) {
             showHeaderAndFooter();
           }
-          updateUI(); // NOVO: Atualiza textos ao redimensionar
+          updateUI();
         }, 100)
       );
-
-      updateUI(); // Chamada inicial para definir o idioma
-      updateLayoutPositions();
-      renderLives();
-      showHeaderAndFooter();
 
       // LÓGICA DO WELCOME MODAL / TUTORIAL
 
       function showWelcome() {
-        welcomeModal.style.display = "flex";
+        // MUDANÇA: Usa a classe 'active' para exibir, o que é consistente com o CSS do '.add-modal'
+        welcomeModal.classList.add("active");
         overlay.classList.add("active");
         document.body.style.overflow = "hidden";
         welcomeModal.scrollTop = 0;
         updateUI();
-        closeMobileMenu(); // Garante que o menu mobile feche ao abrir o tutorial (apenas se estiver aberto)
-        closeAddModal(); // Garante que o modal de adicionar feche ao abrir o tutorial
+        closeMobileMenu();
+        closeAddModal();
       }
 
       function hideWelcome() {
-        welcomeModal.style.display = "none";
+        // MUDANÇA: Usa a classe 'active' para ocultar
+        welcomeModal.classList.remove("active");
 
         // CORREÇÃO: A overlay e o body.overflow só são desativados se NENHUM outro modal estiver ativo.
         const addModalActive = addModal.classList.contains("active");
@@ -2223,7 +2252,7 @@
 
         if (!addModalActive && !mobileMenuActive) {
           overlay.classList.remove("active");
-          document.body.style.overflow = ""; // CORREÇÃO #3: Libera a rolagem condicionalmente.
+          document.body.style.overflow = "";
         }
       }
 
@@ -2237,18 +2266,17 @@
         hideWelcome();
       };
 
-      // O evento click no overlay chamará handleOverlayClick, que por sua vez chama hideWelcome.
-      // Não precisa de um listener direto aqui.
-
+      // BOTÃO AJUDA NO TOPO (PC)
       document.getElementById("help-btn")?.addEventListener("click", () => {
         localStorage.removeItem("telazona-welcome-seen");
         showWelcome();
       });
 
+      // BOTÃO AJUDA NO MENU DO CELULAR (agora funciona!)
       document
         .getElementById("mobile-help-btn")
         ?.addEventListener("click", () => {
-          closeMobileMenu();
+          closeMobileMenu(); // fecha o menu
           localStorage.removeItem("telazona-welcome-seen");
           showWelcome();
         });
@@ -2273,6 +2301,11 @@
           img.style.transition = "transform 0.5s ease";
         });
       }
+
+      updateUI();
+      updateLayoutPositions();
+      renderLives();
+      showHeaderAndFooter();
     </script>
   </body>
 </html>
