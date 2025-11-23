@@ -1,1760 +1,412 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>TELAZONA - Assista Múltiplas Lives Simultaneamente</title>
-    <meta name="description" content="Assista lives do YouTube, Twitch e Kick em uma única tela. Multistreaming simples e responsivo para mobile e desktop." />
-    <meta name="keywords" content="lives, streaming, multistream, YouTube, Twitch, Kick, telazona" />
-    <meta property="og:title" content="TELAZONA - Multilives" />
-    <meta property="og:description" content="Assista múltiplas lives simultaneamente em uma única tela. Suporta YouTube, Twitch e Kick." />
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://telazona.live/" />
-    <link rel="canonical" href="https://telazona.live/" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&family=Inter:wght@400&display=swap"
-      rel="stylesheet"
-    />
-    <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@type": "WebApplication",
-        "name": "TELAZONA",
-        "description": "Plataforma para assistir múltiplas lives simultaneamente",
-        "url": "https://telazona.live/",
-        "applicationCategory": "MultimediaApplication",
-        "operatingSystem": "Web"
-      }
-    </script>
-    <script src="https://unpkg.com/@phosphor-icons/web"></script>
-    <style>
-    :root {
-        --bg-primary: #0a0a0a;
-        --bg-secondary: #1a1a1a;
-        --bg-tertiary: #242424;
-        --text-primary: #ffffff;
-        --text-secondary: #a0a0a0;
-        --accent: #00d084;
-        --accent-hover: #00b377;
-        --border: #333333;
-        --shadow: 0 8px 32px rgba(0, 208, 132, 0.3);
-        --shadow-light: 0 4px 16px rgba(0, 0, 0, 0.4);
-        --neon-glow: 0 0 20px rgba(0, 208, 132, 0.6);
-        --gradient: linear-gradient(135deg,var(--accent) 0%,var(--accent-hover) 100%);
-        --border-radius: 12px;
-        --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        --header-height: 60px;
-        --footer-height: 30px;
-        --gap: 16px;
-      }
-      body {
-        font-family: "Inter", sans-serif;
-        font-weight: 400;
-        background: var(--bg-primary);
-        color: var(--text-primary);
-        overflow-x: hidden;
-        line-height: 1.6;
-        margin: 0;
-        padding: 0;
-        height: 100vh;
-      }
-      .silkscreen-regular {
-        font-family: "Silkscreen", sans-serif;
-        font-weight: 400;
-        font-style: normal;
-      }
-      .header-custom {
-        background: rgba(10, 10, 10, 0.95);
-        backdrop-filter: blur(20px);
-        border-bottom: 1px solid var(--border);
-        box-shadow: var(--shadow-light);
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        z-index: 100;
-        padding: 0 24px;
-        height: var(--header-height);
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        transition: var(--transition);
-        box-sizing: border-box;
-      }
-      .header-custom.hidden {
-        transform: translateY(-100%);
-      }
-      .logo {
-        font-size: 28px;
-        font-weight: 700;
-        letter-spacing: 2px;
-        color: var(--text-primary);
-        text-transform: uppercase;
-        flex-shrink: 0;
-      }
-      .header-right {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        flex-wrap: nowrap;
-        min-width: 0;
-        flex: 1;
-        justify-content: flex-end;
-      }
-      .header-right > * {
-        flex-shrink: 0;
-      }
-      .btn-header {
-        background: transparent;
-        color: var(--text-secondary);
-        border: 1px solid var(--border);
-        padding: 10px 16px;
-        border-radius: var(--border-radius);
-        font-size: 14px;
-        font-weight: 400;
-        transition: var(--transition);
-        display: flex;
-        align-items: center;
-        gap: 4px;
-        text-decoration: none;
-        cursor: pointer;
-        white-space: nowrap;
-        flex-shrink: 0;
-      }
-      .btn-header:hover {
-        background: var(--gradient);
-        color: var(--text-primary);
-        border-color: var(--accent);
-        box-shadow: var(--neon-glow);
-        transform: translateY(-2px);
-      }
-      .toggle-btn {
-        background: rgba(26, 26, 26, 0.95);
-        backdrop-filter: blur(20px);
-        color: var(--text-primary);
-        border: 1px solid var(--border);
-        padding: 12px 20px;
-        border-radius: var(--border-radius);
-        font-size: 14px;
-        font-weight: 400;
-        transition: var(--transition);
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        cursor: pointer;
-        z-index: 102;
-        position: absolute;
-        left: 24px;
-        bottom: -40px;
-      }
-      .toggle-btn:hover {
-        background: var(--gradient);
-        color: var(--text-primary);
-        border-color: var(--accent);
-        box-shadow: var(--neon-glow);
-      }
-      .toggle-btn.fixed {
-        position: fixed;
-        top: 10px;
-        left: 24px;
-        bottom: auto;
-        padding: 8px;
-        min-width: 200px;
-      }
-      .toggle-btn.fixed .controls-flex {
-        display: flex;
-        gap: 8px;
-        align-items: center;
-        justify-content: center;
-      }
-      .toggle-btn.fixed button {
-        padding: 6px 12px;
-        border-radius: 6px;
-        font-size: 12px;
-        font-weight: 400;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        gap: 4px;
-        transition: var(--transition);
-        border: none;
-        white-space: nowrap;
-      }
-      .toggle-btn.fixed .show-ui-btn {
-        background: var(--gradient);
-        color: var(--text-primary);
-      }
-      .toggle-btn.fixed .show-ui-btn:hover {
-        box-shadow: var(--neon-glow);
-        transform: translateY(-1px);
-      }
-      .toggle-btn.fixed .chat-toggle-btn {
-        background: transparent;
-        color: var(--text-primary);
-        border: 1px solid var(--border);
-      }
-      .toggle-btn.fixed .chat-toggle-btn:hover {
-        background: var(--gradient);
-        border-color: var(--accent);
-        color: var(--text-primary);
-        box-shadow: var(--neon-glow);
-      }
-      .hamburger {
-        display: none;
-        flex-direction: column;
-        cursor: pointer;
-        gap: 4px;
-        flex-shrink: 0;
-      }
-      .hamburger span {
-        width: 24px;
-        height: 2px;
-        background: var(--text-primary);
-        transition: var(--transition);
-        border-radius: 1px;
-      }
-      .hamburger.active span:nth-child(1) {
-        transform: rotate(45deg) translate(5px, 5px);
-      }
-      .hamburger.active span:nth-child(2) {
-        opacity: 0;
-      }
-      .hamburger.active span:nth-child(3) {
-        transform: rotate(-45deg) translate(7px, -6px);
-      }
-      .mobile-menu {
-        position: fixed;
-        top: 0;
-        right: -100%;
-        width: 80%;
-        max-width: 300px;
-        height: 100vh;
-        background: rgba(10, 10, 10, 0.95);
-        backdrop-filter: blur(20px);
-        transition: right 0.3s ease;
-        z-index: 1000;
-        padding: 80px 24px 24px;
-        display: flex;
-        flex-direction: column;
-        gap: 16px;
-      }
-      .mobile-menu.active {
-        right: 0;
-      }
-      .close-btn {
-        position: absolute;
-        top: 20px;
-        right: 20px;
-        background: transparent;
-        border: none;
-        color: var(--text-secondary);
-        font-size: 24px;
-        cursor: pointer;
-        transition: var(--transition);
-      }
-      .close-btn:hover {
-        color: var(--accent);
-      }
-      .mobile-btn {
-        background: transparent;
-        color: var(--text-secondary);
-        border: 1px solid var(--border);
-        padding: 14px;
-        border-radius: var(--border-radius);
-        font-size: 18px;
-        transition: var(--transition);
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        text-align: left;
-        text-decoration: none;
-      }
-      .mobile-btn:hover {
-        background: var(--gradient);
-        color: var(--text-primary);
-        border-color: var(--accent);
-        box-shadow: var(--neon-glow);
-      }
-      .overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.5);
-        backdrop-filter: blur(10px);
-        opacity: 0;
-        visibility: hidden;
-        transition: var(--transition);
-        z-index: 999;
-      }
-      .overlay.active {
-        opacity: 1;
-        visibility: visible;
-      }
-      .add-modal {
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        background: rgba(26, 26, 26, 0.95);
-        backdrop-filter: blur(20px);
-        border: 1px solid var(--border);
-        border-radius: var(--border-radius);
-        box-shadow: var(--shadow);
-        z-index: 1001;
-        display: none;
-        flex-direction: column;
-        width: 90%;
-        max-width: 400px;
-        padding: 32px;
-        animation: modalSlideIn 0.3s ease;
-      }
-      @keyframes modalSlideIn {
-        from {
-          opacity: 0;
-          transform: translate(-50%, -50%) scale(0.95);
-        }
-        to {
-          opacity: 1;
-          transform: translate(-50%, -50%) scale(1);
-        }
-      }
-      .add-modal.active {
-        display: flex;
-      }
-      .add-modal h2 {
-        text-align: center;
-        margin-bottom: 16px;
-        color: var(--text-primary);
-        font-weight: 400;
-      }
-      .platforms {
-        display: flex;
-        justify-content: space-around;
-        align-items: center;
-        margin-bottom: 16px;
-        flex-wrap: wrap;
-        opacity: 0.8;
-      }
-      .platform-item {
-        text-align: center;
-        margin: 5px;
-      }
-      .platform-item i {
-        font-size: 40px;
-        margin-bottom: 4px;
-        color: var(--accent);
-      }
-      .add-modal input {
-        background: rgba(36, 36, 36, 0.8);
-        backdrop-filter: blur(10px);
-        color: var(--text-primary);
-        border: 1px solid var(--border);
-        border-radius: var(--border-radius);
-        padding: 12px;
-        margin-bottom: 24px;
-        transition: var(--transition);
-        width: 100%;
-        box-sizing: border-box;
-      }
-      .add-modal input:focus {
-        border-color: var(--accent);
-        box-shadow: var(--neon-glow);
-        outline: none;
-      }
-      .btn-group {
-        display: flex;
-        gap: 12px;
-        justify-content: flex-end;
-      }
-      .btn-modal {
-        background: transparent;
-        color: var(--text-secondary);
-        border: 1px solid var(--border);
-        padding: 14px 28px;
-        border-radius: var(--border-radius);
-        transition: var(--transition);
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        cursor: pointer;
-        font-weight: 400;
-      }
-      .btn-primary-modal {
-        background: var(--gradient);
-        color: var(--text-primary);
-        border-color: var(--accent);
-      }
-      .btn-primary-modal:hover {
-        box-shadow: var(--neon-glow);
-        transform: translateY(-2px);
-      }
-      .btn-secondary-modal:hover {
-        background: var(--border);
-        color: var(--text-primary);
-      }
-      .loading-spinner {
-        border: 4px solid var(--border);
-        border-top: 4px solid var(--accent);
-        border-radius: 50%;
-        width: 20px;
-        height: 20px;
-        animation: spin 1s linear infinite;
-        margin: 0 auto;
-      }
-      @keyframes spin {
-        0% {
-          transform: rotate(0deg);
-        }
-        100% {
-          transform: rotate(360deg);
-        }
-      }
-      .loading {
-        display: none;
-        text-align: center;
-        padding: 20px;
-      }
-      .loading.active {
-        display: block;
-      }
-      .btn-group:not(.active) {
-        display: none;
-      }
-      main {
-        margin-top: var(--header-height);
-        height: calc(100vh - var(--header-height) - var(--footer-height));
-        display: flex;
-        flex-direction: column;
-        transition: var(--transition);
-        overflow: hidden;
-        padding: 20px;
-        box-sizing: border-box;
-      }
-      #main-content {
-        display: none;
-        flex: 1;
-        overflow: hidden;
-        flex-direction: row;
-      }
-      #hero-section {
-        text-align: center;
-        max-width: 800px;
-        margin: 0 auto;
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        gap: 24px;
-      }
-      .hero-title {
-        font-size: 4rem;
-        font-weight: 700;
-        margin-bottom: 16px;
-        color: var(--text-primary);
-        letter-spacing: 1px;
-        text-transform: uppercase;
-        line-height: 1.1;
-      }
-      .hero-subtitle {
-        font-size: 1.5rem;
-        color: var(--text-secondary);
-        margin-bottom: 40px;
-        line-height: 1.5;
-        max-width: 600px;
-        margin-left: auto;
-        margin-right: auto;
-      }
-      .hero-btn {
-        background: var(--gradient);
-        color: var(--text-primary);
-        border: none;
-        padding: 20px 40px;
-        border-radius: var(--border-radius);
-        font-size: 18px;
-        font-weight: 400;
-        transition: var(--transition);
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        text-decoration: none;
-        cursor: pointer;
-        box-shadow: var(--shadow);
-      }
-      .hero-btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 12px 40px rgba(0, 208, 132, 0.4);
-      }
-      .grid-container {
-        flex: 1;
-        display: grid;
-        gap: 0;
-        width: 100%;
-        padding: 0;
-        transition: var(--transition);
-        margin: 0 auto;
-        height: 100%;
-        overflow: hidden;
-        align-content: stretch;
-        will-change: transform;
-      }
-      .chat-container {
-        width: 350px;
-        background: var(--bg-secondary);
-        border-left: 1px solid var(--border);
-        display: none;
-        overflow: hidden;
-        flex-direction: column;
-        margin-top: var(--gap);
-        flex: 0 0 350px;
-      }
-      #chat-selector {
-        padding: 10px;
-        border-bottom: 1px solid var(--border);
-        background: var(--bg-tertiary);
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-        justify-content: center;
-        align-items: center;
-      }
-      .chat-btn {
-        background: transparent;
-        color: var(--text-secondary);
-        border: 1px solid var(--border);
-        padding: 6px 12px;
-        border-radius: 6px;
-        font-size: 12px;
-        transition: var(--transition);
-        cursor: pointer;
-        white-space: nowrap;
-      }
-      .chat-btn:hover {
-        background: var(--gradient);
-        color: var(--text-primary);
-        border-color: var(--accent);
-        box-shadow: var(--neon-glow);
-      }
-      .chat-btn.active {
-        background: var(--gradient);
-        color: var(--text-primary);
-        border-color: var(--accent);
-      }
-      .chat-placeholder {
-        height: 100%;
-        padding: 10px;
-        overflow: auto;
-        color: var(--text-secondary);
-        flex: 1;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-      .live-wrapper {
-        position: relative;
-        aspect-ratio: 16/9;
-        border-radius: var(--border-radius);
-        box-shadow: none;
-        overflow: hidden;
-        background: transparent;
-        border: none;
-        transition: var(--transition);
-        min-width: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        box-sizing: border-box;
-        cursor: pointer;
-        will-change: transform;
-        width: 100%;
-        height: 100%;
-      }
-      .live-wrapper:hover {
-        box-shadow: var(--neon-glow);
-        transform: scale(1.01);
-      }
-      .live-wrapper.selected {
-        border-color: var(--accent);
-        box-shadow: var(--neon-glow);
-      }
-      .live-wrapper.full-height,
-      .live-wrapper.stretch-height {
-        aspect-ratio: none;
-        height: 100%;
-      }
-      .live-wrapper.two-col {
-        aspect-ratio: 16/7;
-      }
-      .live-frame {
-        width: 100%;
-        height: 100%;
-        border: none;
-        border-radius: var(--border-radius);
-      }
-      .menu-toggle {
-        position: absolute;
-        top: 12px;
-        left: 12px;
-        background: rgba(0, 0, 0, 0.7);
-        color: var(--text-primary);
-        border: none;
-        padding: 8px;
-        border-radius: 50%;
-        cursor: pointer;
-        font-size: 16px;
-        z-index: 10;
-        transition: var(--transition);
-        width: 40px;
-        height: 40px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-      .menu-toggle:hover {
-        background: var(--accent);
-        color: var(--text-primary);
-        box-shadow: var(--neon-glow);
-        transform: scale(1.1);
-      }
-      .context-menu {
-        position: absolute;
-        top: 60px;
-        left: 12px;
-        background: rgba(26, 26, 26, 0.95);
-        backdrop-filter: blur(10px);
-        border: 1px solid var(--border);
-        border-radius: var(--border-radius);
-        box-shadow: var(--shadow);
-        z-index: 11;
-        display: none;
-        flex-direction: column;
-        min-width: 160px;
-      }
-      .context-menu.active {
-        display: flex;
-      }
-      .context-item {
-        background: transparent;
-        color: var(--text-secondary);
-        border: none;
-        padding: 12px 16px;
-        text-align: left;
-        cursor: pointer;
-        font-size: 14px;
-        transition: var(--transition);
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        width: 100%;
-      }
-      .context-item:hover {
-        background: var(--bg-tertiary);
-        color: var(--text-primary);
-        box-shadow: var(--neon-glow);
-      }
-      .skeleton {
-        background: linear-gradient(90deg,var(--bg-secondary) 25%,var(--bg-tertiary) 50%,var(--bg-secondary) 75%);
-        background-size: 200% 100%;
-        animation: shimmer 1.5s infinite;
-        border-radius: var(--border-radius);
-        height: 100%;
-        width: 100%;
-      }
-      @keyframes shimmer {
-        0% {
-          background-position: -200% 0;
-        }
-        100% {
-          background-position: 200% 0;
-        }
-      }
-      footer {
-        background: rgba(10, 10, 10, 0.95);
-        backdrop-filter: blur(10px);
-        border-top: 1px solid var(--border);
-        padding: 10px 20px;
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        height: var(--footer-height);
-        z-index: 100;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: var(--transition);
-      }
-      footer.hidden {
-        transform: translateY(100%);
-      }
-      .footer-content {
-        display: flex;
-        align-items: center;
-        gap: 4px;
-        text-align: center;
-        color: var(--text-secondary);
-        font-size: 12px;
-        font-weight: 400;
-        letter-spacing: 0.5px;
-      }
-      .footer-link {
-        color: var(--accent);
-        text-decoration: none;
-        font-weight: 600;
-        transition: var(--transition);
-      }
-      .footer-link:hover {
-        color: var(--accent-hover);
-        text-shadow: 0 0 8px rgba(0, 208, 132, 0.5);
-      }
-      /* Media Queries para Mobile */
-      @media (max-width: 768px) {
-        /* Esconder botões específicos da navbar em mobile */
-        .desktop-only {
-          display: none !important;
-        }
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TELAZONA - Multilives</title>
+  <link href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <link rel="icon" href="data:,">
+  <style>
+    :root{
+      --bg:#0a0a0a;--bg2:#1a1a1a;--border:#333;--text:#fff;--text2:#aaa;
+      --accent:#00d084;--accent2:#a855f7;--radius:12px;--header-h:70px;--footer-h:40px;--chat-w:380px;
+    }
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);height:100vh;overflow:hidden;position:relative}
+    .silkscreen{font-family:'Silkscreen',sans-serif}
 
-        .header-custom {
-          padding: 0 16px;
-        }
-        .logo {
-          font-size: 24px;
-        }
-        .header-right {
-          gap: 4px;
-          justify-content: flex-end;
-        }
-        /* Ocultar botões que agora estão no hamburger */
-        .header-right .btn-header {
-          display: none; 
-        }
-        .hamburger {
-          display: flex;
-        }
-        main {
-          overflow-y: auto;
-          padding: 8px;
-        }
-        .grid-container {
-          flex: none;
-          height: auto;
-          display: grid;
-          grid-template-columns: 1fr !important;
-          gap: 0;
-          padding: 0;
-        }
-        #chat-selector {
-          justify-content: center;
-          flex-wrap: wrap;
-        }
-        .chat-btn {
-          min-width: 80px;
-        }
-        .hero-title {
-          font-size: 2.5rem;
-        }
-        .hero-subtitle {
-          font-size: 1.2rem;
-        }
-        .toggle-btn {
-          left: 16px;
-          bottom: -35px;
-          padding: 10px 16px;
-          font-size: 12px;
-        }
-        .toggle-btn.fixed {
-          left: 16px;
-          padding: 6px;
-          min-width: 180px;
-        }
-        .toggle-btn.fixed button {
-          padding: 4px 8px;
-          font-size: 11px;
-        }
-        footer {
-          padding: 10px 16px;
-          font-size: 11px;
-        }
-        .footer-content {
-          gap: 2px;
-          font-size: 11px;
-        }
-        .menu-toggle {
-          left: 8px;
-        }
-        .context-menu {
-          left: 8px;
-        }
-      }
-      @media (prefers-reduced-motion: reduce) {
-        *, *::before, *::after {
-          animation-duration: 0.01ms !important;
-          animation-iteration-count: 1 !important;
-          transition-duration: 0.01ms !important;
-        }
-      }
-    </style>
-  </head>
-  <body>
-    <header class="header-custom" id="main-header">
-      <div class="logo">TELAZONA</div>
-      <button id="toggle-header-footer" class="toggle-btn" aria-label="Ocultar/Mostrar Interface">
-        <i class="ph ph-eye-slash" aria-hidden="true"></i> Ocultar Interface
-      </button>
-      <div class="header-right">
-        <button id="add-live-btn" class="btn-header desktop-only" aria-label="Adicionar Nova Live">
-          <i class="ph ph-plus" aria-hidden="true"></i> Adicionar Live
-        </button>
-        <button id="toggle-chat" class="btn-header desktop-only" aria-label="Mostrar/Ocultar Chat">
-          <i class="ph ph-chat-text" aria-hidden="true"></i> Mostrar Chat
-        </button>
-        <button id="help-btn" class="btn-header desktop-only" title="Reabrir tutorial">
-          <i class="ph ph-question"></i> Ajuda
-        </button>
-        <a href="https://picpay.me/seuusuario" target="_blank" rel="noopener" class="btn-header desktop-only" title="Doar pro TELAZONA" style="text-decoration:none;">
-          <i class="ph ph-heart" style="color:#ff6b6b;"></i> Doar
-        </a>
-        <div class="hamburger" id="hamburger" role="button" aria-label="Abrir menu mobile" aria-expanded="false">
-          <span></span><span></span><span></span>
-        </div>
-      </div>
-    </header>
+    header{
+      position:fixed;top:0;left:0;width:100%;height:var(--header-h);
+      background:rgba(10,10,10,.95);backdrop-filter:blur(20px);
+      border-bottom:1px solid var(--border);z-index:100;
+      display:flex;align-items:center;justify-content:space-between;padding:0 24px;
+      transition:transform .4s ease;
+    }
+    footer{
+      position:fixed;bottom:0;left:0;width:100%;height:var(--footer-h);
+      background:rgba(10,10,10,.95);backdrop-filter:blur(20px);
+      border-top:1px solid var(--border);z-index:100;
+      display:flex;align-items:center;justify-content:center;font-size:13px;
+      transition:transform .4s ease;
+    }
+    header.hidden{transform:translateY(-100%)}
+    footer.hidden{transform:translateY(100%)}
 
-    <div id="overlay" class="overlay"></div>
+    .logo{font-size:32px;font-weight:700;letter-spacing:2px;color:var(--accent)}
 
-    <div id="mobile-menu" class="mobile-menu">
-      <button id="close-menu" class="close-btn">
-        <i class="ph ph-x"></i>
-      </button>
+    /* HAMBÚRGUER BONITO */
+    #menu-btn{
+      display:none;background:none;border:none;color:#fff;font-size:32px;cursor:pointer;
+      padding:8px;border-radius:8px;transition:.3s;
+    }
+    #menu-btn:hover{background:rgba(255,255,255,.1)}
 
-      <button id="mobile-add-live-btn" class="mobile-btn">
-        <i class="ph ph-plus"></i> Adicionar Live
-      </button>
+    /* MENU MOBILE */
+    #mobile-menu{
+      position:fixed;top:var(--header-h);left:0;width:100%;background:rgba(10,10,10,.98);
+      backdrop-filter:blur(20px);padding:20px;display:none;flex-direction:column;gap:16px;
+      border-bottom:1px solid var(--border);z-index:99;transition:transform .35s ease;
+      transform:translateY(-100%);
+    }
+    #mobile-menu.open{transform:translateY(0)}
 
-      <button id="mobile-toggle-chat" class="mobile-btn">
-        <i class="ph ph-chat-text"></i> Mostrar/Ocultar Chat
-      </button>
+    /* MENU DE IDIOMA MOBILE */
+    #mobile-lang-menu{
+      background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);
+      margin-top:8px;overflow:hidden;display:none;
+    }
+    #mobile-lang-menu button{
+      width:100%;padding:14px 20px;background:none;border:none;color:#fff;text-align:left;
+      font-size:15px;cursor:pointer;transition:.2s;
+    }
+    #mobile-lang-menu button:hover{background:var(--accent);color:#000}
 
-      <button id="mobile-help-btn" class="mobile-btn">
-        <i class="ph ph-question"></i> Ajuda / Tutorial
-      </button>
+    @media (max-width:768px){
+      #menu-btn{display:block}
+      .header-right{display:none !important}
+      #mobile-menu{display:flex}
+    }
 
-      <a href="https://picpay.me/seuusuario" target="_blank" rel="noopener" class="mobile-btn" 
-        style="border:2px solid var(--accent); color:var(--text-primary);">
-        <i class="ph ph-heart" style="color:#ff4444;"></i> Doar pro TELAZONA
-      </a>
-    </div>
+    /* BARRA DE CONTROLE */
+    #control-bar{
+      position:fixed;top:var(--header-h);left:50%;transform:translate(-50%,-50%);
+      height:42px;border-radius:22px;display:flex;z-index:101;
+      font-size:13px;font-weight:600;transition:all .4s ease;gap:2px;
+      box-shadow:0 6px 20px rgba(0,0,0,.7);
+    }
+    header.hidden ~ #control-bar{top:21px}
 
-    <div id="add-modal" class="add-modal" role="dialog" aria-labelledby="modal-title" aria-hidden="true">
-      <h2 id="modal-title">Adicionar Live (YouTube, Twitch ou Kick)</h2>
-      <div class="platforms">
-        <div class="platform-item">
-          <i class="ph ph-youtube-logo" aria-hidden="true"></i>
-          <div>YouTube</div>
-        </div>
-        <div class="platform-item">
-          <i class="ph ph-twitch-logo" aria-hidden="true"></i>
-          <div>Twitch</div>
-        </div>
-        <div class="platform-item">
-          <i class="ph ph-fire" aria-hidden="true"></i>
-          <div>Kick</div>
-        </div>
-      </div>
-      <input
-        type="url"
-        id="live-url"
-        placeholder="Cole a URL da live aqui... (ex: youtube.com/watch?v=ID, youtube.com/live/ID, twitch.tv/canal, kick.com/canal)"
-        pattern="https?://.*"
-        required
-        aria-label="URL da Live"
-      />
-      <div id="loading-section" class="loading">
-        <div class="loading-spinner"></div>
-        <p>Validando live...</p>
-      </div>
-      <div class="btn-group active">
-        <button id="cancel-add" class="btn-modal btn-secondary-modal" aria-label="Cancelar adição">
-          <i class="ph ph-x" aria-hidden="true"></i> Cancelar
-        </button>
-        <button id="submit-add" class="btn-modal btn-primary-modal" aria-label="Adicionar Live">
-          <i class="ph ph-check" aria-hidden="true"></i> Adicionar
-        </button>
+    #toggle-ui{background:var(--accent);color:#000;padding:0 20px;height:100%;border-radius:22px 0 0 22px;cursor:pointer;display:flex;align-items:center}
+    #toggle-chat{background:var(--accent2);color:#fff;padding:0 20px;height:100%;border-radius:0 22px 22px 0;cursor:pointer;display:none;align-items:center}
+
+    header.hidden ~ #control-bar #toggle-ui,
+    header.hidden ~ #control-bar #toggle-chat{background:rgba(30,30,30,.95);color:#fff}
+
+    .header-right{display:flex;align-items:center;gap:12px}
+    .btn{
+      background:transparent;color:var(--text2);border:1px solid var(--border);
+      padding:9px 16px;border-radius:var(--radius);font-size:14px;cursor:pointer;
+      display:flex;align-items:center;gap:8px;transition:.3s;
+    }
+    .btn:hover{background:var(--accent);color:#000;border-color:var(--accent)}
+
+    .ph-heart{color:transparent;-webkit-text-stroke:1.8px #e91e63;font-weight:900}
+
+    .overlay{position:fixed;inset:0;background:rgba(0,0,0,.8);backdrop-filter:blur(12px);opacity:0;visibility:hidden;transition:.3s;z-index:999}
+    .overlay.active{opacity:1;visibility:visible}
+
+    .modal{
+      position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(.95);
+      background:rgba(26,26,26,.98);backdrop-filter:blur(20px);border:1px solid var(--border);
+      border-radius:var(--radius);padding:32px;width:90%;max-width:640px;max-height:90vh;overflow-y:auto;
+      opacity:0;visibility:hidden;transition:.4s;z-index:1001;color:#fff;
+    }
+    .modal.active{opacity:1;visibility:visible;transform:translate(-50%,-50%) scale(1)}
+
+    main{height:100vh;display:flex;position:relative}
+    #hero{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px;text-align:center;padding:20px}
+    #main-content{flex:1;display:flex;position:relative;display:none}
+    #grid{flex:1;display:grid;gap:4px;height:100%;padding:4px}
+    .live-container{position:relative;overflow:hidden;border-radius:var(--radius);background:#000}
+    .live-container iframe{width:100%;height:100%;border:none}
+
+    .live-menu-btn{
+      position:absolute;top:12px;left:12px;background:rgba(0,0,0,.7);backdrop-filter:blur(10px);
+      border:1px solid var(--border);border-radius:50%;width:40px;height:40px;
+      display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:10;
+      opacity:0;transition:.3s;font-size:22px;color:#fff;
+    }
+    .live-container:hover .live-menu-btn{opacity:1}
+
+    #chat-sidebar{width:0;background:var(--bg2);border-left:1px solid var(--border);overflow:hidden;transition:width .4s;display:flex;flex-direction:column}
+    #chat-sidebar.open{width:var(--chat-w)}
+    #chat-selector{padding:16px;background:#111;border-bottom:1px solid var(--border);text-align:center}
+    #chat-selector select{width:100%;padding:10px;background:#000;border:1px solid var(--border);border-radius:8px;color:#fff;font-size:15px}
+    #chat-iframe{flex:1;width:100%}
+
+    img{max-width:100%;border-radius:12px;margin:12px 0;border:2px solid #333}
+    a{color:var(--accent);text-decoration:none}
+    a:hover{text-decoration:underline}
+  </style>
+</head>
+<body>
+
+  <header id="header">
+    <div class="logo silkscreen">TELAZONA</div>
+    <button id="menu-btn"><i class="ph ph-list"></i></button>
+    <div class="header-right">
+      <button class="btn" id="add-btn" data-t="addLive">+ Adicionar Live</button>
+      <button class="btn" id="donate-btn"><i class="ph ph-heart"></i> <span data-t="donate">Doar</span></button>
+      <button class="btn" id="help-btn" data-t="help">Ajuda</button>
+      <button class="btn" id="lang-btn">PT</button>
+      <div id="lang-menu" style="display:none;position:absolute;top:100%;right:0;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);min-width:140px;z-index:999">
+        <button data-lang="pt" style="width:100%;padding:12px;background:none;border:none;color:#fff;text-align:left;cursor:pointer">Português</button>
+        <button data-lang="en" style="width:100%;padding:12px;background:none;border:none;color:#fff;text-align:left;cursor:pointer">English</button>
+        <button data-lang="es" style="width:100%;padding:12px;background:none;border:none;color:#fff;text-align:left;cursor:pointer">Español</button>
       </div>
     </div>
+  </header>
 
-    <main id="main">
-      <section id="hero-section" class="hero-section">
-        <h1 class="hero-title silkscreen-regular">TELAZONA</h1>
-        <p class="hero-subtitle">
-          Assista múltiplas lives simultaneamente em uma única tela. Suporta
-          YouTube, Twitch e Kick.
-        </p>
-        <button id="hero-add-btn" class="hero-btn" aria-label="Adicionar Primeira Live">
-          <i class="ph ph-play-circle" aria-hidden="true"></i> Adicionar Primeira Live
-        </button>
-      </section>
-      <div id="main-content">
-        <section id="grid-section" class="grid-container" aria-label="Grade de Lives"></section>
-        <section id="chat-section" class="chat-container" aria-label="Seção de Chat">
-          <div id="chat-selector"></div>
-          <div id="chat-placeholder" class="chat-placeholder">Selecione uma live para ver o chat.</div>
-        </section>
-      </div>
-    </main>
+  <!-- MENU MOBILE -->
+  <div id="mobile-menu">
+    <button class="btn" id="mobile-add" data-t="addLive">+ Adicionar Live</button>
+    <button class="btn" id="mobile-donate"><i class="ph ph-heart"></i> <span data-t="donate">Doar</span></button>
+    <button class="btn" id="mobile-help" data-t="help">Ajuda</button>
+    <button class="btn" id="mobile-lang-btn">Idioma • <span id="mobile-lang-text">PT</span> <i class="ph ph-caret-down" style="float:right;margin-top:3px"></i></button>
+    <div id="mobile-lang-menu">
+      <button data-lang="pt">Português</button>
+      <button data-lang="en">English</button>
+      <button data-lang="es">Español</button>
+    </div>
+  </div>
 
-    <footer id="main-footer">
-      <div class="footer-content">
-        Copyright © 2025 TELAZONA feito por <a href="https://www.instagram.com/michelsantnasc/" class="footer-link" target="_blank" rel="noopener noreferrer">Santnasc</a>
-      </div>
-    </footer>
+  <div id="control-bar">
+    <div id="toggle-ui" data-t="hideUI">Ocultar Interface</div>
+    <div id="toggle-chat" data-t="showChat">Mostrar Chat</div>
+  </div>
 
-    <div id="welcome-modal" class="add-modal" style="display:none; max-width:520px; padding:36px 28px; max-height:95vh; overflow-y:auto;">
-      <button id="close-welcome" style="position:absolute; top:12px; right:12px; background:none; border:none; color:#aaa; font-size:28px; cursor:pointer;">
-        <i class="ph ph-x"></i>
-      </button>
+  <div id="overlay" class="overlay"></div>
 
-      <h2 style="font-size:2.1rem; text-align:center; color:var(--accent); margin:0 0 16px;">
-        Bem-vindo ao TELAZONA!
-      </h2>
-      <p style="text-align:center; color:#ccc; font-size:1.05rem; margin-bottom:32px;">
-        Assista várias lives ao mesmo tempo
-      </p>
+  <!-- MODAL ADICIONAR LIVE -->
+  <div id="add-modal" class="modal">
+    <h2 data-t="addLiveTitle">Adicionar Live (YouTube, Twitch ou Kick)</h2>
+    <p style="text-align:center;margin:20px 0">Cole a URL da live abaixo</p>
+    <input type="url" id="url-input" placeholder="https://..." style="width:100%;padding:14px;background:#111;border:1px solid var(--border);border-radius:8px;color:#fff;font-size:16px">
+    <div style="display:flex;justify-content:flex-end;gap:12px;margin-top:20px">
+      <button class="btn" id="cancel-add" data-t="cancel">Cancelar</button>
+      <button class="btn" style="background:var(--accent);color:#000" id="confirm-add" data-t="add">Adicionar</button>
+    </div>
+  </div>
 
-      <div style="display:grid; gap:36px;">
+  <!-- MODAL BOAS-VINDAS -->
+  <div id="welcome-modal" class="modal">
+    <h1 class="silkscreen" style="font-size:3.5rem;text-align:center;margin-bottom:20px">TELAZONA</h1>
+    <p style="text-align:center;font-size:1.3rem" data-t="welcomeText">Assista várias lives ao mesmo tempo!</p>
+    <h2 style="margin:30px 0 10px" data-t="howTo">Como pegar o link da live</h2>
+    <strong>YouTube:</strong> Compartilhar → Copiar link<br>
+    <img src="https://i.ibb.co/1t0nHJSD/msedge-Lw0-RNd9h-H0.png" alt="YouTube">
+    <strong>Twitch:</strong> Copie o link do canal ao vivo<br>
+    <img src="https://i.ibb.co/BHG6p2mR/msedge-Wdm4-XIkx-J7.png" alt="Twitch">
+    <strong>Kick:</strong> Copie o link do canal ao vivo<br>
+    <img src="https://i.ibb.co/xqFFfcnp/msedge-X5-Fm-Trj6-To.png" alt="Kick">
+    <label style="display:flex;align-items:center;gap:10px;margin:30px 0">
+      <input type="checkbox" id="no-welcome"> <span data-t="dontShow">Não mostrar novamente</span>
+    </label>
+    <div style="text-align:center">
+      <button class="btn" style="background:var(--accent);color:#000;padding:14px 40px;font-size:18px" id="close-welcome" data-t="start">Começar!</button>
+    </div>
+  </div>
 
-        <div style="display:flex; gap:20px; align-items:flex-start;">
-          <div style="background:var(--gradient); color:white; width:48px; height:48px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-weight:bold; font-size:1.2rem;">1</div>
-          <div style="width:100%;">
-            <strong style="font-size:1.15rem;">Copie o link da live</strong>
+  <main>
+    <section id="hero">
+      <h1 class="silkscreen">TELAZONA</h1>
+      <p style="font-size:1.5rem;color:var(--text2)" data-t="heroText">YouTube • Twitch • Kick</p>
+      <button class="btn" style="background:var(--accent);color:#000;padding:16px 40px;font-size:18px" id="hero-add" data-t="addFirst">+ Adicionar Primeira Live</button>
+    </section>
 
-            <div style="margin-top:24px; display:flex; flex-direction:column; gap:28px; align-items:center;">
-
-              <div style="text-align:center; width:100%;">
-                <img src="https://i.ibb.co/1t0nHJSD/msedge-Lw0-RNd9h-H0.png" alt="YouTube"
-                    style="width:100%; max-width:560px; border-radius:24px; box-shadow:0 20px 70px rgba(0,0,0,0.95); border:6px solid var(--accent);">
-                <div style="margin-top:16px; font-weight:800; font-size:1.3rem; color:var(--accent); text-shadow:0 0 20px rgba(0,208,132,0.8);">YouTube → Compartilhar</div>
-              </div>
-
-              <div style="text-align:center; width:100%;">
-                <img src="https://i.ibb.co/BHG6p2mR/msedge-Wdm4-XIkx-J7.png" alt="Twitch"
-                    style="width:100%; max-width:560px; border-radius:24px; box-shadow:0 20px 70px rgba(0,0,0,0.95); border:6px solid var(--accent);">
-                <div style="margin-top:16px; font-weight:800; font-size:1.3rem; color:var(--accent); text-shadow:0 0 20px rgba(0,208,132,0.8);">Twitch → Copie o link</div>
-              </div>
-
-              <div style="text-align:center; width:100%;">
-                <img src="https://i.ibb.co/xqFFfcnp/msedge-X5-Fm-Trj6-To.png" alt="Kick"
-                    style="width:100%; max-width:560px; border-radius:24px; box-shadow:0 20px 70px rgba(0,0,0,0.95); border:6px solid var(--accent);">
-                <div style="margin-top:16px; font-weight:800; font-size:1.3rem; color:var(--accent); text-shadow:0 0 20px rgba(0,208,132,0.8);">Kick → Copie o link</div>
-              </div>
-
-            </div>
-          </div>
+    <div id="main-content">
+      <div id="grid"></div>
+      <div id="chat-sidebar">
+        <div id="chat-selector">
+          <select id="chat-select"><option data-t="selectChat">Selecione o chat</option></select>
         </div>
-      
-        <div style="display:flex; gap:20px; align-items:flex-start;">
-          <div style="background:var(--gradient); color:white; width:48px; height:48px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-weight:bold; font-size:1.2rem;">2</div>
-          <div>
-            <strong style="font-size:1.15rem;">Cole aqui no TELAZONA</strong>
-            <div style="margin:24px auto 0; text-align:center;">
-              <img src="https://i.ibb.co/VGp2Wgd/msedge-wiwrl-YSKy2.png" alt="Colar link" 
-                  style="width:100%; max-width:460px; border-radius:18px; box-shadow:0 12px 50px rgba(0,0,0,0.8); border:3px solid var(--accent);">
-            </div>
-          </div>
-        </div>
-
-        <div style="display:flex; gap:20px; align-items:flex-start;">
-          <div style="background:var(--gradient); color:white; width:48px; height:48px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-            <i class="ph ph-eye-slash" style="font-size:24px;"></i>
-          </div>
-          <div>
-            <strong style="font-size:1.15rem;">Modo tela cheia</strong><br>
-            <small style="color:#aaa;">Botão no canto superior esquerdo para ocultar interface (cabeçalho e rodapé).</small>
-          </div>
-        </div>
-      </div>
-
-      <div style="margin-top:40px; padding-top:24px; border-top:2px solid var(--accent); text-align:center;">
-        <label style="display:inline-flex; align-items:center; gap:12px; color:#ddd; cursor:pointer; font-size:1rem; font-weight:500;">
-          <input type="checkbox" id="dont-show-welcome" style="width:20px; height:20px; accent-color:var(--accent);">
-          Não mostrar novamente
-        </label>
-
-        <div style="margin-top:24px;">
-          <button id="start-telazona" style="background:var(--gradient); color:white; border:none; padding:16px 60px; border-radius:14px; font-size:1.3rem; cursor:pointer; box-shadow:0 0 30px rgba(0,208,132,0.7); font-weight:600;">
-            Vamos lá!
-          </button>
-        </div>
+        <iframe id="chat-iframe" src="" allowfullscreen></iframe>
       </div>
     </div>
-    <script>
-    const domain = window.location.hostname || 'localhost';
-      const header = document.getElementById('main-header');
-      const footer = document.getElementById('main-footer');
-      const main = document.getElementById('main');
-      const hero = document.getElementById('hero-section');
-      const mainContent = document.getElementById('main-content');
-      const grid = document.getElementById('grid-section');
-      const chatSection = document.getElementById('chat-section');
-      const chatSelector = document.getElementById('chat-selector');
-      const chatPlaceholder = document.getElementById('chat-placeholder');
-      const toggleBtn = document.getElementById('toggle-header-footer');
-      const toggleChatBtn = document.getElementById('toggle-chat');
-      const mobileToggleChatBtn = document.getElementById('mobile-toggle-chat');
-      const heroAddBtn = document.getElementById('hero-add-btn');
-      const addLiveBtn = document.getElementById('add-live-btn');
-      const mobileAddLiveBtn = document.getElementById('mobile-add-live-btn');
-      const submitAddBtn = document.getElementById('submit-add');
-      const cancelAddBtn = document.getElementById('cancel-add');
-      const liveUrlInput = document.getElementById('live-url');
-      const hamburger = document.getElementById('hamburger');
-      const mobileMenu = document.getElementById('mobile-menu');
-      const closeMenuBtn = document.getElementById('close-menu');
-      const overlay = document.getElementById('overlay');
-      const addModal = document.getElementById('add-modal');
-      const loadingSection = document.getElementById('loading-section');
-      const btnGroup = document.querySelector('.btn-group');
+  </main>
 
-      let lives = JSON.parse(sessionStorage.getItem('telazona-lives') || '[]');
-      let deleteConfirmations = {};
-      let currentSelected = -1;
-      let chatVisible = false;
-      let iframeObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            const iframe = entry.target.querySelector('.live-frame');
-            if (iframe && iframe.dataset.src) {
-              iframe.src = iframe.dataset.src;
-              delete iframe.dataset.src;
-            }
+  <footer id="footer">
+    <div>© 2025 TELAZONA • by <a href="https://instagram.com/michelsantnasc" target="_blank">Santnasc</a></div>
+  </footer>
+
+  <script>
+    const trad = {
+      pt:{addLive:"Adicionar Live",addLiveTitle:"Adicionar Live (YouTube, Twitch ou Kick)",addFirst:"Adicionar Primeira Live",donate:"Doar",help:"Ajuda",hideUI:"Ocultar Interface",showUI:"Mostrar Interface",showChat:"Mostrar Chat",hideChat:"Ocultar Chat",cancel:"Cancelar",add:"Adicionar",welcomeText:"Assista várias lives ao mesmo tempo!",howTo:"Como pegar o link da live",dontShow:"Não mostrar novamente",start:"Começar!",heroText:"YouTube • Twitch • Kick",selectChat:"Selecione o chat"},
+      en:{addLive:"Add Live",addLiveTitle:"Add Live (YouTube, Twitch or Kick)",addFirst:"Add First Live",donate:"Donate",help:"Help",hideUI:"Hide Interface",showUI:"Show Interface",showChat:"Show Chat",hideChat:"Hide Chat",cancel:"Cancel",add:"Add",welcomeText:"Watch multiple lives at once!",howTo:"How to get the live link",dontShow:"Don't show again",start:"Start!",heroText:"YouTube • Twitch • Kick",selectChat:"Select chat"},
+      es:{addLive:"Añadir Live",addLiveTitle:"Añadir Live (YouTube, Twitch o Kick)",addFirst:"Añadir Primera Live",donate:"Donar",help:"Ayuda",hideUI:"Ocultar Interfaz",showUI:"Mostrar Interfaz",showChat:"Mostrar Chat",hideChat:"Ocultar Chat",cancel:"Cancelar",add:"Añadir",welcomeText:"¡Mira varias lives al mismo tiempo!",howTo:"Cómo obtener el enlace",dontShow:"No mostrar nuevamente",start:"¡Empezar!",heroText:"YouTube • Twitch • Kick",selectChat:"Seleccionar chat"}
+    };
+
+    let lang = localStorage.getItem("lang") || "pt";
+
+    function t() {
+      document.querySelectorAll("[data-t]").forEach(el => el.textContent = trad[lang][el.dataset.t] || el.textContent);
+      document.getElementById("lang-btn").textContent = lang.toUpperCase();
+      document.getElementById("mobile-lang-text").textContent = lang.toUpperCase();
+    }
+    t();
+
+    const el = {
+      header: document.getElementById("header"),
+      footer: document.getElementById("footer"),
+      toggleUI: document.getElementById("toggle-ui"),
+      toggleChat: document.getElementById("toggle-chat"),
+      chatSidebar: document.getElementById("chat-sidebar"),
+      chatIframe: document.getElementById("chat-iframe"),
+      chatSelect: document.getElementById("chat-select"),
+      grid: document.getElementById("grid"),
+      overlay: document.getElementById("overlay"),
+      addModal: document.getElementById("add-modal"),
+      welcomeModal: document.getElementById("welcome-modal")
+    };
+
+    let lives = JSON.parse(sessionStorage.getItem("telazona_lives") || "[]");
+
+    function extrair(u){
+      let m = u.match(/(?:v=|youtu\.be\/|youtube\.com\/embed\/|\/live\/)([^&\n?#]+)/); 
+      if(m) return {type:"yt",id:m[1],name:"YouTube"};
+      m = u.match(/twitch\.tv\/([a-zA-Z0-9_]+)/); if(m) return {type:"tw",id:m[1],name:m[1]};
+      m = u.match(/kick\.com\/([a-zA-Z0-9_]+)/); if(m) return {type:"kick",id:m[1],name:m[1]};
+      return null;
+    }
+    function embed(d){
+      if(d.type==="yt") return `https://www.youtube.com/embed/${d.id}?autoplay=1&mute=0`;
+      if(d.type==="tw") return `https://player.twitch.tv/?channel=${d.id}&parent=${location.hostname}&autoplay=true`;
+      return `https://player.kick.com/${d.id}?autoplay=true`;
+    }
+    function chatEmbed(d){
+      if(d.type==="yt") return `https://www.youtube.com/live_chat?v=${d.id}&embed_domain=${location.hostname}`;
+      if(d.type==="tw") return `https://www.twitch.tv/embed/${d.id}/chat?parent=${location.hostname}&darkpopout`;
+      return `https://kick.com/${d.id}/chatroom`;
+    }
+
+    function abrir(modal){ modal.classList.add("active"); el.overlay.classList.add("active"); }
+    function fechar(){ document.querySelectorAll(".modal").forEach(m=>m.classList.remove("active")); el.overlay.classList.remove("active"); }
+
+    function updateChatButton(){
+      const isOpen = el.chatSidebar.classList.contains("open");
+      el.toggleChat.textContent = isOpen ? trad[lang].hideChat : trad[lang].showChat;
+    }
+
+    function render(){
+      const hasLives = lives.length > 0;
+      document.getElementById("hero").style.display = hasLives ? "none" : "flex";
+      document.getElementById("main-content").style.display = hasLives ? "flex" : "none";
+      el.toggleChat.style.display = hasLives ? "flex" : "none";
+
+      el.grid.innerHTML = "";
+      el.chatSelect.innerHTML = `<option data-t="selectChat">Selecione o chat</option>`;
+      t();
+
+      const cols = lives.length === 1 ? 1 : lives.length <= 4 ? 2 : 3;
+      el.grid.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
+
+      lives.forEach((url, i) => {
+        const data = extrair(url);
+        if(!data) return;
+
+        const div = document.createElement("div");
+        div.className = "live-container";
+        div.innerHTML = `<iframe src="${embed(data)}" allowfullscreen allow="autoplay; clipboard-write"></iframe>
+                         <div class="live-menu-btn">×</div>`;
+        div.querySelector(".live-menu-btn").onclick = e => {
+          e.stopPropagation();
+          if(confirm("Excluir esta live?")){
+            lives.splice(i,1);
+            sessionStorage.setItem("telazona_lives", JSON.stringify(lives));
+            render();
           }
-        });
-      }, { threshold: 0.1 });
-
-      function getText(key) {
-        const texts = {
-          'selectLive': 'Selecione uma live para ver o chat.',
-          'noKickChat': 'Chat não disponível para Kick. Acesse o site oficial para interagir.',
-          'noChat': 'Chat não disponível para esta live.',
-          'chatPlaceholder': 'Chat oculto. Clique em "Mostrar Chat" para ativar.',
-          'hideChat': 'Ocultar Chat',
-          'showChat': 'Mostrar Chat',
-          'hideUI': 'Ocultar Interface',
-          'showUI': 'Mostrar Interface',
-          'delete': 'Deletar',
-          'confirmDelete': 'Confirmar Deleção',
-          'invalidUrl': 'URL inválida. Suporte apenas para YouTube, Twitch e Kick.',
-          'saveError': 'Erro ao salvar. Tente novamente.'
         };
-        return texts[key] || key;
-      }
+        el.grid.appendChild(div);
 
-      function updateTexts() {}
-
-      function debounce(func, wait) {
-        let timeout;
-        return function executedFunction(...args) {
-          const later = () => {
-            clearTimeout(timeout);
-            func(...args);
-          };
-          clearTimeout(timeout);
-          timeout = setTimeout(later, wait);
-        };
-      }
-
-      function populateChatSelect(visibleIndices) {
-        chatSelector.innerHTML = "";
-        visibleIndices.forEach((i) => {
-          if (lives[i].platform === "kick") return;
-          const btn = document.createElement("button");
-          btn.className = `chat-btn ${i === currentSelected ? "active" : ""}`;
-          btn.dataset.index = i.toString();
-          btn.textContent = lives[i].channel || `Live ${i + 1}`;
-          btn.addEventListener("click", () => {
-            document
-              .querySelectorAll(".chat-btn")
-              .forEach((b) => b.classList.remove("active"));
-            btn.classList.add("active");
-            selectLive(i);
-          });
-          chatSelector.appendChild(btn);
-        });
-      }
-
-      function updateChat() {
-        if (currentSelected < 0 || !lives[currentSelected]) {
-          chatPlaceholder.innerHTML = getText('selectLive');
-          return;
-        }
-        if (lives[currentSelected].platform === "kick") {
-          chatPlaceholder.innerHTML = getText('noKickChat');
-          return;
-        }
-        const chatEmbed = lives[currentSelected].chatEmbed;
-        if (!chatEmbed) {
-          chatPlaceholder.innerHTML = getText('noChat');
-          return;
-        }
-        chatPlaceholder.innerHTML = `<iframe src="${chatEmbed}" style="width:100%;height:100%;border:none;" allow="fullscreen" title="Chat da Live ${lives[currentSelected].channel}"></iframe>`;
-      }
-
-      function updateMainContentLayout(isMobile) {
-        if (isMobile && chatVisible) {
-          mainContent.style.flexDirection = "column";
-          mainContent.style.overflowY = "auto";
-          grid.style.flex = "none";
-          grid.style.height = "auto";
-          grid.style.width = "100%";
-          chatSection.style.flex = "0 0 auto";
-          chatSection.style.width = "100%";
-          chatSection.style.borderLeft = "none";
-          chatSection.style.borderTop = "1px solid var(--border)";
-          chatSection.style.marginTop = "0";
-          chatSection.style.height = "calc(100vh - var(--header-height) - var(--footer-height))";
-          return;
-        }
-        if (isMobile) {
-          mainContent.style.flexDirection = "column";
-          mainContent.style.overflowY = "hidden";
-          grid.style.flex = "none";
-          grid.style.height = "auto";
-          chatSection.style.flex = "1";
-          chatSection.style.width = "100%";
-          chatSection.style.borderLeft = "none";
-          chatSection.style.borderTop = "1px solid var(--border)";
-          chatSection.style.marginTop = "0";
-        } else {
-          mainContent.style.flexDirection = "row";
-          mainContent.style.overflowY = "hidden";
-          grid.style.flex = "1";
-          grid.style.height = "100%";
-          chatSection.style.flex = "0 0 350px";
-          chatSection.style.width = "350px";
-          chatSection.style.borderLeft = "1px solid var(--border)";
-          chatSection.style.borderTop = "none";
-          chatSection.style.marginTop = "0";
-        }
-      }
-
-      function toggleChat() {
-        chatVisible = !chatVisible;
-        const icon = '<i class="ph ph-chat-text" aria-hidden="true"></i>';
-        const isMobile = window.innerWidth <= 768;
-        if (chatVisible) {
-          chatSection.style.display = "flex";
-          const visibleIndices = lives.map((_, idx) => idx);
-          populateChatSelect(visibleIndices);
-          chatSelector.style.display = "flex";
-          updateChat();
-          toggleChatBtn.innerHTML = `${icon} ${getText('hideChat')}`;
-          mobileToggleChatBtn.innerHTML = `${icon} ${getText('hideChat')}`;
-          updateMainContentLayout(isMobile);
-        } else {
-          chatPlaceholder.innerHTML = getText('chatPlaceholder');
-          chatSection.style.display = "none";
-          mainContent.style.flexDirection = "row";
-          toggleChatBtn.innerHTML = `${icon} ${getText('showChat')}`;
-          mobileToggleChatBtn.innerHTML = `${icon} ${getText('showChat')}`;
-          updateMainContentLayout(isMobile);
-        }
-        updateLayoutPositions();
-      }
-
-      function selectLive(index) {
-        currentSelected = index;
-        document
-          .querySelectorAll(".live-wrapper")
-          .forEach((w) => w.classList.remove("selected"));
-        const selectedWrapper = document.querySelector(
-          `[data-index="${index}"]`
-        );
-        if (selectedWrapper) selectedWrapper.classList.add("selected");
-        if (chatVisible) {
-          document
-            .querySelectorAll(".chat-btn")
-            .forEach((b) => b.classList.remove("active"));
-          const activeBtn = document.querySelector(
-            `.chat-btn[data-index="${index}"]`
-          );
-          if (activeBtn) activeBtn.classList.add("active");
-          updateChat();
-        }
-      }
-
-      function showHeaderAndFooter() {
-        header.classList.remove("hidden");
-        footer.classList.remove("hidden");
-        
-        if (window.innerWidth > 768) {
-          const headerRight = document.querySelector('.header-right');
-          headerRight.parentNode.insertBefore(toggleBtn, headerRight);
-        } else {
-          
-          document.body.appendChild(toggleBtn);
-        }
-        updateLayoutPositions();
-        toggleBtn.innerHTML = `<i class="ph ph-eye-slash" aria-hidden="true"></i> ${getText('hideUI')}`;
-        toggleBtn.classList.remove("fixed");
-        toggleBtn.style.position = "absolute";
-        toggleBtn.style.top = "auto";
-        toggleBtn.style.bottom = "-40px";
-        toggleBtn.style.left = "24px";
-        renderLives();
-      }
-
-      function hideHeaderAndFooter() {
-        header.classList.add("hidden");
-        footer.classList.add("hidden");
-        document.body.appendChild(toggleBtn); 
-        updateLayoutPositions();
-        const chatIconClass = chatVisible ? 'x' : 'chat-text';
-        const chatText = chatVisible ? getText('hideChat') : getText('showChat');
-        toggleBtn.innerHTML = `
-          <div class="controls-flex">
-            <button class="show-ui-btn" onclick="showHeaderAndFooter(); event.stopPropagation();">
-              <i class="ph ph-eye" aria-hidden="true"></i> ${getText('showUI')}
-            </button>
-            <button class="chat-toggle-btn fixed-chat-toggle" onclick="handleFixedChatToggle(event);">
-              <i class="ph ph-${chatIconClass}" aria-hidden="true"></i> ${chatText}
-            </button>
-          </div>
-        `;
-        toggleBtn.classList.add("fixed");
-        toggleBtn.style.position = "fixed";
-        toggleBtn.style.top = "10px";
-        toggleBtn.style.bottom = "auto";
-        toggleBtn.style.left = "24px";
-        renderLives();
-      }
-
-      function handleFixedChatToggle(e) {
-        e.stopPropagation();
-        const fixedChatToggle = e.target.closest('.fixed-chat-toggle') || e.target;
-        toggleChat();
-        const chatIconClass = chatVisible ? 'x' : 'chat-text';
-        const chatText = chatVisible ? getText('hideChat') : getText('showChat');
-        fixedChatToggle.innerHTML = `<i class="ph ph-${chatIconClass}" aria-hidden="true"></i> ${chatText}`;
-      }
-
-      function toggleHeaderFooter() {
-        if (header.classList.contains("hidden")) {
-          showHeaderAndFooter();
-        } else {
-          hideHeaderAndFooter();
-        }
-      }
-
-      function updateLayoutPositions() {
-        const headerVisible = !header.classList.contains("hidden");
-        const footerVisible = !footer.classList.contains("hidden");
-        const headerH = headerVisible ? 60 : 0;
-        const footerH = footerVisible ? 30 : 0;
-        main.style.marginTop = `${headerH}px`;
-        main.style.height = `calc(100vh - ${headerH + footerH}px)`;
-      }
-
-      function appendParams(base, isMini) {
-        let params;
-        if (base.includes("youtube.com/embed")) {
-          params = isMini
-            ? "autoplay=0&mute=1"
-            : "autoplay=1&mute=0&enablejsapi=1";
-        } else if (
-          base.includes("player.twitch.tv") ||
-          base.includes("player.kick.com")
-        ) {
-          params = isMini
-            ? "autoplay=false&muted=true"
-            : "autoplay=true&muted=false";
-        } else {
-          return base;
-        }
-        const separator = base.includes("?") ? "&" : "?";
-        return base + separator + params;
-      }
-
-      function extractYouTubeId(url) {
-        const regExp =
-          /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=|live\/)([^#&?]*).*/;
-        const match = url.match(regExp);
-        return match && match[2].length === 11 ? match[2] : null;
-      }
-
-      function extractTwitchChannel(url) {
-        let match = url.match(/twitch\.tv\/([a-zA-Z0-9_]+)/i);
-        if (!match) {
-          match = url.match(/channel=([a-zA-Z0-9_]+)/i);
-        }
-        return match ? match[1] : null;
-      }
-
-      function extractKickChannel(url) {
-        let match = url.match(/kick\.com\/([a-zA-Z0-9_]+)/i);
-        if (!match) {
-          match = url.match(/player\.kick\.com\/([a-zA-Z0-9_]+)/i);
-        }
-        return match ? match[1] : null;
-      }
-
-      function extractChannelName(url, platform) {
-        if (platform === 'youtube') return 'YouTube Live';
-        if (platform === 'twitch') {
-          const channel = extractTwitchChannel(url);
-          return channel ? `@${channel}` : 'Twitch Live';
-        }
-        if (platform === 'kick') {
-          const channel = extractKickChannel(url);
-          return channel ? `@${channel}` : 'Kick Live';
-        }
-        return 'Live';
-      }
-
-      function generateLiveEmbed(url) {
-        const videoId = extractYouTubeId(url);
-        if (videoId) return `https://www.youtube.com/embed/${videoId}`;
-        const twitchChannel = extractTwitchChannel(url);
-        if (twitchChannel) {
-          return `https://player.twitch.tv/?channel=${twitchChannel}&parent=${domain}`;
-        }
-        const kickChannel = extractKickChannel(url);
-        if (kickChannel) return `https://player.kick.com/${kickChannel}`;
-        if (
-          url.includes("youtube.com/embed") ||
-          url.includes("player.twitch.tv") ||
-          url.includes("player.kick.com")
-        ) {
-          return url;
-        }
-        return null;
-      }
-
-      function generateChatEmbed(url) {
-        const videoId = extractYouTubeId(url);
-        if (videoId)
-          return `https://www.youtube.com/live_chat?v=${videoId}&embed_domain=${domain}`;
-        const twitchChannel = extractTwitchChannel(url);
-        if (twitchChannel)
-          return `https://www.twitch.tv/embed/${twitchChannel}/chat?darkpopout&parent=${domain}`;
-        const kickChannel = extractKickChannel(url);
-        if (kickChannel) return null;
-        return null;
-      }
-
-      function toggleMobileMenu() {
-        const isActive = hamburger.classList.contains("active");
-        hamburger.classList.toggle("active");
-        hamburger.setAttribute("aria-expanded", !isActive);
-        mobileMenu.classList.toggle("active");
-        overlay.classList.toggle("active");
-        document.body.style.overflow = isActive ? '' : 'hidden'; 
-      }
-
-      function closeMobileMenu() {
-        hamburger.classList.remove("active");
-        hamburger.setAttribute("aria-expanded", "false");
-        mobileMenu.classList.remove("active");
-        
-        if (!addModal.classList.contains('active')) {
-             overlay.classList.remove("active");
-             document.body.style.overflow = '';
-        }
-      }
-      
-      
-      function handleOverlayClick() {
-          if (mobileMenu.classList.contains('active')) {
-              closeMobileMenu();
-          } else if (addModal.classList.contains('active')) {
-              closeAddModal();
-          }
-      }
-      
-      
-      overlay.addEventListener('click', handleOverlayClick);
-
-      function updateLayout(visibleLives, isUIHidden) {
-        if (window.innerWidth <= 768) {
-          grid.style.gridTemplateColumns = "1fr";
-          grid.style.gridAutoRows = "auto";
-          return;
-        }
-        let cols;
-        if (visibleLives === 1) {
-          cols = 1;
-        } else if (visibleLives <= 4) {
-          cols = 2;
-        } else {
-          cols = 3;
-        }
-        if (visibleLives === 1) {
-          grid.style.gridTemplateColumns = "1fr";
-          grid.style.gridTemplateRows = "1fr";
-          grid.style.gap = "0";
-          grid.style.justifyContent = "center";
-          grid.style.alignContent = "center";
-          return;
-        }
-        grid.style.gap = "0";
-        grid.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
-        if (cols === 2 && isUIHidden) {
-          const rows = Math.ceil(visibleLives / cols);
-          grid.style.gridTemplateRows = `repeat(${rows}, 1fr)`;
-          grid.style.alignContent = "stretch";
-        } else {
-          grid.style.gridAutoRows = "auto";
-          grid.style.alignContent = "start";
-        }
-      }
-
-      function performDelete(i, contextMenu = null) {
-        try {
-          const wasSelected = currentSelected === i;
-          lives.splice(i, 1);
-          delete deleteConfirmations[i];
-          if (wasSelected) {
-            currentSelected = lives.length > 0 ? lives.length - 1 : -1;
-          } else if (currentSelected > i) {
-            currentSelected--;
-          }
-          const oldConf = { ...deleteConfirmations };
-          deleteConfirmations = {};
-          lives.forEach((_, newIdx) => {
-            deleteConfirmations[newIdx] = oldConf[newIdx] || 0;
-          });
-          sessionStorage.setItem("telazona-lives", JSON.stringify(lives));
-          updateLayoutPositions();
-          if (lives.length === 0) {
-            location.reload();
-            return;
-          }
-          renderLives();
-          if (contextMenu) contextMenu.classList.remove("active");
-          if (chatVisible) {
-            const visibleIndices = lives.map((_, idx) => idx);
-            populateChatSelect(visibleIndices);
-            updateChat();
-          }
-        } catch (e) {
-          console.error("Erro ao deletar:", e);
-        }
-      }
-
-      function closeContextMenus(e) {
-        if (
-          !e.target.closest(".menu-toggle") &&
-          !e.target.closest(".context-menu") &&
-          !e.target.closest(".context-item")
-        ) {
-          document
-            .querySelectorAll(".context-menu.active")
-            .forEach((m) => m.classList.remove("active"));
-        }
-      }
-
-      function renderLives() {
-        const visibleLives = lives.length;
-        const isUIHidden =
-          header.classList.contains("hidden") &&
-          footer.classList.contains("hidden");
-        if (visibleLives === 0) {
-          hero.style.display = "flex";
-          mainContent.style.display = "none";
-          currentSelected = -1;
-          if (chatVisible) {
-            toggleChat();
-          }
-          return;
-        }
-        hero.style.display = "none";
-        mainContent.style.display = "flex";
-        grid.style.display = "grid";
-        updateLayout(visibleLives, isUIHidden);
-        let cols;
-        if (visibleLives === 1) {
-          cols = 1;
-        } else if (visibleLives <= 4) {
-          cols = 2;
-        } else {
-          cols = 3;
-        }
-        const existingWrappers = grid.querySelectorAll(".live-wrapper");
-        if (existingWrappers.length === visibleLives) {
-          return;
-        }
-        grid.innerHTML = "";
-        lives.forEach((live, i) => {
-          const wrapper = document.createElement("div");
-          wrapper.dataset.index = i;
-          let className = "live-wrapper";
-          if (i === currentSelected) className += " selected";
-          if (visibleLives === 1) className += " full-height";
-          if (cols === 2 && !isUIHidden) className += " two-col";
-          if (cols === 2 && isUIHidden) className += " stretch-height";
-          wrapper.className = className;
-          const skeleton = document.createElement("div");
-          skeleton.className = "skeleton";
-          wrapper.appendChild(skeleton);
-          const iframe = document.createElement("iframe");
-          iframe.className = "live-frame";
-          iframe.dataset.src = appendParams(live.embed, false);
-          iframe.allow = "autoplay; encrypted-media; fullscreen";
-          iframe.loading = "lazy";
-          iframe.title = `Live: ${live.channel}`;
-          iframe.sandbox = "allow-scripts allow-same-origin allow-popups";
-          wrapper.appendChild(iframe);
-          wrapper.addEventListener("click", (e) => {
-            if (
-              e.target.closest(".menu-toggle") ||
-              e.target.closest(".context-menu")
-            )
-              return;
-            selectLive(i);
-          });
-          const menuToggle = document.createElement("button");
-          menuToggle.className = "menu-toggle";
-          menuToggle.innerHTML = '<i class="ph ph-dots-three" aria-hidden="true"></i>';
-          menuToggle.setAttribute("aria-label", "Opções da Live");
-          const contextMenu = document.createElement("div");
-          contextMenu.className = "context-menu";
-          const deleteItem = document.createElement("button");
-          deleteItem.className = "context-item";
-          deleteItem.innerHTML = `<i class="ph ph-trash" aria-hidden="true"></i> ${getText('delete')}`;
-          deleteItem.setAttribute("aria-label", "Deletar Live");
-          let confTimer;
-          deleteItem.addEventListener("click", (e) => {
-            e.stopPropagation();
-            const conf = deleteConfirmations[i] || 0;
-            if (conf === 0) {
-              deleteConfirmations[i] = 1;
-              deleteItem.innerHTML = `<i class="ph ph-trash" aria-hidden="true"></i> ${getText('confirmDelete')}`;
-              confTimer = setTimeout(() => {
-                deleteConfirmations[i] = 0;
-                deleteItem.innerHTML = `<i class="ph ph-trash" aria-hidden="true"></i> ${getText('delete')}`;
-              }, 3000);
-            } else {
-              clearTimeout(confTimer);
-              performDelete(i, contextMenu);
-            }
-          });
-          contextMenu.appendChild(deleteItem);
-          menuToggle.addEventListener("click", (e) => {
-            e.stopPropagation();
-            const wasActive = contextMenu.classList.contains("active");
-            document
-              .querySelectorAll(".context-menu.active")
-              .forEach((m) => m.classList.remove("active"));
-            if (!wasActive) {
-              contextMenu.classList.add("active");
-            }
-          });
-          wrapper.appendChild(menuToggle);
-          wrapper.appendChild(contextMenu);
-          grid.appendChild(wrapper);
-          iframeObserver.observe(wrapper);
-          setTimeout(() => {
-            skeleton.style.display = "none";
-          }, 500);
-        });
-        if (chatVisible) {
-          const isMobile = window.innerWidth <= 768;
-          const visibleIndices = lives.map((_, idx) => idx);
-          populateChatSelect(visibleIndices);
-          updateMainContentLayout(isMobile);
-        }
-        document.removeEventListener("click", closeContextMenus, true);
-        document.addEventListener("click", closeContextMenus, true);
-      }
-
-      function showAddModal() {
-        addModal.classList.add("active");
-        addModal.setAttribute("aria-hidden", "false");
-        overlay.classList.add("active");
-        liveUrlInput.focus();
-        closeMobileMenu();
-      }
-
-      function closeAddModal() {
-        addModal.classList.remove("active");
-        addModal.setAttribute("aria-hidden", "true");
-        
-        if (!mobileMenu.classList.contains('active') && !welcomeModal.classList.contains('active')) {
-            overlay.classList.remove("active");
-            document.body.style.overflow = '';
-        }
-        liveUrlInput.value = "";
-      }
-
-      async function addLive() {
-        const url = liveUrlInput.value.trim();
-        if (!url) return;
-        const loading = loadingSection;
-        const btnGroup = document.querySelector(".btn-group");
-        loading.classList.add("active");
-        btnGroup.classList.remove("active");
-        const embedUrl = generateLiveEmbed(url);
-        if (!embedUrl) {
-          loading.classList.remove("active");
-          btnGroup.classList.add("active");
-          return alert(getText('invalidUrl'));
-        }
-        try {
-          const chatEmbedUrl = generateChatEmbed(url);
-          const videoId = extractYouTubeId(url);
-          const twitchChannel = extractTwitchChannel(url);
-          const kickChannel = extractKickChannel(url);
-          let platform = null;
-          if (videoId) platform = "youtube";
-          else if (twitchChannel) platform = "twitch";
-          else if (kickChannel) platform = "kick";
-          const channelName = extractChannelName(url, platform);
-          const newIndex = lives.length;
-          lives.push({
-            embed: embedUrl,
-            chatEmbed: chatEmbedUrl,
-            platform: platform,
-            channel: channelName,
-          });
-          deleteConfirmations[newIndex] = 0;
-          currentSelected = newIndex;
-          sessionStorage.setItem("telazona-lives", JSON.stringify(lives));
-          closeAddModal();
-          renderLives();
-          if (lives.length === 1 && !chatVisible) {
-            toggleChat();
-          } else if (chatVisible) {
-            const isMobile = window.innerWidth <= 768;
-            const visibleIndices = lives.map((_, idx) => idx);
-            populateChatSelect(visibleIndices);
-            updateChat();
-            updateMainContentLayout(isMobile);
-          }
-        } catch (e) {
-          console.error("Erro ao adicionar:", e);
-          alert(getText('saveError'));
-        } finally {
-          loading.classList.remove("active");
-          btnGroup.classList.add("active");
-        }
-      }
-
-      addLiveBtn.addEventListener("click", showAddModal);
-      heroAddBtn.addEventListener("click", showAddModal);
-      submitAddBtn.addEventListener("click", addLive);
-      cancelAddBtn.addEventListener("click", closeAddModal);
-      liveUrlInput.addEventListener("keypress", (e) => {
-        if (e.key === "Enter") addLive();
+        const opt = document.createElement("option");
+        opt.value = i;
+        opt.textContent = data.name;
+        el.chatSelect.appendChild(opt);
       });
-      hamburger.addEventListener("click", toggleMobileMenu);
-      closeMenuBtn.addEventListener("click", closeMobileMenu);
-      
-      toggleBtn.addEventListener("click", (e) => {
-        if (toggleBtn.classList.contains('fixed')) {
-          return;
-        }
-        toggleHeaderFooter();
-      });
-      toggleChatBtn.addEventListener("click", toggleChat);
+    }
 
-      
-      mobileAddLiveBtn.addEventListener("click", () => {
-          closeMobileMenu();
-          showAddModal();
-      });
-      
-      mobileToggleChatBtn.addEventListener("click", () => {
-          toggleChat();
-          closeMobileMenu();
-      });
-      
-      window.addEventListener(
-        "resize",
-        debounce(() => {
-          renderLives();
-          updateLayoutPositions();
-          if (chatVisible) {
-            const isMobile = window.innerWidth <= 768;
-            updateMainContentLayout(isMobile);
-            const visibleIndices = lives.map((_, idx) => idx);
-            populateChatSelect(visibleIndices);
-          }
-          
-          if (!header.classList.contains('hidden')) {
-              showHeaderAndFooter();
-          }
-        }, 100)
-      );
+    // EVENTOS PRINCIPAIS
+    el.toggleUI.onclick = () => {
+      const oculto = !el.header.classList.contains("hidden");
+      el.header.classList.toggle("hidden", oculto);
+      el.footer.classList.toggle("hidden", oculto);
+      el.toggleUI.textContent = oculto ? trad[lang].showUI : trad[lang].hideUI;
+    };
 
-      updateTexts();
-      updateLayoutPositions();
-      renderLives();
-      showHeaderAndFooter();
+    el.toggleChat.onclick = () => { el.chatSidebar.classList.toggle("open"); updateChatButton(); };
 
-      
-      const welcomeModal = document.getElementById('welcome-modal');
-      const closeWelcome = document.getElementById('close-welcome');
-      const startBtn = document.getElementById('start-telazona');
-      const dontShow = document.getElementById('dont-show-welcome');
+    el.chatSelect.onchange = () => {
+      if(el.chatSelect.value === "") return;
+      const data = extrair(lives[el.chatSelect.value]);
+      el.chatIframe.src = chatEmbed(data);
+      el.chatSidebar.classList.add("open");
+      updateChatButton();
+    };
 
-      function showWelcome() {
-        welcomeModal.style.display = 'flex';
-        overlay.classList.add('active');
-        document.body.style.overflow = 'hidden';
-        welcomeModal.scrollTop = 0;
-      }
+    document.getElementById("add-btn").onclick = () => abrir(el.addModal);
+    document.getElementById("hero-add").onclick = () => abrir(el.addModal);
+    document.getElementById("confirm-add").onclick = () => {
+      const url = document.getElementById("url-input").value.trim();
+      if(extrair(url)){
+        lives.push(url);
+        sessionStorage.setItem("telazona_lives", JSON.stringify(lives));
+        render();
+        fechar();
+        document.getElementById("url-input").value = "";
+      } else alert("URL inválida ou não suportada!");
+    };
+    document.getElementById("cancel-add").onclick = fechar;
+    el.overlay.onclick = fechar;
+    document.getElementById("help-btn").onclick = () => abrir(el.welcomeModal);
+    document.getElementById("close-welcome").onclick = () => {
+      fechar();
+      if(document.getElementById("no-welcome").checked) localStorage.setItem("welcome_seen","1");
+    };
+    document.getElementById("donate-btn").onclick = () => window.open("https://instagram.com/michelsantnasc","_blank");
 
-      function hideWelcome() {
-        welcomeModal.style.display = 'none';
-        
-        if (!addModal.classList.contains('active') && !mobileMenu.classList.contains('active')) {
-             overlay.classList.remove('active');
-             document.body.style.overflow = '';
-        }
-      }
+    // MENU MOBILE + IDIOMA NO CELULAR
+    const mobileMenu = document.getElementById("mobile-menu");
+    const mobileLangBtn = document.getElementById("mobile-lang-btn");
+    const mobileLangMenu = document.getElementById("mobile-lang-menu");
 
-      
-      if (!localStorage.getItem('telazona-welcome-seen')) {
-        setTimeout(showWelcome, 1000);
-      }
+    document.getElementById("menu-btn").onclick = () => mobileMenu.classList.toggle("open");
 
-      
-      closeWelcome.onclick = startBtn.onclick = () => {
-        if (dontShow.checked) localStorage.setItem('telazona-welcome-seen', 'true');
-        hideWelcome();
+    mobileLangBtn.onclick = (e) => {
+      e.stopPropagation();
+      mobileLangMenu.style.display = mobileLangMenu.style.display === "block" ? "none" : "block";
+    };
+
+    document.querySelectorAll("#mobile-lang-menu button").forEach(b => {
+      b.onclick = () => {
+        lang = b.dataset.lang;
+        localStorage.setItem("lang", lang);
+        t();
+        mobileLangMenu.style.display = "none";
       };
+    });
 
-      
-      document.getElementById('help-btn')?.addEventListener('click', () => {
-        localStorage.removeItem('telazona-welcome-seen');
-        showWelcome();
-      });
+    // MENU IDIOMA DESKTOP
+    document.getElementById("lang-btn").onclick = e => {
+      e.stopPropagation();
+      const menu = document.getElementById("lang-menu");
+      menu.style.display = menu.style.display === "block" ? "none" : "block";
+    };
+    document.querySelectorAll("#lang-menu button").forEach(b => b.onclick = () => {
+      lang = b.dataset.lang;
+      localStorage.setItem("lang", lang);
+      t();
+      document.getElementById("lang-menu").style.display = "none";
+    });
 
-      
-      document.getElementById('mobile-help-btn')?.addEventListener('click', () => {
-        closeMobileMenu();
-        localStorage.removeItem('telazona-welcome-seen');
-        showWelcome();
-      });
+    // FECHAR MENUS AO CLICAR FORA
+    document.addEventListener("click", () => {
+      mobileLangMenu.style.display = "none";
+      document.getElementById("lang-menu").style.display = "none";
+    });
+    mobileMenu.onclick = e => e.stopPropagation();
 
-     
-      document.querySelectorAll('a[href*="picpay.me"]').forEach(link => {
-        link.addEventListener('click', () => {
-          closeMobileMenu(); 
-        });
-      });
-      
-   
-      if (window.innerWidth > 768) {
-        document.querySelectorAll('#welcome-modal img').forEach(img => {
-          img.style.cursor = 'zoom-in';
-          img.addEventListener('mouseenter', () => img.style.transform = 'scale(1.08)');
-          img.addEventListener('mouseleave', () => img.style.transform = 'scale(1)');
-          img.style.transition = 'transform 0.5s ease';
-        });
-      }  
-    </script>
-  </body>
+    // BOTÕES MOBILE
+    document.getElementById("mobile-add").onclick = () => document.getElementById("add-btn").click();
+    document.getElementById("mobile-donate").onclick = () => document.getElementById("donate-btn").click();
+    document.getElementById("mobile-help").onclick = () => document.getElementById("help-btn").click();
+
+    // OBSERVER DO CHAT
+    new MutationObserver(updateChatButton).observe(el.chatSidebar, { attributes: true, attributeFilter: ["class"] });
+
+    // INÍCIO
+    if(!localStorage.getItem("welcome_seen")) setTimeout(() => abrir(el.welcomeModal), 800);
+    render();
+  </script>
+</body>
 </html>
