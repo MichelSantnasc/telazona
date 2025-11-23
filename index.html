@@ -132,7 +132,8 @@
     }
     .live-container iframe{width:100%;height:100%;border:none}
     .live-menu-btn{
-      position:absolute;top:12px;left:12px;background:rgba(0,0,0,.7);backdrop-filter:blur(10px);
+      position:absolute;top:12px;right:16px; /* PADRÃO PC: LADO DIREITO */
+      background:rgba(0,0,0,.7);backdrop-filter:blur(10px); 
       border:1px solid var(--border);border-radius:var(--radius); 
       width:auto;height:auto;padding:8px 12px; 
       display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:10;
@@ -155,6 +156,17 @@
       body { overflow-y: auto; height: auto; }
       main { flex-direction: column; height: auto; padding-top: var(--header-h); padding-bottom: var(--footer-h); }
       #main-content { flex-direction: column; height: auto; }
+      
+      .modal {
+        padding: 20px;
+      }
+      
+      /* SOBRESCREVE PARA MOBILE: LADO ESQUERDO */
+      .live-container .live-menu-btn {
+        right: auto;
+        left: 16px;
+      }
+
       #grid { 
         height: auto; 
         min-height: auto;
