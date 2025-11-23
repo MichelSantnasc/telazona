@@ -15,7 +15,6 @@
     *{margin:0;padding:0;box-sizing:border-box}
     body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);height:100vh;overflow:hidden;position:relative}
     .silkscreen{font-family:'Silkscreen',sans-serif}
-
     header{
       position:fixed;top:0;left:0;width:100%;height:var(--header-h);
       background:rgba(10,10,10,.95);backdrop-filter:blur(20px);
@@ -32,26 +31,29 @@
     }
     header.hidden{transform:translateY(-100%)}
     footer.hidden{transform:translateY(100%)}
-
     .logo{font-size:32px;font-weight:700;letter-spacing:2px;color:var(--accent)}
-
-    /* HAMBÚRGUER BONITO */
     #menu-btn{
       display:none;background:none;border:none;color:#fff;font-size:32px;cursor:pointer;
       padding:8px;border-radius:8px;transition:.3s;
     }
     #menu-btn:hover{background:rgba(255,255,255,.1)}
-
-    /* MENU MOBILE */
     #mobile-menu{
       position:fixed;top:var(--header-h);left:0;width:100%;background:rgba(10,10,10,.98);
-      backdrop-filter:blur(20px);padding:20px;display:none;flex-direction:column;gap:16px;
+      backdrop-filter:blur(20px);padding:20px;
+      display:none; 
+      flex-direction:column;gap:16px;
       border-bottom:1px solid var(--border);z-index:99;transition:transform .35s ease;
       transform:translateY(-100%);
     }
-    #mobile-menu.open{transform:translateY(0)}
-
-    /* MENU DE IDIOMA MOBILE */
+    #mobile-menu.open{
+        transform:translateY(0);
+        display:flex;
+    }
+    #close-menu-btn{
+      background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);
+      padding:12px;color:#fff;font-size:16px;cursor:pointer;transition:.3s;
+    }
+    #close-menu-btn:hover{background:var(--accent2);border-color:var(--accent2)}
     #mobile-lang-menu{
       background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);
       margin-top:8px;overflow:hidden;display:none;
@@ -61,14 +63,19 @@
       font-size:15px;cursor:pointer;transition:.2s;
     }
     #mobile-lang-menu button:hover{background:var(--accent);color:#000}
-
+    #lang-menu{
+        position:absolute;top:calc(var(--header-h) - 5px);right:24px;background:var(--bg2);
+        border:1px solid var(--border);border-radius:var(--radius);min-width:140px;
+        z-index:999;transition:opacity .3s, transform .3s;
+    }
+    #lang-menu button{
+        width:100%;padding:12px;background:none;border:none;color:#fff;text-align:left;cursor:pointer;
+    }
+    #lang-menu button:hover{background:var(--accent);color:#000}
     @media (max-width:768px){
       #menu-btn{display:block}
       .header-right{display:none !important}
-      #mobile-menu{display:flex}
     }
-
-    /* BARRA DE CONTROLE */
     #control-bar{
       position:fixed;top:var(--header-h);left:50%;transform:translate(-50%,-50%);
       height:42px;border-radius:22px;display:flex;z-index:101;
@@ -76,13 +83,10 @@
       box-shadow:0 6px 20px rgba(0,0,0,.7);
     }
     header.hidden ~ #control-bar{top:21px}
-
     #toggle-ui{background:var(--accent);color:#000;padding:0 20px;height:100%;border-radius:22px 0 0 22px;cursor:pointer;display:flex;align-items:center}
     #toggle-chat{background:var(--accent2);color:#fff;padding:0 20px;height:100%;border-radius:0 22px 22px 0;cursor:pointer;display:none;align-items:center}
-
     header.hidden ~ #control-bar #toggle-ui,
     header.hidden ~ #control-bar #toggle-chat{background:rgba(30,30,30,.95);color:#fff}
-
     .header-right{display:flex;align-items:center;gap:12px}
     .btn{
       background:transparent;color:var(--text2);border:1px solid var(--border);
@@ -90,12 +94,9 @@
       display:flex;align-items:center;gap:8px;transition:.3s;
     }
     .btn:hover{background:var(--accent);color:#000;border-color:var(--accent)}
-
     .ph-heart{color:transparent;-webkit-text-stroke:1.8px #e91e63;font-weight:900}
-
     .overlay{position:fixed;inset:0;background:rgba(0,0,0,.8);backdrop-filter:blur(12px);opacity:0;visibility:hidden;transition:.3s;z-index:999}
     .overlay.active{opacity:1;visibility:visible}
-
     .modal{
       position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(.95);
       background:rgba(26,26,26,.98);backdrop-filter:blur(20px);border:1px solid var(--border);
@@ -103,35 +104,102 @@
       opacity:0;visibility:hidden;transition:.4s;z-index:1001;color:#fff;
     }
     .modal.active{opacity:1;visibility:visible;transform:translate(-50%,-50%) scale(1)}
-
+    
+    #welcome-modal::-webkit-scrollbar {
+        width: 8px;
+    }
+    #welcome-modal::-webkit-scrollbar-track {
+        background: var(--bg2);
+        border-radius: 10px;
+    }
+    #welcome-modal::-webkit-scrollbar-thumb {
+        background: var(--accent2);
+        border-radius: 10px;
+    }
+    #welcome-modal::-webkit-scrollbar-thumb:hover {
+        background: var(--accent);
+    }
+    
     main{height:100vh;display:flex;position:relative}
     #hero{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px;text-align:center;padding:20px}
     #main-content{flex:1;display:flex;position:relative;display:none}
     #grid{flex:1;display:grid;gap:4px;height:100%;padding:4px}
-    .live-container{position:relative;overflow:hidden;border-radius:var(--radius);background:#000}
+    .live-container{
+        position:relative;
+        overflow:hidden;
+        background:#000;
+        transition: all 0.4s ease-out;
+    }
     .live-container iframe{width:100%;height:100%;border:none}
-
     .live-menu-btn{
       position:absolute;top:12px;left:12px;background:rgba(0,0,0,.7);backdrop-filter:blur(10px);
-      border:1px solid var(--border);border-radius:50%;width:40px;height:40px;
+      border:1px solid var(--border);border-radius:var(--radius); 
+      width:auto;height:auto;padding:8px 12px; 
       display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:10;
-      opacity:0;transition:.3s;font-size:22px;color:#fff;
+      opacity:0;transition:.3s;font-size:14px;color:#fff;
+    }
+    .live-menu-btn.confirm-delete {
+        background: #e91e63;
+        border-color: #e91e63;
     }
     .live-container:hover .live-menu-btn{opacity:1}
-
     #chat-sidebar{width:0;background:var(--bg2);border-left:1px solid var(--border);overflow:hidden;transition:width .4s;display:flex;flex-direction:column}
     #chat-sidebar.open{width:var(--chat-w)}
     #chat-selector{padding:16px;background:#111;border-bottom:1px solid var(--border);text-align:center}
     #chat-selector select{width:100%;padding:10px;background:#000;border:1px solid var(--border);border-radius:8px;color:#fff;font-size:15px}
     #chat-iframe{flex:1;width:100%}
-
     img{max-width:100%;border-radius:12px;margin:12px 0;border:2px solid #333}
     a{color:var(--accent);text-decoration:none}
     a:hover{text-decoration:underline}
+    @media (max-width: 768px) {
+      body { overflow-y: auto; height: auto; }
+      main { flex-direction: column; height: auto; padding-top: var(--header-h); padding-bottom: var(--footer-h); }
+      #main-content { flex-direction: column; height: auto; }
+      #grid { 
+        height: auto; 
+        min-height: auto;
+      }
+      .live-container {
+        aspect-ratio: 16 / 9; 
+        margin-bottom: 0; 
+        border-radius: 0; 
+      }
+      #grid {
+        grid-template-columns: 1fr !important;
+        gap: 0;
+        padding: 0;
+      }
+      #grid .live-container:first-child { border-top-left-radius: var(--radius); border-top-right-radius: var(--radius); }
+      #grid .live-container:last-child { border-bottom-left-radius: var(--radius); border-bottom-right-radius: var(--radius); }
+      #chat-sidebar {
+        width: 100% !important; 
+        height: 0; 
+        border-left: none;
+        border-top: 1px solid var(--border);
+        transition: height .4s;
+      }
+      #chat-sidebar.open {
+        height: 70vh !important;
+      }
+      #control-bar {
+        top: 90px;
+        transform: translate(-50%, -50%);
+        height: 48px; 
+      }
+      header.hidden ~ #control-bar { 
+        top: 24px;
+      }
+      #toggle-ui, #toggle-chat {
+        padding: 0 16px;
+        font-size: 14px;
+        height: 100%;
+        display: flex;
+        align-items: center;
+      }
+    }
   </style>
 </head>
 <body>
-
   <header id="header">
     <div class="logo silkscreen">TELAZONA</div>
     <button id="menu-btn"><i class="ph ph-list"></i></button>
@@ -139,36 +207,31 @@
       <button class="btn" id="add-btn" data-t="addLive">+ Adicionar Live</button>
       <button class="btn" id="donate-btn"><i class="ph ph-heart"></i> <span data-t="donate">Doar</span></button>
       <button class="btn" id="help-btn" data-t="help">Ajuda</button>
-      <button class="btn" id="lang-btn">PT</button>
-      <div id="lang-menu" style="display:none;position:absolute;top:100%;right:0;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);min-width:140px;z-index:999">
-        <button data-lang="pt" style="width:100%;padding:12px;background:none;border:none;color:#fff;text-align:left;cursor:pointer">Português</button>
-        <button data-lang="en" style="width:100%;padding:12px;background:none;border:none;color:#fff;text-align:left;cursor:pointer">English</button>
-        <button data-lang="es" style="width:100%;padding:12px;background:none;border:none;color:#fff;text-align:left;cursor:pointer">Español</button>
+      <button class="btn" id="lang-btn"><i class="ph ph-globe"></i> <span id="lang-text">PT</span></button>
+      <div id="lang-menu" style="display:none">
+        <button data-lang="pt">Português</button>
+        <button data-lang="en">English</button>
+        <button data-lang="es">Español</button>
       </div>
     </div>
   </header>
-
-  <!-- MENU MOBILE -->
   <div id="mobile-menu">
     <button class="btn" id="mobile-add" data-t="addLive">+ Adicionar Live</button>
     <button class="btn" id="mobile-donate"><i class="ph ph-heart"></i> <span data-t="donate">Doar</span></button>
     <button class="btn" id="mobile-help" data-t="help">Ajuda</button>
-    <button class="btn" id="mobile-lang-btn">Idioma • <span id="mobile-lang-text">PT</span> <i class="ph ph-caret-down" style="float:right;margin-top:3px"></i></button>
+    <button class="btn" id="mobile-lang-btn"><i class="ph ph-globe"></i> Idioma • <span id="mobile-lang-text">PT</span> <i class="ph ph-caret-down" style="float:right;margin-top:3px"></i></button>
     <div id="mobile-lang-menu">
       <button data-lang="pt">Português</button>
       <button data-lang="en">English</button>
       <button data-lang="es">Español</button>
     </div>
+    <button id="close-menu-btn" data-t="closeMenu">Fechar Menu</button>
   </div>
-
   <div id="control-bar">
     <div id="toggle-ui" data-t="hideUI">Ocultar Interface</div>
     <div id="toggle-chat" data-t="showChat">Mostrar Chat</div>
   </div>
-
   <div id="overlay" class="overlay"></div>
-
-  <!-- MODAL ADICIONAR LIVE -->
   <div id="add-modal" class="modal">
     <h2 data-t="addLiveTitle">Adicionar Live (YouTube, Twitch ou Kick)</h2>
     <p style="text-align:center;margin:20px 0">Cole a URL da live abaixo</p>
@@ -178,8 +241,6 @@
       <button class="btn" style="background:var(--accent);color:#000" id="confirm-add" data-t="add">Adicionar</button>
     </div>
   </div>
-
-  <!-- MODAL BOAS-VINDAS -->
   <div id="welcome-modal" class="modal">
     <h1 class="silkscreen" style="font-size:3.5rem;text-align:center;margin-bottom:20px">TELAZONA</h1>
     <p style="text-align:center;font-size:1.3rem" data-t="welcomeText">Assista várias lives ao mesmo tempo!</p>
@@ -197,45 +258,39 @@
       <button class="btn" style="background:var(--accent);color:#000;padding:14px 40px;font-size:18px" id="close-welcome" data-t="start">Começar!</button>
     </div>
   </div>
-
   <main>
     <section id="hero">
       <h1 class="silkscreen">TELAZONA</h1>
       <p style="font-size:1.5rem;color:var(--text2)" data-t="heroText">YouTube • Twitch • Kick</p>
       <button class="btn" style="background:var(--accent);color:#000;padding:16px 40px;font-size:18px" id="hero-add" data-t="addFirst">+ Adicionar Primeira Live</button>
     </section>
-
     <div id="main-content">
       <div id="grid"></div>
       <div id="chat-sidebar">
         <div id="chat-selector">
-          <select id="chat-select"><option data-t="selectChat">Selecione o chat</option></select>
+          <select id="chat-select"><option value="" data-t="selectChat">Selecione o chat</option></select>
         </div>
         <iframe id="chat-iframe" src="" allowfullscreen></iframe>
       </div>
     </div>
   </main>
-
   <footer id="footer">
     <div>© 2025 TELAZONA • by <a href="https://instagram.com/michelsantnasc" target="_blank">Santnasc</a></div>
   </footer>
-
   <script>
     const trad = {
-      pt:{addLive:"Adicionar Live",addLiveTitle:"Adicionar Live (YouTube, Twitch ou Kick)",addFirst:"Adicionar Primeira Live",donate:"Doar",help:"Ajuda",hideUI:"Ocultar Interface",showUI:"Mostrar Interface",showChat:"Mostrar Chat",hideChat:"Ocultar Chat",cancel:"Cancelar",add:"Adicionar",welcomeText:"Assista várias lives ao mesmo tempo!",howTo:"Como pegar o link da live",dontShow:"Não mostrar novamente",start:"Começar!",heroText:"YouTube • Twitch • Kick",selectChat:"Selecione o chat"},
-      en:{addLive:"Add Live",addLiveTitle:"Add Live (YouTube, Twitch or Kick)",addFirst:"Add First Live",donate:"Donate",help:"Help",hideUI:"Hide Interface",showUI:"Show Interface",showChat:"Show Chat",hideChat:"Hide Chat",cancel:"Cancel",add:"Add",welcomeText:"Watch multiple lives at once!",howTo:"How to get the live link",dontShow:"Don't show again",start:"Start!",heroText:"YouTube • Twitch • Kick",selectChat:"Select chat"},
-      es:{addLive:"Añadir Live",addLiveTitle:"Añadir Live (YouTube, Twitch o Kick)",addFirst:"Añadir Primera Live",donate:"Donar",help:"Ayuda",hideUI:"Ocultar Interfaz",showUI:"Mostrar Interfaz",showChat:"Mostrar Chat",hideChat:"Ocultar Chat",cancel:"Cancelar",add:"Añadir",welcomeText:"¡Mira varias lives al mismo tiempo!",howTo:"Cómo obtener el enlace",dontShow:"No mostrar nuevamente",start:"¡Empezar!",heroText:"YouTube • Twitch • Kick",selectChat:"Seleccionar chat"}
+      pt:{addLive:"Adicionar Live",addLiveTitle:"Adicionar Live (YouTube, Twitch ou Kick)",addFirst:"Adicionar Primeira Live",donate:"Doar",help:"Ajuda",hideUI:"Ocultar Interface",showUI:"Mostrar Interface",showChat:"Mostrar Chat",hideChat:"Ocultar Chat",cancel:"Cancelar",add:"Adicionar",welcomeText:"Assista várias lives ao mesmo tempo!",howTo:"Como pegar o link da live",dontShow:"Não mostrar novamente",start:"Começar!",heroText:"YouTube • Twitch • Kick",selectChat:"Selecione o chat",closeMenu:"Fechar Menu",deleteLive:"Excluir Live",confirmDelete:"Confirme Exclusão"},
+      en:{addLive:"Add Live",addLiveTitle:"Add Live (YouTube, Twitch or Kick)",addFirst:"Add First Live",donate:"Donate",help:"Help",hideUI:"Hide Interface",showUI:"Show Interface",showChat:"Show Chat",hideChat:"Hide Chat",cancel:"Cancel",add:"Add",welcomeText:"Watch multiple lives at once!",howTo:"How to get the live link",dontShow:"Don't show again",start:"Start!",heroText:"YouTube • Twitch • Kick",selectChat:"Select chat",closeMenu:"Close Menu",deleteLive:"Delete Live",confirmDelete:"Confirm Delete"},
+      es:{addLive:"Añadir Live",addLiveTitle:"Añadir Live (YouTube, Twitch o Kick)",addFirst:"Añadir Primera Live",donate:"Donar",help:"Ayuda",hideUI:"Ocultar Interfaz",showUI:"Mostrar Interfaz",showChat:"Mostrar Chat",hideChat:"Ocultar Interfaz",cancel:"Cancelar",add:"Añadir",welcomeText:"¡Mira varias lives al mismo tiempo!",howTo:"Cómo obtener el enlace",dontShow:"No mostrar nuevamente",start:"¡Empezar!",heroText:"YouTube • Twitch • Kick",selectChat:"Seleccionar chat",closeMenu:"Cerrar Menu",deleteLive:"Eliminar Live",confirmDelete:"Confirmar Eliminación"}
     };
-
     let lang = localStorage.getItem("lang") || "pt";
-
+    const FINAL_HOST = "telazona.live";
     function t() {
       document.querySelectorAll("[data-t]").forEach(el => el.textContent = trad[lang][el.dataset.t] || el.textContent);
-      document.getElementById("lang-btn").textContent = lang.toUpperCase();
+      document.getElementById("lang-text").textContent = lang.toUpperCase();
       document.getElementById("mobile-lang-text").textContent = lang.toUpperCase();
     }
     t();
-
     const el = {
       header: document.getElementById("header"),
       footer: document.getElementById("footer"),
@@ -249,9 +304,7 @@
       addModal: document.getElementById("add-modal"),
       welcomeModal: document.getElementById("welcome-modal")
     };
-
     let lives = JSON.parse(sessionStorage.getItem("telazona_lives") || "[]");
-
     function extrair(u){
       let m = u.match(/(?:v=|youtu\.be\/|youtube\.com\/embed\/|\/live\/)([^&\n?#]+)/); 
       if(m) return {type:"yt",id:m[1],name:"YouTube"};
@@ -261,79 +314,101 @@
     }
     function embed(d){
       if(d.type==="yt") return `https://www.youtube.com/embed/${d.id}?autoplay=1&mute=0`;
-      if(d.type==="tw") return `https://player.twitch.tv/?channel=${d.id}&parent=${location.hostname}&autoplay=true`;
+      if(d.type==="tw") return `https://player.twitch.tv/?channel=${d.id}&parent=${FINAL_HOST}&autoplay=true`;
       return `https://player.kick.com/${d.id}?autoplay=true`;
     }
     function chatEmbed(d){
-      if(d.type==="yt") return `https://www.youtube.com/live_chat?v=${d.id}&embed_domain=${location.hostname}`;
-      if(d.type==="tw") return `https://www.twitch.tv/embed/${d.id}/chat?parent=${location.hostname}&darkpopout`;
+      if(d.type==="yt") return `https://www.youtube.com/live_chat?v=${d.id}&embed_domain=${FINAL_HOST}`;
+      if(d.type==="tw") return `https://www.twitch.tv/embed/${d.id}/chat?parent=${FINAL_HOST}&darkpopout`;
       return `https://kick.com/${d.id}/chatroom`;
     }
-
     function abrir(modal){ modal.classList.add("active"); el.overlay.classList.add("active"); }
     function fechar(){ document.querySelectorAll(".modal").forEach(m=>m.classList.remove("active")); el.overlay.classList.remove("active"); }
-
     function updateChatButton(){
       const isOpen = el.chatSidebar.classList.contains("open");
       el.toggleChat.textContent = isOpen ? trad[lang].hideChat : trad[lang].showChat;
     }
-
     function render(){
       const hasLives = lives.length > 0;
       document.getElementById("hero").style.display = hasLives ? "none" : "flex";
       document.getElementById("main-content").style.display = hasLives ? "flex" : "none";
       el.toggleChat.style.display = hasLives ? "flex" : "none";
-
       el.grid.innerHTML = "";
-      el.chatSelect.innerHTML = `<option data-t="selectChat">Selecione o chat</option>`;
+      el.chatSelect.innerHTML = `<option value="" data-t="selectChat">${trad[lang].selectChat}</option>`;
       t();
-
-      const cols = lives.length === 1 ? 1 : lives.length <= 4 ? 2 : 3;
+      let cols = 0;
+      if (window.innerWidth > 768) {
+          cols = lives.length === 1 ? 1 : lives.length <= 4 ? 2 : 3;
+      } else {
+          cols = 1;
+      }
       el.grid.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
-
       lives.forEach((url, i) => {
         const data = extrair(url);
         if(!data) return;
-
         const div = document.createElement("div");
         div.className = "live-container";
         div.innerHTML = `<iframe src="${embed(data)}" allowfullscreen allow="autoplay; clipboard-write"></iframe>
-                         <div class="live-menu-btn">×</div>`;
-        div.querySelector(".live-menu-btn").onclick = e => {
+                         <div class="live-menu-btn" data-t="deleteLive" data-index="${i}">${trad[lang].deleteLive}</div>`;
+        const deleteBtn = div.querySelector(".live-menu-btn");
+        deleteBtn.onclick = e => {
           e.stopPropagation();
-          if(confirm("Excluir esta live?")){
-            lives.splice(i,1);
-            sessionStorage.setItem("telazona_lives", JSON.stringify(lives));
-            render();
+          if (deleteBtn.classList.contains('confirm-delete')) {
+              div.style.opacity = '0';
+              div.style.transform = 'scale(0.9)';
+              div.style.height = '0';
+              div.style.padding = '0';
+              div.style.margin = '0';
+              setTimeout(() => {
+                lives.splice(i, 1);
+                sessionStorage.setItem("telazona_lives", JSON.stringify(lives));
+                render();
+              }, 400);
+          } else {
+              deleteBtn.classList.add('confirm-delete');
+              deleteBtn.textContent = trad[lang].confirmDelete;
+              setTimeout(() => {
+                  const currentBtn = document.querySelector(`.live-container:nth-child(${i + 1}) .live-menu-btn`);
+                  if (currentBtn && currentBtn.classList.contains('confirm-delete')) {
+                      currentBtn.classList.remove('confirm-delete');
+                      currentBtn.textContent = trad[lang].deleteLive;
+                  }
+              }, 3000);
           }
         };
+        div.onmouseleave = () => {
+             if (window.innerWidth > 768) {
+                deleteBtn.classList.remove('confirm-delete');
+                deleteBtn.textContent = trad[lang].deleteLive;
+             }
+        };
         el.grid.appendChild(div);
-
         const opt = document.createElement("option");
         opt.value = i;
         opt.textContent = data.name;
         el.chatSelect.appendChild(opt);
       });
     }
-
-    // EVENTOS PRINCIPAIS
     el.toggleUI.onclick = () => {
       const oculto = !el.header.classList.contains("hidden");
       el.header.classList.toggle("hidden", oculto);
       el.footer.classList.toggle("hidden", oculto);
       el.toggleUI.textContent = oculto ? trad[lang].showUI : trad[lang].hideUI;
+      document.getElementById("lang-menu").style.display = "none";
     };
-
     el.toggleChat.onclick = () => { el.chatSidebar.classList.toggle("open"); updateChatButton(); };
-
     el.chatSelect.onchange = () => {
-      if(el.chatSelect.value === "") return;
+      if(el.chatSelect.value === "") {
+        el.chatIframe.src = "";
+        el.chatSidebar.classList.remove("open");
+        updateChatButton();
+        return;
+      }
       const data = extrair(lives[el.chatSelect.value]);
       el.chatIframe.src = chatEmbed(data);
       el.chatSidebar.classList.add("open");
       updateChatButton();
     };
-
     document.getElementById("add-btn").onclick = () => abrir(el.addModal);
     document.getElementById("hero-add").onclick = () => abrir(el.addModal);
     document.getElementById("confirm-add").onclick = () => {
@@ -354,19 +429,16 @@
       if(document.getElementById("no-welcome").checked) localStorage.setItem("welcome_seen","1");
     };
     document.getElementById("donate-btn").onclick = () => window.open("https://instagram.com/michelsantnasc","_blank");
-
-    // MENU MOBILE + IDIOMA NO CELULAR
     const mobileMenu = document.getElementById("mobile-menu");
     const mobileLangBtn = document.getElementById("mobile-lang-btn");
     const mobileLangMenu = document.getElementById("mobile-lang-menu");
-
+    const closeMenuBtn = document.getElementById("close-menu-btn");
     document.getElementById("menu-btn").onclick = () => mobileMenu.classList.toggle("open");
-
+    closeMenuBtn.onclick = () => mobileMenu.classList.remove("open");
     mobileLangBtn.onclick = (e) => {
       e.stopPropagation();
       mobileLangMenu.style.display = mobileLangMenu.style.display === "block" ? "none" : "block";
     };
-
     document.querySelectorAll("#mobile-lang-menu button").forEach(b => {
       b.onclick = () => {
         lang = b.dataset.lang;
@@ -375,8 +447,6 @@
         mobileLangMenu.style.display = "none";
       };
     });
-
-    // MENU IDIOMA DESKTOP
     document.getElementById("lang-btn").onclick = e => {
       e.stopPropagation();
       const menu = document.getElementById("lang-menu");
@@ -388,23 +458,15 @@
       t();
       document.getElementById("lang-menu").style.display = "none";
     });
-
-    // FECHAR MENUS AO CLICAR FORA
     document.addEventListener("click", () => {
       mobileLangMenu.style.display = "none";
       document.getElementById("lang-menu").style.display = "none";
     });
     mobileMenu.onclick = e => e.stopPropagation();
-
-    // BOTÕES MOBILE
-    document.getElementById("mobile-add").onclick = () => document.getElementById("add-btn").click();
+    document.getElementById("mobile-add").onclick = () => { document.getElementById("add-btn").click(); mobileMenu.classList.remove("open"); };
     document.getElementById("mobile-donate").onclick = () => document.getElementById("donate-btn").click();
-    document.getElementById("mobile-help").onclick = () => document.getElementById("help-btn").click();
-
-    // OBSERVER DO CHAT
+    document.getElementById("mobile-help").onclick = () => { document.getElementById("help-btn").click(); mobileMenu.classList.remove("open"); };
     new MutationObserver(updateChatButton).observe(el.chatSidebar, { attributes: true, attributeFilter: ["class"] });
-
-    // INÍCIO
     if(!localStorage.getItem("welcome_seen")) setTimeout(() => abrir(el.welcomeModal), 800);
     render();
   </script>
