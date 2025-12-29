@@ -6,6 +6,9 @@
   <title>TELAZONA - Multilives</title>
   <link href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3157806850059447"
+     crossorigin="anonymous"></script>
   <link rel="icon" href="data:,">
   <style>
     :root{
@@ -209,6 +212,63 @@
         align-items: center;
       }
     }
+
+    footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: var(--footer-h);
+      background: rgba(10,10,10,.95);
+      backdrop-filter: blur(20px);
+      border-top: 1px solid var(--border);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      transition: transform .4s ease;
+      padding: 0 16px; /* espaço lateral */
+    }
+
+    #footer-content {
+      width: 100%;
+      max-width: 1280px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .footer-ad {
+      flex: 1;
+      min-width: 250px;
+      text-align: center;
+    }
+
+    .footer-copyright {
+      flex: 2;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    /* Mobile: apenas um anúncio acima do copyright */
+    @media (max-width: 768px) {
+      #footer-content {
+        flex-direction: column;
+      }
+      .footer-ad.desktop-only {
+        display: none;
+      }
+      .footer-ad.mobile-only {
+        order: -1; /* coloca o anúncio acima do texto */
+        margin-bottom: 8px;
+      }
+      .footer-copyright {
+        order: 0;
+      }
+    }
   </style>
 </head>
 <body>
@@ -287,7 +347,45 @@
     </div>
   </main>
   <footer id="footer">
-    <div>© 2025 TELAZONA • by <a href="https://instagram.com/michelsantnasc" target="_blank">Santnasc</a></div>
+    <div id="footer-content">
+      <div class="footer-ad desktop-only">
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-3157806850059447"
+             data-ad-slot="SEU_SLOT_ID_ESQUERDO"  <!-- opcional: crie slots diferentes se quiser -->
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+        <script>
+             (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+      </div>
+      <div class="footer-copyright">
+        © 2025 TELAZONA • by <a href="https://instagram.com/michelsantnasc" target="_blank">Santnasc</a>
+      </div>
+
+      <div class="footer-ad desktop-only">
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-3157806850059447"
+             data-ad-slot="SEU_SLOT_ID_DIREITO"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+        <script>
+             (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+      </div>
+      <div class="footer-ad mobile-only">
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-3157806850059447"
+             data-ad-slot="SEU_SLOT_ID_MOBILE"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+        <script>
+             (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+      </div>
+    </div>
   </footer>
   <script>
     const trad = {
@@ -440,7 +538,7 @@
       fechar();
       if(document.getElementById("no-welcome").checked) localStorage.setItem("welcome_seen","1");
     };
-    document.getElementById("donate-btn").onclick = () => window.open("https://linktr.ee/TELAZONA","_blank");
+    document.getElementById("donate-btn").onclick = () => window.open("https://instagram.com/michelsantnasc","_blank");
     const mobileMenu = document.getElementById("mobile-menu");
     const mobileLangBtn = document.getElementById("mobile-lang-btn");
     const mobileLangMenu = document.getElementById("mobile-lang-menu");
@@ -484,4 +582,5 @@
   </script>
 </body>
 </html>
+
 
