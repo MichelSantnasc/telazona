@@ -7,9 +7,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/@phosphor-icons/web"></script>
 
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6751672938034651"
-     crossorigin="anonymous"></script>
-  <link rel="icon" href="data:,">
   <style>
     :root{
       --bg:#0a0a0a;--bg2:#1a1a1a;--border:#333;--text:#fff;--text2:#aaa;
@@ -86,10 +83,19 @@
       box-shadow:0 6px 20px rgba(0,0,0,.7);
     }
     header.hidden ~ #control-bar{top:21px}
-    #toggle-ui{background:var(--accent);color:#000;padding:0 20px;height:100%;border-radius:22px 0 0 22px;cursor:pointer;display:flex;align-items:center}
-    #toggle-chat{background:var(--accent2);color:#fff;padding:0 20px;height:100%;border-radius:0 22px 22px 0;cursor:pointer;display:none;align-items:center}
+    #quick-add, #toggle-ui, #toggle-chat, #toggle-fullscreen{
+      background:var(--accent);color:#000;padding:0 14px;height:100%;cursor:pointer;display:flex;align-items:center;justify-content:center;
+      transition:.3s;
+    }
+    #quick-add{background:var(--accent2);color:#fff;border-radius:22px 0 0 22px}
+    #toggle-ui{background:var(--accent)}
+    #toggle-chat{background:var(--accent2);color:#fff}
+    #toggle-fullscreen{background:var(--accent);border-radius:0 22px 22px 0;display:none}
+    @media (min-width:769px){#toggle-fullscreen{display:flex}}
+    header.hidden ~ #control-bar #quick-add,
     header.hidden ~ #control-bar #toggle-ui,
-    header.hidden ~ #control-bar #toggle-chat{background:rgba(30,30,30,.95);color:#fff}
+    header.hidden ~ #control-bar #toggle-chat,
+    header.hidden ~ #control-bar #toggle-fullscreen{background:rgba(30,30,30,.95);color:#fff}
     .header-right{display:flex;align-items:center;gap:12px}
     .btn{
       background:transparent;color:var(--text2);border:1px solid var(--border);
@@ -108,20 +114,91 @@
     }
     .modal.active{opacity:1;visibility:visible;transform:translate(-50%,-50%) scale(1)}
     
-    #welcome-modal::-webkit-scrollbar {
-        width: 8px;
-    }
-    #welcome-modal::-webkit-scrollbar-track {
-        background: var(--bg2);
-        border-radius: 10px;
-    }
-    #welcome-modal::-webkit-scrollbar-thumb {
-        background: var(--accent2);
-        border-radius: 10px;
-    }
-    #welcome-modal::-webkit-scrollbar-thumb:hover {
-        background: var(--accent);
-    }
+#welcome-modal {
+  width: 90%;
+  max-width: 720px;
+  max-height: 85vh;
+  padding: 28px;
+  font-size: 1.05rem;
+  line-height: 1.5;
+}
+
+#welcome-modal h1 {
+  font-size: 3.8rem;
+  margin-bottom: 12px;
+  letter-spacing: 4px;
+}
+
+#welcome-modal h2 {
+  font-size: 1.7rem;
+  margin: 32px 0 16px;
+  color: var(--accent);
+}
+
+#welcome-modal strong {
+  color: var(--accent2);
+  font-size: 1.15rem;
+}
+
+#welcome-modal img {
+  width: 100%;
+  max-width: 480px;
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  margin: 16px auto;
+  display: block;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+}
+
+#welcome-modal p {
+  margin: 12px 0;
+}
+
+#welcome-modal .steps {
+  background: rgba(30,30,30,0.6);
+  padding: 20px;
+  border-radius: 12px;
+  margin: 24px 0;
+  border: 1px solid var(--border);
+}
+
+#welcome-modal .checkbox-container {
+  margin: 32px 0 40px;
+  font-size: 1.1rem;
+}
+
+#close-welcome {
+  min-width: 220px;
+  padding: 16px 48px !important;
+  font-size: 1.25rem !important;
+  border-radius: 12px;
+}
+
+/* Ajuste fino para mobile */
+@media (max-width: 640px) {
+  #welcome-modal {
+    padding: 24px 18px;
+    max-height: 88vh;
+  }
+  
+  #welcome-modal h1 {
+    font-size: 3.2rem;
+  }
+  
+  #welcome-modal h2 {
+    font-size: 1.5rem;
+  }
+  
+  #welcome-modal img {
+    max-width: 100%;
+  }
+  
+  #close-welcome {
+    width: 100%;
+    font-size: 1.15rem !important;
+  }
+}
+
     
     main{height:100vh;display:flex;position:relative}
     #hero{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px;text-align:center;padding:20px}
@@ -197,15 +274,16 @@
         height: 70vh !important;
       }
       #control-bar {
-        top: 90px;
-        transform: translate(-50%, -50%);
+        bottom: calc(var(--footer-h) + 20px);
+        top: auto;
+        transform: translateX(-50%);
         height: 48px; 
       }
       header.hidden ~ #control-bar { 
-        top: 24px;
+        bottom: 20px;
       }
-      #toggle-ui, #toggle-chat {
-        padding: 0 16px;
+      #quick-add, #toggle-ui, #toggle-chat {
+        padding: 0 12px;
         font-size: 14px;
         height: 100%;
         display: flex;
@@ -300,8 +378,10 @@
     <button id="close-menu-btn" data-t="closeMenu">Fechar Menu</button>
   </div>
   <div id="control-bar">
-    <div id="toggle-ui" data-t="hideUI">Ocultar Interface</div>
-    <div id="toggle-chat" data-t="showChat">Mostrar Chat</div>
+    <div id="quick-add" title=""><i class="ph ph-plus"></i></div>
+    <div id="toggle-ui" title=""><i class="ph ph-eye-slash"></i></div>
+    <div id="toggle-chat" title=""><i class="ph ph-chat-circle"></i> <i class="ph ph-caret-right"></i></div>
+    <div id="toggle-fullscreen" title=""><i class="ph ph-arrows-out"></i></div>
   </div>
   <div id="overlay" class="overlay"></div>
   <div id="add-modal" class="modal">
@@ -313,23 +393,37 @@
       <button class="btn" style="background:var(--accent);color:#000" id="confirm-add" data-t="add">Adicionar</button>
     </div>
   </div>
-  <div id="welcome-modal" class="modal">
-    <h1 class="silkscreen" style="font-size:3.5rem;text-align:center;margin-bottom:20px">TELAZONA</h1>
-    <p style="text-align:center;font-size:1.3rem" data-t="welcomeText">Assista várias lives ao mesmo tempo!</p>
-    <h2 style="margin:30px 0 10px" data-t="howTo">Como pegar o link da live</h2>
-    <strong>YouTube:</strong> Compartilhar → Copiar link<br>
-    <img src="https://i.ibb.co/1t0nHJSD/msedge-Lw0-RNd9h-H0.png" alt="YouTube">
-    <strong>Twitch:</strong> Copie o link do canal ao vivo<br>
-    <img src="https://i.ibb.co/BHG6p2mR/msedge-Wdm4-XIkx-J7.png" alt="Twitch">
-    <strong>Kick:</strong> Copie o link do canal ao vivo<br>
-    <img src="https://i.ibb.co/xqFFfcnp/msedge-X5-Fm-Trj6-To.png" alt="Kick">
-    <label style="display:flex;align-items:center;gap:10px;margin:30px 0">
-      <input type="checkbox" id="no-welcome"> <span data-t="dontShow">Não mostrar novamente</span>
-    </label>
-    <div style="text-align:center">
-      <button class="btn" style="background:var(--accent);color:#000;padding:14px 40px;font-size:18px" id="close-welcome" data-t="start">Começar!</button>
-    </div>
+<div id="welcome-modal" class="modal">
+  <h1 class="silkscreen">TELAZONA</h1>
+  
+  <p style="text-align:center; font-size:1.4rem; margin:16px 0 32px;" data-t="welcomeText">
+    Assista várias lives ao mesmo tempo!
+  </p>
+
+  <div class="steps">
+    <h2 data-t="howTo">Como pegar o link da live</h2>
+    
+    <p><strong>YouTube:</strong> Clique em Compartilhar → Copiar link</p>
+    <img src="https://i.ibb.co/1t0nHJSD/msedge-Lw0-RNd9h-H0.png" alt="YouTube como copiar link">
+    
+    <p><strong>Twitch:</strong> Copie o link do canal enquanto estiver ao vivo</p>
+    <img src="https://i.ibb.co/BHG6p2mR/msedge-Wdm4-XIkx-J7.png" alt="Twitch como copiar link">
+    
+    <p><strong>Kick:</strong> Copie o link do canal ao vivo</p>
+    <img src="https://i.ibb.co/xqFFfcnp/msedge-X5-Fm-Trj6-To.png" alt="Kick como copiar link">
   </div>
+
+  <label class="checkbox-container" style="display:flex; align-items:center; gap:12px; justify-content:center;">
+    <input type="checkbox" id="no-welcome">
+    <span data-t="dontShow">Não mostrar novamente</span>
+  </label>
+
+  <div style="text-align:center; margin-top:20px;">
+    <button class="btn" style="background:var(--accent); color:#000;" id="close-welcome" data-t="start">
+      Começar!
+    </button>
+  </div>
+</div>
   <main>
     <section id="hero">
       <h1 class="silkscreen">TELAZONA</h1>
@@ -355,9 +449,9 @@
 </footer>
   <script>
     const trad = {
-      pt:{addLive:"Adicionar Live",addLiveTitle:"Adicionar Live (YouTube, Twitch ou Kick)",addFirst:"Adicionar Primeira Live",donate:"Doar",help:"Ajuda",hideUI:"Ocultar Interface",showUI:"Mostrar Interface",showChat:"Mostrar Chat",hideChat:"Ocultar Chat",cancel:"Cancelar",add:"Adicionar",welcomeText:"Assista várias lives ao mesmo tempo!",howTo:"Como pegar o link da live",dontShow:"Não mostrar novamente",start:"Começar!",heroText:"YouTube • Twitch • Kick",selectChat:"Selecione o chat",closeMenu:"Fechar Menu",deleteLive:"Excluir Live",confirmDelete:"Confirme Exclusão"},
-      en:{addLive:"Add Live",addLiveTitle:"Add Live (YouTube, Twitch or Kick)",addFirst:"Add First Live",donate:"Donate",help:"Help",hideUI:"Hide Interface",showUI:"Show Interface",showChat:"Show Chat",hideChat:"Hide Chat",cancel:"Cancel",add:"Add",welcomeText:"Watch multiple lives at once!",howTo:"How to get the live link",dontShow:"Don't show again",start:"Start!",heroText:"YouTube • Twitch • Kick",selectChat:"Select chat",closeMenu:"Close Menu",deleteLive:"Delete Live",confirmDelete:"Confirm Delete"},
-      es:{addLive:"Añadir Live",addLiveTitle:"Añadir Live (YouTube, Twitch o Kick)",addFirst:"Añadir Primera Live",donate:"Donar",help:"Ayuda",hideUI:"Ocultar Interfaz",showUI:"Mostrar Interfaz",showChat:"Mostrar Chat",hideChat:"Ocultar Interfaz",cancel:"Cancelar",add:"Añadir",welcomeText:"¡Mira varias lives al mismo tiempo!",howTo:"Cómo obtener el enlace",dontShow:"No mostrar nuevamente",start:"¡Empezar!",heroText:"YouTube • Twitch • Kick",selectChat:"Seleccionar chat",closeMenu:"Cerrar Menu",deleteLive:"Eliminar Live",confirmDelete:"Confirmar Eliminación"}
+      pt:{addLive:"Adicionar Live",addLiveTitle:"Adicionar Live (YouTube, Twitch ou Kick)",addFirst:"Adicionar Primeira Live",donate:"Doar",help:"Ajuda",hideUI:"Ocultar Interface",showUI:"Mostrar Interface",showChat:"Mostrar Chat",hideChat:"Ocultar Chat",cancel:"Cancelar",add:"Adicionar",welcomeText:"Assista várias lives ao mesmo tempo!",howTo:"Como pegar o link da live",dontShow:"Não mostrar novamente",start:"Começar!",heroText:"YouTube • Twitch • Kick",selectChat:"Selecione o chat",closeMenu:"Fechar Menu",deleteLive:"Excluir Live",confirmDelete:"Confirme Exclusão",quickAdd:"Adicionar Live Rápido",fullscreen:"Entrar em Tela Cheia",exitFullscreen:"Sair de Tela Cheia"},
+      en:{addLive:"Add Live",addLiveTitle:"Add Live (YouTube, Twitch or Kick)",addFirst:"Add First Live",donate:"Donate",help:"Help",hideUI:"Hide Interface",showUI:"Show Interface",showChat:"Show Chat",hideChat:"Hide Chat",cancel:"Cancel",add:"Add",welcomeText:"Watch multiple lives at once!",howTo:"How to get the live link",dontShow:"Don't show again",start:"Start!",heroText:"YouTube • Twitch • Kick",selectChat:"Select chat",closeMenu:"Close Menu",deleteLive:"Delete Live",confirmDelete:"Confirm Delete",quickAdd:"Quick Add Live",fullscreen:"Enter Fullscreen",exitFullscreen:"Exit Fullscreen"},
+      es:{addLive:"Añadir Live",addLiveTitle:"Añadir Live (YouTube, Twitch o Kick)",addFirst:"Añadir Primera Live",donate:"Donar",help:"Ayuda",hideUI:"Ocultar Interfaz",showUI:"Mostrar Interfaz",showChat:"Mostrar Chat",hideChat:"Ocultar Interfaz",cancel:"Cancelar",add:"Añadir",welcomeText:"¡Mira varias lives al mismo tiempo!",howTo:"Cómo obtener el enlace",dontShow:"No mostrar nuevamente",start:"¡Empezar!",heroText:"YouTube • Twitch • Kick",selectChat:"Seleccionar chat",closeMenu:"Cerrar Menu",deleteLive:"Eliminar Live",confirmDelete:"Confirmar Eliminación",quickAdd:"Añadir Live Rápido",fullscreen:"Entrar en Pantalla Completa",exitFullscreen:"Salir de Pantalla Completa"}
     };
     let lang = localStorage.getItem("lang") || "pt";
     const FINAL_HOST = "telazona.live";
@@ -365,6 +459,16 @@
       document.querySelectorAll("[data-t]").forEach(el => el.textContent = trad[lang][el.dataset.t] || el.textContent);
       document.getElementById("lang-text").textContent = lang.toUpperCase();
       document.getElementById("mobile-lang-text").textContent = lang.toUpperCase();
+      updateTitles();
+    }
+    function updateTitles() {
+      document.getElementById("quick-add").title = trad[lang].quickAdd;
+      const uiHidden = document.getElementById("header").classList.contains("hidden");
+      document.getElementById("toggle-ui").title = uiHidden ? trad[lang].showUI : trad[lang].hideUI;
+      const chatOpen = document.getElementById("chat-sidebar").classList.contains("open");
+      document.getElementById("toggle-chat").title = chatOpen ? trad[lang].hideChat : trad[lang].showChat;
+      const fs = document.fullscreenElement;
+      document.getElementById("toggle-fullscreen").title = fs ? trad[lang].exitFullscreen : trad[lang].fullscreen;
     }
     t();
     const el = {
@@ -400,15 +504,29 @@
     }
     function abrir(modal){ modal.classList.add("active"); el.overlay.classList.add("active"); }
     function fechar(){ document.querySelectorAll(".modal").forEach(m=>m.classList.remove("active")); el.overlay.classList.remove("active"); }
-    function updateChatButton(){
+    function updateChatIcon(){
       const isOpen = el.chatSidebar.classList.contains("open");
-      el.toggleChat.textContent = isOpen ? trad[lang].hideChat : trad[lang].showChat;
+      const caret = isOpen ? 'ph-caret-left' : 'ph-caret-right';
+      el.toggleChat.innerHTML = `<i class="ph ph-chat-circle"></i> <i class="ph ${caret}"></i>`;
+      updateTitles();
+    }
+    function updateUIIcon(){
+      const oculto = el.header.classList.contains("hidden");
+      const eye = oculto ? 'ph-eye' : 'ph-eye-slash';
+      el.toggleUI.innerHTML = `<i class="ph ${eye}"></i>`;
+      updateTitles();
+    }
+    function updateFullscreenIcon(){
+      const fs = document.fullscreenElement;
+      const arrows = fs ? 'ph-arrows-in' : 'ph-arrows-out';
+      document.getElementById("toggle-fullscreen").innerHTML = `<i class="ph ${arrows}"></i>`;
+      updateTitles();
     }
     function render(){
       const hasLives = lives.length > 0;
       document.getElementById("hero").style.display = hasLives ? "none" : "flex";
       document.getElementById("main-content").style.display = hasLives ? "flex" : "none";
-      el.toggleChat.style.display = hasLives ? "flex" : "none";
+      document.getElementById("toggle-chat").style.display = hasLives ? "flex" : "none";
       el.grid.innerHTML = "";
       el.chatSelect.innerHTML = `<option value="" data-t="selectChat">${trad[lang].selectChat}</option>`;
       t();
@@ -439,6 +557,7 @@
                 lives.splice(i, 1);
                 sessionStorage.setItem("telazona_lives", JSON.stringify(lives));
                 render();
+                updateURL();
               }, 400);
           } else {
               deleteBtn.classList.add('confirm-delete');
@@ -464,27 +583,64 @@
         opt.textContent = data.name;
         el.chatSelect.appendChild(opt);
       });
+      updateChatIcon();
+      updateUIIcon();
+      updateFullscreenIcon();
+      updateURL();
+    }
+    function loadFromURL() {
+      const params = new URLSearchParams(window.location.search);
+      const livesStr = params.get('lives');
+      if (livesStr) {
+        lives = livesStr.split(',').map(str => {
+          const [type, id] = str.split(':');
+          if (type === 'yt') return `https://youtube.com/watch?v=${id}`;
+          if (type === 'tw') return `https://twitch.tv/${id}`;
+          if (type === 'kick') return `https://kick.com/${id}`;
+          return null;
+        }).filter(Boolean);
+        sessionStorage.setItem("telazona_lives", JSON.stringify(lives));
+        render();
+      }
+    }
+    function updateURL() {
+      const livesStr = lives.map(url => {
+        const data = extrair(url);
+        return `${data.type}:${data.id}`;
+      }).join(',');
+      const newURL = livesStr ? `?lives=${livesStr}` : '';
+      history.pushState({}, '', newURL || '/');
     }
     el.toggleUI.onclick = () => {
       const oculto = !el.header.classList.contains("hidden");
       el.header.classList.toggle("hidden", oculto);
       el.footer.classList.toggle("hidden", oculto);
-      el.toggleUI.textContent = oculto ? trad[lang].showUI : trad[lang].hideUI;
-      document.getElementById("lang-menu").style.display = "none";
+      updateUIIcon();
     };
-    el.toggleChat.onclick = () => { el.chatSidebar.classList.toggle("open"); updateChatButton(); };
+    el.toggleChat.onclick = () => { el.chatSidebar.classList.toggle("open"); updateChatIcon(); };
     el.chatSelect.onchange = () => {
       if(el.chatSelect.value === "") {
         el.chatIframe.src = "";
         el.chatSidebar.classList.remove("open");
-        updateChatButton();
+        updateChatIcon();
         return;
       }
       const data = extrair(lives[el.chatSelect.value]);
       el.chatIframe.src = chatEmbed(data);
       el.chatSidebar.classList.add("open");
-      updateChatButton();
+      updateChatIcon();
     };
+    document.getElementById("toggle-fullscreen").onclick = () => {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen();
+      } else {
+        document.exitFullscreen();
+      }
+      // Listener para atualizar ícone
+      document.addEventListener('fullscreenchange', updateFullscreenIcon);
+    };
+
+    document.getElementById("quick-add").onclick = () => {abrir(el.addModal);};
     document.getElementById("add-btn").onclick = () => abrir(el.addModal);
     document.getElementById("hero-add").onclick = () => abrir(el.addModal);
     document.getElementById("confirm-add").onclick = () => {
@@ -542,12 +698,10 @@
     document.getElementById("mobile-add").onclick = () => { document.getElementById("add-btn").click(); mobileMenu.classList.remove("open"); };
     document.getElementById("mobile-donate").onclick = () => document.getElementById("donate-btn").click();
     document.getElementById("mobile-help").onclick = () => { document.getElementById("help-btn").click(); mobileMenu.classList.remove("open"); };
-    new MutationObserver(updateChatButton).observe(el.chatSidebar, { attributes: true, attributeFilter: ["class"] });
+    new MutationObserver(updateChatIcon).observe(el.chatSidebar, { attributes: true, attributeFilter: ["class"] });
     if(!localStorage.getItem("welcome_seen")) setTimeout(() => abrir(el.welcomeModal), 800);
+    loadFromURL();
     render();
   </script>
 </body>
 </html>
-
-
-
