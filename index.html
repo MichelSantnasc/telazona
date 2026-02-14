@@ -3,9 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TELAZONA - Multilives</title>
+  <title>TELAZONA - Multilives YouTube, Twitch e Kick</title>
+  <meta name="description" content="Assista várias lives ao mesmo tempo no YouTube, Twitch e Kick. Chat integrado, tela cheia, grátis e sem anúncios intrusivos. Experimente o TELAZONA agora!">
+  <meta property="og:title" content="TELAZONA - Multilives: YouTube, Twitch e Kick ao mesmo tempo">
+  <meta property="og:description" content="Veja múltiplas transmissões ao vivo simultaneamente. Chat, modo fullscreen e experiência otimizada para PC e celular.">
+  <meta property="og:image" content="https://telazona.live/og-image.jpg">
+  <meta property="og:url" content="https://telazona.live">
+  <meta property="og:type" content="website">
+  <link rel="canonical" href="https://telazona.live/">
   <link href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
 
   <style>
     :root {
@@ -98,7 +106,7 @@
     #quick-add { background: transparent; color: #fff; border-radius: 22px 0 0 22px; }
     #toggle-ui { background: transparent; }
     #toggle-chat { background: transparent; color: #fff; }
-    #toggle-fullscreen { background: transparent; border-radius: 0 22px 22px 0; display: none; }
+    #toggle-fullscreen { background: transparent; border-radius: 0 22px 22px 0; /* display: none;*/ }
     @media (min-width: 769px) { #toggle-fullscreen { display: flex; } }
     #quick-add:hover, #toggle-ui:hover, #toggle-chat:hover, #toggle-fullscreen:hover { background: var(--accent); color: #000; }
     header.hidden ~ #control-bar #quick-add,
@@ -606,6 +614,18 @@ function updateGridColumns() {
     startControlHideTimer();
   }
 
+  // Coloque isso dentro do render() ou no load
+if (window.innerWidth <= 768) {
+  const fullscreenBtn = document.getElementById("toggle-fullscreen");
+  fullscreenBtn.title = "Tela cheia (melhor no Android ou via Tela Inicial no iOS)";
+
+  // Opcional: mostre um toast ou modal uma vez
+  if (!localStorage.getItem("fullscreen_dica_mobile")) {
+    alert("No celular:\n• Android: use o botão de tela cheia\n• iPhone: adicione à Tela de Início para modo fullscreen real");
+    localStorage.setItem("fullscreen_dica_mobile", "1");
+  }
+}
+
   // ── Eventos ───────────────────────────────────────────────
 
   el.toggleUI.onclick = () => {
@@ -772,8 +792,31 @@ function updateGridColumns() {
   }
 
   window.addEventListener('resize', updateGridColumns);
-  document.addEventListener('mousemove', showControlBar);
-  document.addEventListener('touchstart', showControlBar);
+  // document.addEventListener('mousemove', showControlBar);
+  // document.addEventListener('touchstart', showControlBar);
+
+  let lastActivity = Date.now();
+
+function debounceShowControls() {
+  lastActivity = Date.now();
+  showControlBar();  // mostra imediatamente
+}
+
+document.addEventListener('scroll', debounceShowControls, { passive: true });
+document.addEventListener('touchmove', debounceShowControls, { passive: true });
+document.addEventListener('mousemove', debounceShowControls, { passive: true });
+
+// Timer para esconder depois de inatividade (já tem startControlHideTimer, mas ajuste o delay se quiser)
+setInterval(() => {
+  if (Date.now() - lastActivity > 3000 && !document.fullscreenElement) {  // 3 segundos sem atividade
+    // só esconde se UI não estiver oculta manualmente
+    if (!el.header.classList.contains('hidden')) {
+     /*  el.header.classList.add('hidden');
+      el.footer.classList.add('hidden');
+     document.getElementById('control-bar').classList.add('hidden'); */
+    }
+  }
+}, 1000);
 
   loadFromURL();
   render();
