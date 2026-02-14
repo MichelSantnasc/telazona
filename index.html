@@ -19,7 +19,7 @@
       --radius: 12px;
       --header-h: 70px;
       --footer-h: 40px;
-      --chat-w: 380px;
+      --chat-w: 360px;
       --transparent-bg: rgba(10, 10, 10, 0.85); /* Transparência geral */
       --blur: blur(20px); /* Backdrop filter para efeito vidro fosco */
     }
@@ -297,365 +297,486 @@
       </div>
     </div>
   </footer>
-  <script>
-    const trad = {
-      pt: {
-        addLive: "Adicionar Live", addLiveTitle: "Adicionar Live (YouTube, Twitch ou Kick)", addFirst: "Adicionar Primeira Live",
-        donate: "Doar", help: "Ajuda", hideUI: "Ocultar Interface", showUI: "Mostrar Interface", showChat: "Mostrar Chat",
-        hideChat: "Ocultar Chat", cancel: "Cancelar", add: "Adicionar", welcomeText: "Assista várias lives ao mesmo tempo!",
-        howTo: "Como pegar o link da live", dontShow: "Não mostrar novamente", start: "Começar!", heroText: "YouTube • Twitch • Kick",
-        selectChat: "Selecione o chat", closeMenu: "Fechar Menu", deleteLive: "Excluir Live", confirmDelete: "Confirme Exclusão",
-        quickAdd: "Adicionar Live Rápido", fullscreen: "Entrar em Tela Cheia", exitFullscreen: "Sair de Tela Cheia",
-        clearLives: "Limpar Lives", pasteUrl: "Cole a URL da live abaixo", ytShare: "Clique em Compartilhar → Copiar link",
-        twCopy: "Copie o link do canal enquanto estiver ao vivo", kickCopy: "Copie o link do canal ao vivo"
-      },
-      en: {
-        addLive: "Add Live", addLiveTitle: "Add Live (YouTube, Twitch or Kick)", addFirst: "Add First Live",
-        donate: "Donate", help: "Help", hideUI: "Hide Interface", showUI: "Show Interface", showChat: "Show Chat",
-        hideChat: "Hide Chat", cancel: "Cancel", add: "Add", welcomeText: "Watch multiple lives at once!",
-        howTo: "How to get the live link", dontShow: "Don't show again", start: "Start!", heroText: "YouTube • Twitch • Kick",
-        selectChat: "Select chat", closeMenu: "Close Menu", deleteLive: "Delete Live", confirmDelete: "Confirm Delete",
-        quickAdd: "Quick Add Live", fullscreen: "Enter Fullscreen", exitFullscreen: "Exit Fullscreen",
-        clearLives: "Clear Lives", pasteUrl: "Paste the live URL below", ytShare: "Click Share → Copy link",
-        twCopy: "Copy the channel link while live", kickCopy: "Copy the live channel link"
-      },
-      es: {
-        addLive: "Añadir Live", addLiveTitle: "Añadir Live (YouTube, Twitch o Kick)", addFirst: "Añadir Primera Live",
-        donate: "Donar", help: "Ayuda", hideUI: "Ocultar Interfaz", showUI: "Mostrar Interfaz", showChat: "Mostrar Chat",
-        hideChat: "Ocultar Chat", cancel: "Cancelar", add: "Añadir", welcomeText: "¡Mira varias lives al mismo tiempo!",
-        howTo: "Cómo obtener el enlace", dontShow: "No mostrar nuevamente", start: "¡Empezar!", heroText: "YouTube • Twitch • Kick",
-        selectChat: "Seleccionar chat", closeMenu: "Cerrar Menu", deleteLive: "Eliminar Live", confirmDelete: "Confirmar Eliminación",
-        quickAdd: "Añadir Live Rápido", fullscreen: "Entrar en Pantalla Completa", exitFullscreen: "Salir de Pantalla Completa",
-        clearLives: "Limpiar Lives", pasteUrl: "Pega la URL de la live abajo", ytShare: "Haz clic en Compartir → Copiar enlace",
-        twCopy: "Copia el enlace del canal mientras está en vivo", kickCopy: "Copia el enlace del canal en vivo"
-      }
-    };
-    let lang = localStorage.getItem("lang") || "pt";
-    const FINAL_HOST = "telazona.live";
-    function t() {
-      document.querySelectorAll("[data-t]").forEach(el => el.textContent = trad[lang][el.dataset.t] || el.textContent);
-      document.getElementById("lang-text").textContent = lang.toUpperCase();
-      document.getElementById("mobile-lang-text").textContent = lang.toUpperCase();
-      updateTitles();
+<script>
+  const trad = {
+    pt: {
+      addLive: "Adicionar Live", addLiveTitle: "Adicionar Live (YouTube, Twitch ou Kick)", addFirst: "Adicionar Primeira Live",
+      donate: "Doar", help: "Ajuda", hideUI: "Ocultar Interface", showUI: "Mostrar Interface", showChat: "Mostrar Chat",
+      hideChat: "Ocultar Chat", cancel: "Cancelar", add: "Adicionar", welcomeText: "Assista várias lives ao mesmo tempo!",
+      howTo: "Como pegar o link da live", dontShow: "Não mostrar novamente", start: "Começar!", heroText: "YouTube • Twitch • Kick",
+      selectChat: "Selecione o chat", closeMenu: "Fechar Menu", deleteLive: "Excluir Live", confirmDelete: "Confirme Exclusão",
+      quickAdd: "Adicionar Live Rápido", fullscreen: "Entrar em Tela Cheia", exitFullscreen: "Sair de Tela Cheia",
+      clearLives: "Limpar Lives", pasteUrl: "Cole a URL da live abaixo", ytShare: "Clique em Compartilhar → Copiar link",
+      twCopy: "Copie o link do canal enquanto estiver ao vivo", kickCopy: "Copie o link do canal ao vivo"
+    },
+    en: {
+      addLive: "Add Live", addLiveTitle: "Add Live (YouTube, Twitch or Kick)", addFirst: "Add First Live",
+      donate: "Donate", help: "Help", hideUI: "Hide Interface", showUI: "Show Interface", showChat: "Show Chat",
+      hideChat: "Hide Chat", cancel: "Cancel", add: "Add", welcomeText: "Watch multiple lives at once!",
+      howTo: "How to get the live link", dontShow: "Don't show again", start: "Start!", heroText: "YouTube • Twitch • Kick",
+      selectChat: "Select chat", closeMenu: "Close Menu", deleteLive: "Delete Live", confirmDelete: "Confirm Delete",
+      quickAdd: "Quick Add Live", fullscreen: "Enter Fullscreen", exitFullscreen: "Exit Fullscreen",
+      clearLives: "Clear Lives", pasteUrl: "Paste the live URL below", ytShare: "Click Share → Copy link",
+      twCopy: "Copy the channel link while live", kickCopy: "Copy the live channel link"
+    },
+    es: {
+      addLive: "Añadir Live", addLiveTitle: "Añadir Live (YouTube, Twitch o Kick)", addFirst: "Añadir Primera Live",
+      donate: "Donar", help: "Ayuda", hideUI: "Ocultar Interfaz", showUI: "Mostrar Interfaz", showChat: "Mostrar Chat",
+      hideChat: "Ocultar Chat", cancel: "Cancelar", add: "Añadir", welcomeText: "¡Mira varias lives al mismo tiempo!",
+      howTo: "Cómo obtener el enlace", dontShow: "No mostrar nuevamente", start: "¡Empezar!", heroText: "YouTube • Twitch • Kick",
+      selectChat: "Seleccionar chat", closeMenu: "Cerrar Menu", deleteLive: "Eliminar Live", confirmDelete: "Confirmar Eliminación",
+      quickAdd: "Añadir Live Rápido", fullscreen: "Entrar en Pantalla Completa", exitFullscreen: "Salir de Pantalla Completa",
+      clearLives: "Limpiar Lives", pasteUrl: "Pega la URL de la live abajo", ytShare: "Haz clic en Compartir → Copiar enlace",
+      twCopy: "Copia el enlace del canal mientras está en vivo", kickCopy: "Copia el enlace del canal en vivo"
     }
-    function updateTitles() {
-      document.getElementById("quick-add").title = trad[lang].quickAdd;
-      const uiHidden = document.getElementById("header").classList.contains("hidden");
-      document.getElementById("toggle-ui").title = uiHidden ? trad[lang].showUI : trad[lang].hideUI;
-      const chatOpen = document.getElementById("chat-sidebar").classList.contains("open");
-      document.getElementById("toggle-chat").title = chatOpen ? trad[lang].hideChat : trad[lang].showChat;
-      const fs = document.fullscreenElement;
-      document.getElementById("toggle-fullscreen").title = fs ? trad[lang].exitFullscreen : trad[lang].fullscreen;
-    }
-    t();
-    const el = {
-      header: document.getElementById("header"),
-      footer: document.getElementById("footer"),
-      toggleUI: document.getElementById("toggle-ui"),
-      toggleChat: document.getElementById("toggle-chat"),
-      chatSidebar: document.getElementById("chat-sidebar"),
-      chatIframe1: document.getElementById("chat-iframe1"),
-      chatIframe2: document.getElementById("chat-iframe2"),
-      chatSelect1: document.getElementById("chat-select1"),
-      chatSelect2: document.getElementById("chat-select2"),
-      grid: document.getElementById("grid"),
-      overlay: document.getElementById("overlay"),
-      addModal: document.getElementById("add-modal"),
-      welcomeModal: document.getElementById("welcome-modal")
-    };
-    let lives = [];
-    let dualMode = false;
-    let controlTimer;
-    function extrair(u) {
-      let m = u.match(/(?:v=|youtu\.be\/|youtube\.com\/embed\/|\/live\/)([^&\n?#]+)/);
-      if (m) return {type: "yt", id: m[1], name: "YouTube"};
-      m = u.match(/twitch\.tv\/([a-zA-Z0-9_]+)/); if (m) return {type: "tw", id: m[1], name: m[1]};
-      m = u.match(/kick\.com\/([a-zA-Z0-9_]+)/); if (m) return {type: "kick", id: m[1], name: m[1]};
-      return null;
-    }
-    function embed(d) {
-      if (d.type === "yt") return `https://www.youtube.com/embed/${d.id}?autoplay=1&mute=0`;
-      if (d.type === "tw") return `https://player.twitch.tv/?channel=${d.id}&parent=${FINAL_HOST}&autoplay=true`;
-      return `https://player.kick.com/${d.id}?autoplay=true`;
-    }
-    function chatEmbed(d) {
-      if (d.type === "yt") return `https://www.youtube.com/live_chat?v=${d.id}&embed_domain=${FINAL_HOST}`;
-      if (d.type === "tw") return `https://www.twitch.tv/embed/${d.id}/chat?parent=${FINAL_HOST}&darkpopout`;
-      return `https://kick.com/${d.id}/chatroom`;
-    }
-    function abrir(modal) { modal.classList.add("active"); el.overlay.classList.add("active"); }
-    function fechar() { document.querySelectorAll(".modal").forEach(m => m.classList.remove("active")); el.overlay.classList.remove("active"); }
-    function updateChatIcon() {
-      const isOpen = el.chatSidebar.classList.contains("open");
-      const caret = isOpen ? 'ph-caret-left' : 'ph-caret-right';
-      el.toggleChat.innerHTML = `<i class="ph ph-chat-circle"></i> <i class="ph ${caret}"></i>`;
-      updateTitles();
-    }
-    function updateUIIcon() {
-      const oculto = el.header.classList.contains("hidden");
-      const eye = oculto ? 'ph-eye' : 'ph-eye-slash';
-      el.toggleUI.innerHTML = `<i class="ph ${eye}"></i><i class="ph ph-caret-down" style="font-size:0.8em;"></i>`;
-      updateTitles();
-    }
-    function updateFullscreenIcon() {
-      const fs = document.fullscreenElement;
-      const arrows = fs ? 'ph-arrows-in' : 'ph-arrows-out';
-      document.getElementById("toggle-fullscreen").innerHTML = `<i class="ph ${arrows}"></i>`;
-      updateTitles();
-    }
-    function updateGridColumns() {
-      if (lives.length === 0) return;
-      const isMobile = window.innerWidth <= 768;
-      const chatOpen = el.chatSidebar.classList.contains('open');
-      let cols = 1;
-      if (isMobile) {
+  };
+
+  let lang = localStorage.getItem("lang") || "pt";
+  const FINAL_HOST = "telazona.live";
+
+  function t() {
+    document.querySelectorAll("[data-t]").forEach(el => {
+      el.textContent = trad[lang][el.dataset.t] || el.textContent;
+    });
+    document.getElementById("lang-text").textContent = lang.toUpperCase();
+    document.getElementById("mobile-lang-text").textContent = lang.toUpperCase();
+    updateTitles();
+  }
+
+  function updateTitles() {
+    document.getElementById("quick-add").title = trad[lang].quickAdd;
+    const uiHidden = document.getElementById("header").classList.contains("hidden");
+    document.getElementById("toggle-ui").title = uiHidden ? trad[lang].showUI : trad[lang].hideUI;
+    const chatOpen = document.getElementById("chat-sidebar").classList.contains("open");
+    document.getElementById("toggle-chat").title = chatOpen ? trad[lang].hideChat : trad[lang].showChat;
+    const fs = document.fullscreenElement;
+    document.getElementById("toggle-fullscreen").title = fs ? trad[lang].exitFullscreen : trad[lang].fullscreen;
+  }
+
+  t();
+
+  const el = {
+    header: document.getElementById("header"),
+    footer: document.getElementById("footer"),
+    toggleUI: document.getElementById("toggle-ui"),
+    toggleChat: document.getElementById("toggle-chat"),
+    chatSidebar: document.getElementById("chat-sidebar"),
+    chatIframe1: document.getElementById("chat-iframe1"),
+    chatIframe2: document.getElementById("chat-iframe2"),
+    chatSelect1: document.getElementById("chat-select1"),
+    chatSelect2: document.getElementById("chat-select2"),
+    grid: document.getElementById("grid"),
+    overlay: document.getElementById("overlay"),
+    addModal: document.getElementById("add-modal"),
+    welcomeModal: document.getElementById("welcome-modal")
+  };
+
+  let lives = [];
+  let dualMode = false;
+  let controlTimer;
+
+  function extrair(u) {
+    let m = u.match(/(?:v=|youtu\.be\/|youtube\.com\/embed\/|\/live\/)([^&\n?#]+)/);
+    if (m) return {type: "yt", id: m[1], name: "YouTube"};
+    m = u.match(/twitch\.tv\/([a-zA-Z0-9_]+)/); if (m) return {type: "tw", id: m[1], name: m[1]};
+    m = u.match(/kick\.com\/([a-zA-Z0-9_]+)/); if (m) return {type: "kick", id: m[1], name: m[1]};
+    return null;
+  }
+
+  function embed(d) {
+    if (d.type === "yt") return `https://www.youtube.com/embed/${d.id}?autoplay=1&mute=0`;
+    if (d.type === "tw") return `https://player.twitch.tv/?channel=${d.id}&parent=${FINAL_HOST}&autoplay=true`;
+    return `https://player.kick.com/${d.id}?autoplay=true`;
+  }
+
+  function chatEmbed(d) {
+    if (d.type === "yt") return `https://www.youtube.com/live_chat?v=${d.id}&embed_domain=${FINAL_HOST}`;
+    if (d.type === "tw") return `https://www.twitch.tv/embed/${d.id}/chat?parent=${FINAL_HOST}&darkpopout`;
+    return `https://kick.com/${d.id}/chatroom`;
+  }
+
+  function abrir(modal) { 
+    modal.classList.add("active"); 
+    el.overlay.classList.add("active"); 
+  }
+
+  function fechar() { 
+    document.querySelectorAll(".modal").forEach(m => m.classList.remove("active")); 
+    el.overlay.classList.remove("active"); 
+  }
+
+  function updateChatIcon() {
+    const isOpen = el.chatSidebar.classList.contains("open");
+    const caret = isOpen ? 'ph-caret-left' : 'ph-caret-right';
+    el.toggleChat.innerHTML = `<i class="ph ph-chat-circle"></i> <i class="ph ${caret}"></i>`;
+    updateTitles();
+  }
+
+  function updateUIIcon() {
+    const oculto = el.header.classList.contains("hidden");
+    const eye = oculto ? 'ph-eye' : 'ph-eye-slash';
+    el.toggleUI.innerHTML = `<i class="ph ${eye}"></i><i class="ph ph-caret-down" style="font-size:0.8em;"></i>`;
+    updateTitles();
+  }
+
+  function updateFullscreenIcon() {
+    const fs = document.fullscreenElement;
+    const arrows = fs ? 'ph-arrows-in' : 'ph-arrows-out';
+    document.getElementById("toggle-fullscreen").innerHTML = `<i class="ph ${arrows}"></i>`;
+    updateTitles();
+  }
+
+function updateGridColumns() {
+  if (lives.length === 0) return;
+
+  const isMobile = window.innerWidth <= 768;
+  const chatOpen = el.chatSidebar.classList.contains('open');
+  let cols = 1;
+
+  if (isMobile) {
+    cols = 1;
+  } else {
+    // Desktop
+    if (!chatOpen) {
+      // Chat fechado → lógica principal de colunas
+      if (lives.length > 4) {
+        cols = 3;
+      } else if (lives.length >= 3) {
+        cols = 2;
+      } else if (lives.length >= 2) {
+        cols = 2;
+      } else {
         cols = 1;
-      } else {
-        if (!chatOpen) {
-          cols = Math.min(2, lives.length);
-          if (lives.length > 4) cols = 3;
+      }
+    } else {
+      // Chat aberto → reduz colunas dependendo da largura
+      const width = window.innerWidth;
+
+      if (width >= 1400) {
+        // Tela bem grande + chat aberto
+        if (lives.length > 4) {
+          cols = 3;
+        } else if (lives.length >= 2) {
+          cols = 2;
         } else {
-          const width = window.innerWidth;
-          if (width > 1400) { cols = 2; } else { cols = 1; }
-          if (lives.length === 1) cols = 1;
+          cols = 1;
         }
-      }
-      el.grid.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
-    }
-    function updateChatMode() {
-      el.chatSelect2.style.display = dualMode ? 'block' : 'none';
-      el.chatIframe2.style.display = dualMode ? 'block' : 'none';
-    }
-    function render() {
-      const hasLives = lives.length > 0;
-      document.getElementById("hero").style.display = hasLives ? "none" : "flex";
-      document.getElementById("main-content").style.display = hasLives ? "flex" : "none";
-      document.getElementById("toggle-chat").style.display = hasLives ? "flex" : "none";
-      el.grid.innerHTML = "";
-      el.chatSelect1.innerHTML = `<option value="" data-t="selectChat">${trad[lang].selectChat}</option>`;
-      el.chatSelect2.innerHTML = `<option value="" data-t="selectChat">${trad[lang].selectChat}</option>`;
-      t();
-      lives.forEach((url, i) => {
-        const data = extrair(url);
-        if (!data) return;
-        const div = document.createElement("div");
-        div.className = "live-container";
-        div.innerHTML = `<iframe src="${embed(data)}" allowfullscreen allow="autoplay; clipboard-write"></iframe>
-                         <div class="live-menu-btn" data-t="deleteLive" data-index="${i}">${trad[lang].deleteLive}</div>`;
-        const deleteBtn = div.querySelector(".live-menu-btn");
-        deleteBtn.onclick = e => {
-          e.stopPropagation();
-          if (deleteBtn.classList.contains('confirm-delete')) {
-            div.style.opacity = '0';
-            div.style.transform = 'scale(0.9)';
-            div.style.height = '0';
-            div.style.padding = '0';
-            div.style.margin = '0';
-            setTimeout(() => {
-              lives.splice(i, 1);
-              render();
-              updateURL();
-            }, 400);
-          } else {
-            deleteBtn.classList.add('confirm-delete');
-            deleteBtn.textContent = trad[lang].confirmDelete;
-            setTimeout(() => {
-              const currentBtn = document.querySelector(`.live-container:nth-child(${i + 1}) .live-menu-btn`);
-              if (currentBtn && currentBtn.classList.contains('confirm-delete')) {
-                currentBtn.classList.remove('confirm-delete');
-                currentBtn.textContent = trad[lang].deleteLive;
-              }
-            }, 3000);
-          }
-        };
-        div.onmouseleave = () => {
-          if (window.innerWidth > 768) {
-            deleteBtn.classList.remove('confirm-delete');
-            deleteBtn.textContent = trad[lang].deleteLive;
-          }
-        };
-        el.grid.appendChild(div);
-        const opt1 = document.createElement("option");
-        opt1.value = i;
-        opt1.textContent = data.name;
-        el.chatSelect1.appendChild(opt1);
-        const opt2 = document.createElement("option");
-        opt2.value = i;
-        opt2.textContent = data.name;
-        el.chatSelect2.appendChild(opt2);
-      });
-      document.getElementById("dual-chat-toggle").style.display = lives.length > 1 ? 'block' : 'none';
-      updateGridColumns();
-      updateChatIcon();
-      updateUIIcon();
-      updateFullscreenIcon();
-      updateChatMode();
-      updateURL();
-    }
-    function loadFromURL() {
-      const params = new URLSearchParams(window.location.search);
-      const livesStr = params.get('lives');
-      if (livesStr) {
-        lives = livesStr.split(',').map(str => {
-          const [type, id] = str.split(':');
-          if (type === 'yt') return `https://youtube.com/watch?v=${id}`;
-          if (type === 'tw') return `https://twitch.tv/${id}`;
-          if (type === 'kick') return `https://kick.com/${id}`;
-          return null;
-        }).filter(Boolean);
-        render();
+      } 
+      else if (width >= 1000) {
+        // Tela média + chat aberto
+        cols = (lives.length >= 2) ? 2 : 1;
+      } 
+      else {
+        // Tela pequena mas ainda desktop
+        cols = 1;
       }
     }
-    function updateURL() {
-      const livesStr = lives.map(url => {
-        const data = extrair(url);
-        return `${data.type}:${data.id}`;
-      }).join(',');
-      const newURL = livesStr ? `?lives=${livesStr}` : '';
-      history.pushState({}, '', newURL || '/');
-    }
-    function clearLives() {
-      lives = [];
+  }
+
+  // Segurança extra: nunca mais que 3 colunas, mesmo que tenha 10+ lives
+  cols = Math.min(cols, 3);
+
+  el.grid.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
+}
+
+  function updateChatMode() {
+    el.chatSelect2.style.display = dualMode ? 'block' : 'none';
+    el.chatIframe2.style.display = dualMode ? 'block' : 'none';
+  }
+
+  function render() {
+    const hasLives = lives.length > 0;
+    document.getElementById("hero").style.display = hasLives ? "none" : "flex";
+    document.getElementById("main-content").style.display = hasLives ? "flex" : "none";
+    document.getElementById("toggle-chat").style.display = hasLives ? "flex" : "none";
+
+    el.grid.innerHTML = "";
+    el.chatSelect1.innerHTML = `<option value="" data-t="selectChat">${trad[lang].selectChat}</option>`;
+    el.chatSelect2.innerHTML = `<option value="" data-t="selectChat">${trad[lang].selectChat}</option>`;
+    t();
+
+    lives.forEach((url, i) => {
+      const data = extrair(url);
+      if (!data) return;
+
+      const div = document.createElement("div");
+      div.className = "live-container";
+      div.innerHTML = `
+        <iframe src="${embed(data)}" allowfullscreen allow="autoplay; clipboard-write"></iframe>
+        <div class="live-menu-btn" data-t="deleteLive" data-index="${i}">${trad[lang].deleteLive}</div>
+      `;
+
+      const deleteBtn = div.querySelector(".live-menu-btn");
+      deleteBtn.onclick = e => {
+        e.stopPropagation();
+        if (deleteBtn.classList.contains('confirm-delete')) {
+          div.style.opacity = '0';
+          div.style.transform = 'scale(0.9)';
+          div.style.height = '0';
+          div.style.padding = '0';
+          div.style.margin = '0';
+          setTimeout(() => {
+            lives.splice(i, 1);
+            render();
+            updateURL();
+          }, 400);
+        } else {
+          deleteBtn.classList.add('confirm-delete');
+          deleteBtn.textContent = trad[lang].confirmDelete;
+          setTimeout(() => {
+            const currentBtn = document.querySelector(`.live-container:nth-child(${i + 1}) .live-menu-btn`);
+            if (currentBtn && currentBtn.classList.contains('confirm-delete')) {
+              currentBtn.classList.remove('confirm-delete');
+              currentBtn.textContent = trad[lang].deleteLive;
+            }
+          }, 3000);
+        }
+      };
+
+      div.onmouseleave = () => {
+        if (window.innerWidth > 768) {
+          deleteBtn.classList.remove('confirm-delete');
+          deleteBtn.textContent = trad[lang].deleteLive;
+        }
+      };
+
+      el.grid.appendChild(div);
+
+      const opt1 = document.createElement("option");
+      opt1.value = i;
+      opt1.textContent = data.name;
+      el.chatSelect1.appendChild(opt1);
+
+      const opt2 = document.createElement("option");
+      opt2.value = i;
+      opt2.textContent = data.name;
+      el.chatSelect2.appendChild(opt2);
+    });
+
+    document.getElementById("dual-chat-toggle").style.display = lives.length > 1 ? 'block' : 'none';
+
+    updateGridColumns();
+    updateChatIcon();
+    updateUIIcon();
+    updateFullscreenIcon();
+    updateChatMode();
+    updateURL();
+  }
+
+  function loadFromURL() {
+    const params = new URLSearchParams(window.location.search);
+    const livesStr = params.get('lives');
+    if (livesStr) {
+      lives = livesStr.split(',').map(str => {
+        const [type, id] = str.split(':');
+        if (type === 'yt') return `https://youtube.com/watch?v=${id}`;
+        if (type === 'tw') return `https://twitch.tv/${id}`;
+        if (type === 'kick') return `https://kick.com/${id}`;
+        return null;
+      }).filter(Boolean);
       render();
-      updateURL();
     }
-    function startControlHideTimer() {
-      if (!el.header.classList.contains('hidden')) return;
-      clearTimeout(controlTimer);
-      controlTimer = setTimeout(() => {
-        document.getElementById('control-bar').classList.add('hidden');
-      }, 4000);
-    }
-    function showControlBar() {
+  }
+
+  function updateURL() {
+    const livesStr = lives.map(url => {
+      const data = extrair(url);
+      return `${data.type}:${data.id}`;
+    }).join(',');
+    const newURL = livesStr ? `?lives=${livesStr}` : '';
+    history.pushState({}, '', newURL || '/');
+  }
+
+  function clearLives() {
+    lives = [];
+    render();
+    updateURL();
+  }
+
+  function startControlHideTimer() {
+    if (!el.header.classList.contains('hidden')) return;
+    clearTimeout(controlTimer);
+    controlTimer = setTimeout(() => {
+      document.getElementById('control-bar').classList.add('hidden');
+    }, 4000);
+  }
+
+  function showControlBar() {
+    document.getElementById('control-bar').classList.remove('hidden');
+    startControlHideTimer();
+  }
+
+  // ── Eventos ───────────────────────────────────────────────
+
+  el.toggleUI.onclick = () => {
+    const oculto = !el.header.classList.contains("hidden");
+    el.header.classList.toggle("hidden", oculto);
+    el.footer.classList.toggle("hidden", oculto);
+    const mainEl = document.querySelector('main');
+    mainEl.style.paddingTop = oculto ? '0' : 'var(--header-h)';
+    mainEl.style.paddingBottom = oculto ? '0' : 'var(--footer-h)';
+    updateUIIcon();
+    if (oculto) {
+      showControlBar();
+    } else {
       document.getElementById('control-bar').classList.remove('hidden');
-      startControlHideTimer();
     }
-    el.toggleUI.onclick = () => {
-      const oculto = !el.header.classList.contains("hidden");
-      el.header.classList.toggle("hidden", oculto);
-      el.footer.classList.toggle("hidden", oculto);
-      const mainEl = document.querySelector('main');
-      mainEl.style.paddingTop = oculto ? '0' : 'var(--header-h)';
-      mainEl.style.paddingBottom = oculto ? '0' : 'var(--footer-h)';
-      updateUIIcon();
-      if (oculto) {
-        showControlBar();
-      } else {
-        document.getElementById('control-bar').classList.remove('hidden');
-      }
-    };
-    el.toggleChat.onclick = () => {
-      el.chatSidebar.classList.toggle("open");
-      updateChatIcon();
-      updateGridColumns();
-    };
-    el.chatSelect1.onchange = () => {
-      if (el.chatSelect1.value === "") {
-        el.chatIframe1.src = "";
-        if (!dualMode) {
-          el.chatSidebar.classList.remove("open");
-          updateChatIcon();
-          updateGridColumns();
-        }
-        return;
-      }
-      const data = extrair(lives[el.chatSelect1.value]);
-      el.chatIframe1.src = chatEmbed(data);
-      el.chatSidebar.classList.add("open");
-      updateChatIcon();
-      updateGridColumns();
-    };
-    el.chatSelect2.onchange = () => {
-      if (el.chatSelect2.value === "") {
-        el.chatIframe2.src = "";
-        return;
-      }
-      const data = extrair(lives[el.chatSelect2.value]);
-      el.chatIframe2.src = chatEmbed(data);
-    };
-    document.getElementById("dual-chat-toggle").onclick = () => {
-      dualMode = !dualMode;
-      updateChatMode();
-      if (dualMode && el.chatSelect2.value !== "") {
-        el.chatSidebar.classList.add("open");
+  };
+
+  el.toggleChat.onclick = () => {
+    el.chatSidebar.classList.toggle("open");
+    updateChatIcon();
+    updateGridColumns();
+  };
+
+  el.chatSelect1.onchange = () => {
+    if (el.chatSelect1.value === "") {
+      el.chatIframe1.src = "";
+      if (!dualMode) {
+        el.chatSidebar.classList.remove("open");
         updateChatIcon();
         updateGridColumns();
       }
-    };
-    document.getElementById("toggle-fullscreen").onclick = () => {
-      if (!document.fullscreenElement) {
-        document.documentElement.requestFullscreen();
-      } else {
-        document.exitFullscreen();
-      }
-      document.addEventListener('fullscreenchange', updateFullscreenIcon);
-    };
-    document.getElementById("quick-add").onclick = () => { abrir(el.addModal); };
-    document.getElementById("add-btn").onclick = () => abrir(el.addModal);
-    document.getElementById("hero-add").onclick = () => abrir(el.addModal);
-    document.getElementById("confirm-add").onclick = () => {
-      const url = document.getElementById("url-input").value.trim();
-      if (extrair(url)) {
-        lives.push(url);
-        render();
-        fechar();
-        document.getElementById("url-input").value = "";
-      } else alert("URL inválida ou não suportada!");
-    };
-    document.getElementById("cancel-add").onclick = fechar;
-    el.overlay.onclick = fechar;
-    document.getElementById("help-btn").onclick = () => abrir(el.welcomeModal);
-    document.getElementById("close-welcome").onclick = () => {
+      return;
+    }
+    const data = extrair(lives[el.chatSelect1.value]);
+    el.chatIframe1.src = chatEmbed(data);
+    el.chatSidebar.classList.add("open");
+    updateChatIcon();
+    updateGridColumns();
+  };
+
+  el.chatSelect2.onchange = () => {
+    if (el.chatSelect2.value === "") {
+      el.chatIframe2.src = "";
+      return;
+    }
+    const data = extrair(lives[el.chatSelect2.value]);
+    el.chatIframe2.src = chatEmbed(data);
+  };
+
+  document.getElementById("dual-chat-toggle").onclick = () => {
+    dualMode = !dualMode;
+    updateChatMode();
+    if (dualMode && el.chatSelect2.value !== "") {
+      el.chatSidebar.classList.add("open");
+      updateChatIcon();
+      updateGridColumns();
+    }
+  };
+
+  document.getElementById("toggle-fullscreen").onclick = () => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen();
+    } else {
+      document.exitFullscreen();
+    }
+  };
+
+  document.addEventListener('fullscreenchange', updateFullscreenIcon);
+
+  document.getElementById("quick-add").onclick = () => abrir(el.addModal);
+  document.getElementById("add-btn").onclick = () => abrir(el.addModal);
+  document.getElementById("hero-add").onclick = () => abrir(el.addModal);
+
+  document.getElementById("confirm-add").onclick = () => {
+    const url = document.getElementById("url-input").value.trim();
+    if (extrair(url)) {
+      lives.push(url);
+      render();
       fechar();
-      if (document.getElementById("no-welcome").checked) localStorage.setItem("welcome_seen", "1");
+      document.getElementById("url-input").value = "";
+    } else {
+      alert("URL inválida ou não suportada!");
+    }
+  };
+
+  document.getElementById("cancel-add").onclick = fechar;
+  el.overlay.onclick = fechar;
+
+  document.getElementById("help-btn").onclick = () => abrir(el.welcomeModal);
+
+  document.getElementById("close-welcome").onclick = () => {
+    fechar();
+    if (document.getElementById("no-welcome").checked) {
+      localStorage.setItem("welcome_seen", "1");
+    }
+  };
+
+  document.getElementById("donate-btn").onclick = () => window.open("https://linktr.ee/santnasc", "_blank");
+  document.getElementById("clear-btn").onclick = clearLives;
+  document.getElementById("mobile-clear").onclick = () => { 
+    clearLives(); 
+    mobileMenu.classList.remove("open"); 
+  };
+
+  const mobileMenu = document.getElementById("mobile-menu");
+  const mobileLangBtn = document.getElementById("mobile-lang-btn");
+  const mobileLangMenu = document.getElementById("mobile-lang-menu");
+  const closeMenuBtn = document.getElementById("close-menu-btn");
+
+  document.getElementById("menu-btn").onclick = () => mobileMenu.classList.toggle("open");
+  closeMenuBtn.onclick = () => mobileMenu.classList.remove("open");
+
+  mobileLangBtn.onclick = (e) => {
+    e.stopPropagation();
+    mobileLangMenu.style.display = mobileLangMenu.style.display === "block" ? "none" : "block";
+  };
+
+  document.querySelectorAll("#mobile-lang-menu button").forEach(b => {
+    b.onclick = () => {
+      lang = b.dataset.lang;
+      localStorage.setItem("lang", lang);
+      t();
+      mobileLangMenu.style.display = "none";
     };
-    document.getElementById("donate-btn").onclick = () => window.open("https://linktr.ee/santnasc", "_blank");
-    document.getElementById("clear-btn").onclick = clearLives;
-    document.getElementById("mobile-clear").onclick = () => { clearLives(); mobileMenu.classList.remove("open"); };
-    const mobileMenu = document.getElementById("mobile-menu");
-    const mobileLangBtn = document.getElementById("mobile-lang-btn");
-    const mobileLangMenu = document.getElementById("mobile-lang-menu");
-    const closeMenuBtn = document.getElementById("close-menu-btn");
-    document.getElementById("menu-btn").onclick = () => mobileMenu.classList.toggle("open");
-    closeMenuBtn.onclick = () => mobileMenu.classList.remove("open");
-    mobileLangBtn.onclick = (e) => {
-      e.stopPropagation();
-      mobileLangMenu.style.display = mobileLangMenu.style.display === "block" ? "none" : "block";
-    };
-    document.querySelectorAll("#mobile-lang-menu button").forEach(b => {
-      b.onclick = () => {
-        lang = b.dataset.lang;
-        localStorage.setItem("lang", lang);
-        t();
-        mobileLangMenu.style.display = "none";
-      };
-    });
-    document.getElementById("lang-btn").onclick = e => {
-      e.stopPropagation();
-      const menu = document.getElementById("lang-menu");
-      menu.style.display = menu.style.display === "block" ? "none" : "block";
-    };
-    document.querySelectorAll("#lang-menu button").forEach(b => b.onclick = () => {
+  });
+
+  document.getElementById("lang-btn").onclick = e => {
+    e.stopPropagation();
+    const menu = document.getElementById("lang-menu");
+    menu.style.display = menu.style.display === "block" ? "none" : "block";
+  };
+
+  document.querySelectorAll("#lang-menu button").forEach(b => {
+    b.onclick = () => {
       lang = b.dataset.lang;
       localStorage.setItem("lang", lang);
       t();
       document.getElementById("lang-menu").style.display = "none";
-    });
-    document.addEventListener("click", () => {
-      mobileLangMenu.style.display = "none";
-      document.getElementById("lang-menu").style.display = "none";
-    });
-    mobileMenu.onclick = e => e.stopPropagation();
-    document.getElementById("mobile-add").onclick = () => { document.getElementById("add-btn").click(); mobileMenu.classList.remove("open"); };
-    document.getElementById("mobile-donate").onclick = () => document.getElementById("donate-btn").click();
-    document.getElementById("mobile-help").onclick = () => { document.getElementById("help-btn").click(); mobileMenu.classList.remove("open"); };
-    new MutationObserver(updateChatIcon).observe(el.chatSidebar, { attributes: true, attributeFilter: ["class"] });
-    if (!localStorage.getItem("welcome_seen")) setTimeout(() => abrir(el.welcomeModal), 800);
-    window.addEventListener('resize', updateGridColumns);
-    document.addEventListener('mousemove', showControlBar);
-    document.addEventListener('touchstart', showControlBar);
-    loadFromURL();
-    render();
-  </script>
+    };
+  });
+
+  document.addEventListener("click", () => {
+    mobileLangMenu.style.display = "none";
+    document.getElementById("lang-menu").style.display = "none";
+  });
+
+  mobileMenu.onclick = e => e.stopPropagation();
+
+  document.getElementById("mobile-add").onclick = () => { 
+    document.getElementById("add-btn").click(); 
+    mobileMenu.classList.remove("open"); 
+  };
+
+  document.getElementById("mobile-donate").onclick = () => document.getElementById("donate-btn").click();
+  document.getElementById("mobile-help").onclick = () => { 
+    document.getElementById("help-btn").click(); 
+    mobileMenu.classList.remove("open"); 
+  };
+
+  new MutationObserver(updateChatIcon).observe(el.chatSidebar, { attributes: true, attributeFilter: ["class"] });
+
+  if (!localStorage.getItem("welcome_seen")) {
+    setTimeout(() => abrir(el.welcomeModal), 800);
+  }
+
+  window.addEventListener('resize', updateGridColumns);
+  document.addEventListener('mousemove', showControlBar);
+  document.addEventListener('touchstart', showControlBar);
+
+  loadFromURL();
+  render();
+</script>
 </body>
 </html>
