@@ -211,47 +211,16 @@
       .footer-ad.mobile-only { order: -1; margin-bottom: 8px; }
       .footer-copyright { order: 0; }
     }
-    /* Ajustes para os seletores de chat no modo dual */
-#chat-selector {
-  flex-wrap: wrap;           /* permite quebrar linha se necessário */
-  gap: 8px;                  /* espaço entre elementos */
-  padding: 12px 16px;        /* um pouco mais de respiro vertical */
-}
 
-#chat-selector select {
-  min-width: 0;              /* permite encolher de verdade */
-  flex: 1 1 45%;             /* cada select tenta ocupar ~45% → sobra espaço pro botão */
-  font-size: 14px;           /* diminui um pouco a fonte se quiser mais espaço */
-  padding: 8px 10px;         /* reduz padding interno */
-  white-space: nowrap;       /* evita quebra de linha no texto */
-  overflow: hidden;
-  text-overflow: ellipsis;   /* coloca ... quando corta */
-}
-
-/* Botão de dual no meio fica menor e centralizado */
-#dual-chat-toggle {
-  flex: 0 0 auto;
-  min-width: 36px;
-  padding: 0 8px;
-  font-size: 18px;
-}
+        /* Ajustes para os seletores de chat no modo dual */
+#chat-selector {flex-wrap: wrap; gap: 8px; padding: 12px 16px;}
+#chat-selector select {min-width: 0; flex: 1 1 45%;  font-size: 14px; padding: 8px 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;          }
+#dual-chat-toggle {flex: 0 0 auto; min-width: 36px;padding: 0 8px;font-size: 18px;}
 
 /* Quando a tela for pequena/média, força quebra de linha */
-@media (max-width: 1100px) {
-  #chat-selector {
-    flex-direction: column;
-    align-items: stretch;
-  }
-  
-  #chat-selector select {
-    flex: 1 1 auto;
-    width: 100%;
-  }
-  
-  #dual-chat-toggle {
-    align-self: center;
-  }
-}
+@media (max-width: 1100px) { #chat-selector {flex-direction: column;align-items: stretch;}
+  #chat-selector select { flex: 1 1 auto;width: 100%;}
+  #dual-chat-toggle { align-self: center;}}
   </style>
 </head>
 <body>
@@ -261,6 +230,7 @@
     <div class="header-right">
       <button class="btn" id="add-btn" data-t="addLive">+ Adicionar Live</button>
       <button class="btn" id="clear-btn" data-t="clearLives"><i class="ph ph-trash"></i> Limpar Lives</button>
+      <button class="btn" id="featured-btn" data-t="featured"><i class="ph ph-star"></i> Lives em Destaque</button>
       <button class="btn" id="donate-btn"><i class="ph ph-heart"></i> <span data-t="donate">Doar</span></button>
       <button class="btn" id="help-btn" data-t="help">Ajuda</button>
       <button class="btn" id="lang-btn"><i class="ph ph-globe"></i> <span id="lang-text">PT</span></button>
@@ -274,6 +244,7 @@
   <div id="mobile-menu">
     <button class="btn" id="mobile-add" data-t="addLive">+ Adicionar Live</button>
     <button class="btn" id="mobile-clear" data-t="clearLives"><i class="ph ph-trash"></i> Limpar Lives</button>
+    <button class="btn" id="mobile-featured" data-t="featured"><i class="ph ph-star"></i> Lives em Destaque</button>
     <button class="btn" id="mobile-donate"><i class="ph ph-heart"></i> <span data-t="donate">Doar</span></button>
     <button class="btn" id="mobile-help" data-t="help">Ajuda</button>
     <button class="btn" id="mobile-lang-btn"><i class="ph ph-globe"></i> Idioma • <span id="mobile-lang-text">PT</span> <i class="ph ph-caret-down" style="float:right;margin-top:3px"></i></button>
@@ -298,6 +269,13 @@
     <div style="display:flex;justify-content:flex-end;gap:12px;margin-top:20px">
       <button class="btn" id="cancel-add" data-t="cancel">Cancelar</button>
       <button class="btn" style="background:var(--accent);color:#000" id="confirm-add" data-t="add">Adicionar</button>
+    </div>
+  </div>
+  <div id="featured-modal" class="modal">
+    <h2 data-t="featuredTitle">Lives em Destaque</h2>
+    <div id="featured-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; margin-top: 20px;"></div>
+    <div style="display:flex;justify-content:flex-end;gap:12px;margin-top:20px">
+      <button class="btn" id="close-featured" data-t="close">Fechar</button>
     </div>
   </div>
   <div id="welcome-modal" class="modal">
@@ -356,7 +334,8 @@
       selectChat: "Selecione o chat", closeMenu: "Fechar Menu", deleteLive: "Excluir Live", confirmDelete: "Confirme Exclusão",
       quickAdd: "Adicionar Live Rápido", fullscreen: "Entrar em Tela Cheia", exitFullscreen: "Sair de Tela Cheia",
       clearLives: "Limpar Lives", pasteUrl: "Cole a URL da live abaixo", ytShare: "Clique em Compartilhar → Copiar link",
-      twCopy: "Copie o link do canal enquanto estiver ao vivo", kickCopy: "Copie o link do canal ao vivo"
+      twCopy: "Copie o link do canal enquanto estiver ao vivo", kickCopy: "Copie o link do canal ao vivo",
+      featured: "Lives em Destaque", featuredTitle: "Lives em Destaque", close: "Fechar"
     },
     en: {
       addLive: "Add Live", addLiveTitle: "Add Live (YouTube, Twitch or Kick)", addFirst: "Add First Live",
@@ -366,7 +345,8 @@
       selectChat: "Select chat", closeMenu: "Close Menu", deleteLive: "Delete Live", confirmDelete: "Confirm Delete",
       quickAdd: "Quick Add Live", fullscreen: "Enter Fullscreen", exitFullscreen: "Exit Fullscreen",
       clearLives: "Clear Lives", pasteUrl: "Paste the live URL below", ytShare: "Click Share → Copy link",
-      twCopy: "Copy the channel link while live", kickCopy: "Copy the live channel link"
+      twCopy: "Copy the channel link while live", kickCopy: "Copy the live channel link",
+      featured: "Featured Lives", featuredTitle: "Featured Lives", close: "Close"
     },
     es: {
       addLive: "Añadir Live", addLiveTitle: "Añadir Live (YouTube, Twitch o Kick)", addFirst: "Añadir Primera Live",
@@ -376,7 +356,8 @@
       selectChat: "Seleccionar chat", closeMenu: "Cerrar Menu", deleteLive: "Eliminar Live", confirmDelete: "Confirmar Eliminación",
       quickAdd: "Añadir Live Rápido", fullscreen: "Entrar en Pantalla Completa", exitFullscreen: "Salir de Pantalla Completa",
       clearLives: "Limpiar Lives", pasteUrl: "Pega la URL de la live abajo", ytShare: "Haz clic en Compartir → Copiar enlace",
-      twCopy: "Copia el enlace del canal mientras está en vivo", kickCopy: "Copia el enlace del canal en vivo"
+      twCopy: "Copia el enlace del canal mientras está en vivo", kickCopy: "Copia el enlace del canal en vivo",
+      featured: "Lives Destacadas", featuredTitle: "Lives Destacadas", close: "Cerrar"
     }
   };
 
@@ -417,12 +398,25 @@
     grid: document.getElementById("grid"),
     overlay: document.getElementById("overlay"),
     addModal: document.getElementById("add-modal"),
+    featuredModal: document.getElementById("featured-modal"),
     welcomeModal: document.getElementById("welcome-modal")
   };
 
   let lives = [];
   let dualMode = false;
   let controlTimer;
+
+  // Defina lives em destaque (exemplos; você pode editar ou carregar dinamicamente)
+  const featuredLives = [
+    {
+      name: "Expedição Transamazônica!",
+      lives: [
+    /*"https://youtu.be/uGTfxVAFtCI", 
+      "https://youtu.be/99vLv9ppPFQ",
+      "https://youtu.be/CiQz55dyp3o" */
+      ]
+    },
+  ];
 
   function extrair(u) {
     let m = u.match(/(?:v=|youtu\.be\/|youtube\.com\/embed\/|\/live\/)([^&\n?#]+)/);
@@ -612,6 +606,29 @@ function updateGridColumns() {
     updateURL();
   }
 
+  function renderFeatured() {
+    const grid = document.getElementById("featured-grid");
+    grid.innerHTML = "";
+    featuredLives.forEach(group => {
+      const card = document.createElement("div");
+      card.style.background = "var(--bg2)";
+      card.style.border = "1px solid var(--border)";
+      card.style.borderRadius = "var(--radius)";
+      card.style.padding = "16px";
+      card.style.cursor = "pointer";
+      card.style.transition = "0.3s";
+      card.innerHTML = `<h3 style="margin-bottom: 8px;">${group.name}</h3><p>${group.lives.length} lives</p>`;
+      card.onmouseover = () => { card.style.background = "var(--accent)"; card.style.color = "#000"; };
+      card.onmouseout = () => { card.style.background = "var(--bg2)"; card.style.color = "#fff"; };
+      card.onclick = () => {
+        lives = lives.concat(group.lives);
+        render();
+        fechar();
+      };
+      grid.appendChild(card);
+    });
+  }
+
   function loadFromURL() {
     const params = new URLSearchParams(window.location.search);
     const livesStr = params.get('lives');
@@ -771,6 +788,18 @@ if (window.innerWidth <= 768) {
     mobileMenu.classList.remove("open"); 
   };
 
+  // Eventos para Lives em Destaque
+  document.getElementById("featured-btn").onclick = () => {
+    renderFeatured();
+    abrir(el.featuredModal);
+  };
+  document.getElementById("mobile-featured").onclick = () => {
+    renderFeatured();
+    abrir(el.featuredModal);
+    mobileMenu.classList.remove("open");
+  };
+  document.getElementById("close-featured").onclick = fechar;
+
   const mobileMenu = document.getElementById("mobile-menu");
   const mobileLangBtn = document.getElementById("mobile-lang-btn");
   const mobileLangMenu = document.getElementById("mobile-lang-menu");
@@ -864,4 +893,3 @@ setInterval(() => {
 </script>
 </body>
 </html>
-
