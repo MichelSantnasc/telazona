@@ -30,6 +30,20 @@
       --chat-w: 320px;
       --transparent-bg: rgba(10, 10, 10, 0.85); /* Transparência geral */
       --blur: blur(20px); /* Backdrop filter para efeito vidro fosco */
+
+      #featured-grid {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  overflow-y: auto;
+  max-height: 70vh;
+}
+
+#featured-grid p {  /* para a mensagem de vazio */
+  margin: 40px 0;
+  font-size: 1.1em;
+}
     }
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); height: 100vh; overflow: hidden; position: relative; }
@@ -272,12 +286,12 @@
     </div>
   </div>
   <div id="featured-modal" class="modal">
+  <div class="modal-content">
     <h2 data-t="featuredTitle">Lives em Destaque</h2>
-    <div id="featured-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; margin-top: 20px;"></div>
-    <div style="display:flex;justify-content:flex-end;gap:12px;margin-top:20px">
-      <button class="btn" id="close-featured" data-t="close">Fechar</button>
-    </div>
+    <div id="featured-grid"></div>
+    <button class="btn" id="close-featured" data-t="close">Fechar</button>
   </div>
+</div>
   <div id="welcome-modal" class="modal">
     <h1 class="silkscreen">TELAZONA</h1>
     <p style="text-align:center; font-size:1.4rem; margin:16px 0 32px;" data-t="welcomeText">Assista várias lives ao mesmo tempo!</p>
@@ -411,6 +425,7 @@ function t() {
   // ───────────────────────────────────────────────
 
   let lives = [];
+  window.featuredLives = [];  // inicializa global
   let dualMode = false;
   let controlTimer;
   let featuredLives = [];  // será preenchido pelo Supabase
@@ -590,34 +605,75 @@ function t() {
   // 6. RENDERIZAÇÃO DO MODAL DE DESTAQUES
   // ───────────────────────────────────────────────
 
-  function renderFeatured() {
-    const grid = document.getElementById("featured-grid");
-    grid.innerHTML = "";
+function renderFeatured() {
+  const grid = document.getElementById("featured-grid");
+  if (!grid) {
+    console.error('Grid featured-grid não encontrado!');
+    return;
+  }
 
-    if (featuredLives.length === 0) {
-      grid.innerHTML = '<p style="text-align:center;color:var(--text2);">Nenhum destaque carregado ainda.</p>';
-      return;
-    }
+  console.log('renderFeatured chamado. featuredLives atual:', window.featuredLives);
+  console.log('Quantidade de grupos:', window.featuredLives.length);
 
-    featuredLives.forEach(group => {
-      const card = document.createElement("div");
-      card.style.background = "var(--bg2)";
-      card.style.border = "1px solid var(--border)";
-      card.style.borderRadius = "var(--radius)";
-      card.style.padding = "16px";
-      card.style.cursor = "pointer";
-      card.style.transition = "0.3s";
-      card.innerHTML = `<h3 style="margin-bottom: 8px;">${group.name}</h3><p>${group.lives.length} live${group.lives.length !== 1 ? 's' : ''}</p>`;
-      card.onmouseover = () => { card.style.background = "var(--accent)"; card.style.color = "#000"; };
-      card.onmouseout = () => { card.style.background = "var(--bg2)"; card.style.color = "#fff"; };
-      card.onclick = () => {
+  // Limpa completamente o conteúdo anterior
+  grid.innerHTML = '';
+
+  if (!Array.isArray(window.featuredLives) || window.featuredLives.length === 0) {
+    grid.innerHTML = '<p style="text-align:center; color:var(--text2); padding: 20px;">Nenhum destaque carregado ainda.</p>';
+    console.log('Nenhum dado → mostrando mensagem vazia');
+    return;
+  }
+
+  // Cria um container flex/grid para os cards
+  const container = document.createElement('div');
+  container.style.display = 'grid';
+  container.style.gridTemplateColumns = 'repeat(auto-fit, minmax(220px, 1fr))';
+  container.style.gap = '16px';
+  container.style.padding = '16px';
+
+  window.featuredLives.forEach((group, index) => {
+    console.log(`Criando card ${index + 1}:`, group.name, group.lives?.length || 0, 'lives');
+
+    const card = document.createElement("div");
+    card.style.background = "var(--bg2)";
+    card.style.border = "1px solid var(--border)";
+    card.style.borderRadius = "var(--radius)";
+    card.style.padding = "16px";
+    card.style.cursor = "pointer";
+    card.style.transition = "all 0.3s";
+    card.style.boxShadow = "0 2px 8px rgba(0,0,0,0.3)";
+
+    card.innerHTML = `
+      <h3 style="margin: 0 0 8px 0; font-size: 1.2em;">${group.name || 'Grupo sem nome'}</h3>
+      <p style="margin: 0; color: var(--text2);">${group.lives?.length || 0} live${(group.lives?.length || 0) !== 1 ? 's' : ''}</p>
+    `;
+
+    card.onmouseover = () => { 
+      card.style.background = "var(--accent)"; 
+      card.style.color = "#000"; 
+      card.style.transform = "scale(1.03)";
+    };
+    card.onmouseout = () => { 
+      card.style.background = "var(--bg2)"; 
+      card.style.color = "#fff"; 
+      card.style.transform = "scale(1)";
+    };
+
+    card.onclick = () => {
+      if (group.lives && Array.isArray(group.lives)) {
         lives = [...lives, ...group.lives];
         render();
-        fechar();
-      };
-      grid.appendChild(card);
-    });
-  }
+      }
+      fechar();
+    };
+
+    container.appendChild(card);
+  });
+
+  grid.appendChild(container);
+
+  console.log('Cards criados e container adicionado:', grid.children.length);
+}
 
   // ───────────────────────────────────────────────
   // 7. URL PARAMS E PERSISTÊNCIA
@@ -894,48 +950,66 @@ function t() {
   window.featuredLives = featuredLives;
 </script>
 
-<!-- Supabase – separado e com type="module" -->
-<!-- SUPABASE – VERSÃO CORRIGIDA (sem bloqueio de storage) -->
 <script type="module">
   import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
   const supabaseUrl = 'https://xygmdunlrbtyslvkqvyr.supabase.co';
-  const supabaseAnonKey = 'sb_publishable_QKG5wJZ-qqPrXzZo8wmrFg_LEsjBGff';  // publishable primeiro!
+  const supabaseAnonKey = 'sb_publishable_QKG5wJZ-qqPrXzZo8wmrFg_LEsjBGff';
 
   const supabase = createClient(supabaseUrl, supabaseAnonKey, {
-    auth: {
-      persistSession: false,
-      autoRefreshToken: false,
-      detectSessionInUrl: false
-    }
+    auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false },
+    global: { headers: { 'apikey': supabaseAnonKey } }
   });
 
   async function loadFeaturedFromSupabase() {
-    console.log('Tentando carregar featured...');
+    console.log('Iniciando fetch featured...');
     try {
       const { data, error, count } = await supabase
         .from('featured')
         .select('*', { count: 'exact' })
-        .order('name');
+        .order('name', { ascending: true });
 
-      console.log('Resposta Supabase:', { data, error, count });
+      console.log('Resposta completa:', { dataLength: data?.length, count, error: error?.message || 'sem erro' });
+      console.log('Dados crus:', data);
 
       if (error) throw error;
 
       window.featuredLives = data || [];
-      console.log('✅ Carregado:', window.featuredLives.length, 'itens');
+      console.log('✅ Atribuído featuredLives:', window.featuredLives.length);
 
-      if (window.el?.featuredModal.classList.contains('active')) {
-        window.renderFeatured();
-      }
+      // Força renderização do modal mesmo se não estiver aberto ainda
+      // (útil se o usuário abrir depois do carregamento)
+      setTimeout(() => {
+        if (window.renderFeatured) {
+          console.log('Forçando renderFeatured() após carregamento');
+          window.renderFeatured();
+        }
+      }, 500);  // delay pequeno para garantir que o DOM está pronto
+
     } catch (err) {
-      console.error('❌ Erro detalhado Supabase:', err);
+      console.error('❌ Erro fetch:', err.message || err);
       window.featuredLives = [];
     }
   }
 
+  // Carrega imediatamente
   loadFeaturedFromSupabase();
+
+  // Recarrega quando o modal for aberto (via botão)
+  // Adicione isso no script principal (no final do <script> grande, após os eventos):
+  document.getElementById("featured-btn").onclick = () => {
+    renderFeatured();
+    abrir(el.featuredModal);
+    // Força reload dos dados se necessário
+    loadFeaturedFromSupabase();
+  };
+
+  document.getElementById("mobile-featured").onclick = () => {
+    renderFeatured();
+    abrir(el.featuredModal);
+    document.getElementById("mobile-menu").classList.remove("open");
+    loadFeaturedFromSupabase();
+  };
 </script>
 </body>
 </html>
-
