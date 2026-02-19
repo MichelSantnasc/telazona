@@ -358,7 +358,7 @@
   </footer>
 
 <script>
-  const trad = {
+    const trad = {
     pt: {
       addLive: "Adicionar Live", addLiveTitle: "Adicionar Live (YouTube, Twitch ou Kick)", addFirst: "Adicionar Primeira Live",
       donate: "Doar", help: "Ajuda", hideUI: "Ocultar Interface", showUI: "Mostrar Interface", showChat: "Mostrar Chat",
@@ -440,14 +440,62 @@ function t() {
   };
 
   // ───────────────────────────────────────────────
-  // 3. VARIÁVEIS GLOBAIS
+  // VARIÁVEIS GLOBAIS ADICIONAIS
   // ───────────────────────────────────────────────
-
-  let lives = [];
-  window.featuredLives = [];  // inicializa global
-  let dualMode = false;
+   let lives = [];
+  window.featuredLives = [];
+  window.addedFromGroups = {};   // chave = nome do grupo, valor = Set de URLs já adicionadas por ele
+ let dualMode = false;
   let controlTimer;
   let featuredLives = [];  // será preenchido pelo Supabase
+  // ───────────────────────────────────────────────
+  // MOSTRAR / ESCONDER BOTÕES DE DESTAQUE
+  // ───────────────────────────────────────────────
+  function updateFeaturedButtonVisibility() {
+    const hasFeatured = window.featuredLives && window.featuredLives.length > 0;
+    
+    const featuredBtn = document.getElementById("featured-btn");
+    const mobileFeatured = document.getElementById("mobile-featured");
+    
+    if (featuredBtn) featuredBtn.style.display = hasFeatured ? '' : 'none';
+    if (mobileFeatured) mobileFeatured.style.display = hasFeatured ? 'block' : 'none';
+  }
+
+  // ───────────────────────────────────────────────
+  // TOAST PERSONALIZADO
+  // ───────────────────────────────────────────────
+  function showToast(message, duration = 4000) {
+    const toast = document.createElement('div');
+    toast.textContent = message;
+    toast.style.position = 'fixed';
+    toast.style.bottom = '80px';
+    toast.style.left = '50%';
+    toast.style.transform = 'translateX(-50%)';
+    toast.style.background = 'rgba(0, 208, 132, 0.95)';
+    toast.style.color = '#000';
+    toast.style.padding = '12px 28px';
+    toast.style.borderRadius = '12px';
+    toast.style.zIndex = '99999';
+    toast.style.fontWeight = '600';
+    toast.style.fontSize = '1em';
+    toast.style.boxShadow = '0 4px 16px rgba(0,0,0,0.5)';
+    toast.style.opacity = '0';
+    toast.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+    toast.style.pointerEvents = 'none';
+
+    document.body.appendChild(toast);
+
+    setTimeout(() => {
+      toast.style.opacity = '1';
+      toast.style.transform = 'translateX(-50%) translateY(-10px)';
+    }, 100);
+
+    setTimeout(() => {
+      toast.style.opacity = '0';
+      toast.style.transform = 'translateX(-50%)';
+      setTimeout(() => toast.remove(), 500);
+    }, duration);
+  }
 
   // ───────────────────────────────────────────────
   // 4. FUNÇÕES AUXILIARES (extração, embed, modais, etc.)
@@ -621,80 +669,6 @@ function t() {
   }
 
   // ───────────────────────────────────────────────
-  // 6. RENDERIZAÇÃO DO MODAL DE DESTAQUES
-  // ───────────────────────────────────────────────
-
-function renderFeatured() {
-  const grid = document.getElementById("featured-grid");
-  if (!grid) {
-    console.error('Grid featured-grid não encontrado!');
-    return;
-  }
-
-  console.log('renderFeatured chamado. featuredLives atual:', window.featuredLives);
-  console.log('Quantidade de grupos:', window.featuredLives.length);
-
-  // Limpa completamente o conteúdo anterior
-  grid.innerHTML = '';
-
-  if (!Array.isArray(window.featuredLives) || window.featuredLives.length === 0) {
-    grid.innerHTML = '<p style="text-align:center; color:var(--text2); padding: 20px;">Nenhum destaque carregado ainda.</p>';
-    console.log('Nenhum dado → mostrando mensagem vazia');
-    return;
-  }
-
-  // Cria um container flex/grid para os cards
-  const container = document.createElement('div');
-  container.style.display = 'grid';
-  container.style.gridTemplateColumns = 'repeat(auto-fit, minmax(220px, 1fr))';
-  container.style.gap = '16px';
-  container.style.padding = '16px';
-
-  window.featuredLives.forEach((group, index) => {
-    console.log(`Criando card ${index + 1}:`, group.name, group.lives?.length || 0, 'lives');
-
-    const card = document.createElement("div");
-    card.style.background = "var(--bg2)";
-    card.style.border = "1px solid var(--border)";
-    card.style.borderRadius = "var(--radius)";
-    card.style.padding = "16px";
-    card.style.cursor = "pointer";
-    card.style.transition = "all 0.3s";
-    card.style.boxShadow = "0 2px 8px rgba(0,0,0,0.3)";
-
-    card.innerHTML = `
-      <h3 style="margin: 0 0 8px 0; font-size: 1.2em;">${group.name || 'Grupo sem nome'}</h3>
-      <p style="margin: 0; color: var(--text2);">${group.lives?.length || 0} live${(group.lives?.length || 0) !== 1 ? 's' : ''}</p>
-    `;
-
-    card.onmouseover = () => { 
-      card.style.background = "var(--accent)"; 
-      card.style.color = "#000"; 
-      card.style.transform = "scale(1.03)";
-    };
-    card.onmouseout = () => { 
-      card.style.background = "var(--bg2)"; 
-      card.style.color = "#fff"; 
-      card.style.transform = "scale(1)";
-    };
-
-    card.onclick = () => {
-      if (group.lives && Array.isArray(group.lives)) {
-        lives = [...lives, ...group.lives];
-        render();
-      }
-      fechar();
-    };
-
-    container.appendChild(card);
-  });
-
-  grid.appendChild(container);
-
-  console.log('Cards criados e container adicionado:', grid.children.length);
-}
-
-  // ───────────────────────────────────────────────
   // 7. URL PARAMS E PERSISTÊNCIA
   // ───────────────────────────────────────────────
 
@@ -756,8 +730,69 @@ function renderFeatured() {
       localStorage.setItem("fullscreen_dica_mobile", "1");
     }
   }
-
+  
   // ───────────────────────────────────────────────
+  // RENDER DESTAQUES - SÓ ADICIONA O QUE É NOVO
+  // ───────────────────────────────────────────────
+  function renderFeatured() {
+    const grid = document.getElementById("featured-grid");
+    if (!grid) return;
+
+    grid.innerHTML = '';
+
+    if (!Array.isArray(window.featuredLives) || window.featuredLives.length === 0) {
+      grid.innerHTML = '<p style="text-align:center;color:var(--text2);padding:40px 20px;">Nenhum destaque carregado ainda.</p>';
+      return;
+    }
+
+    window.featuredLives.forEach(group => {
+      const card = document.createElement("div");
+      card.style.background = "var(--bg2)";
+      card.style.border = "1px solid var(--border)";
+      card.style.borderRadius = "var(--radius)";
+      card.style.padding = "16px";
+      card.style.cursor = "pointer";
+      card.style.transition = "all 0.3s";
+
+      card.innerHTML = `
+        <h3 style="margin:0 0 8px 0;">${group.name}</h3>
+        <p style="margin:0;color:var(--text2);">${group.lives.length} live${group.lives.length !== 1 ? 's' : ''}</p>
+      `;
+
+      card.onclick = () => {
+        const groupName = group.name;
+        
+        // Inicializa registro desse grupo
+        if (!window.addedFromGroups[groupName]) {
+          window.addedFromGroups[groupName] = new Set();
+        }
+
+        const alreadyAdded = window.addedFromGroups[groupName];
+        const newLives = [];
+
+        group.lives.forEach(url => {
+          if (!alreadyAdded.has(url) && !lives.includes(url)) {
+            newLives.push(url);
+            alreadyAdded.add(url);
+          }
+        });
+
+        if (newLives.length > 0) {
+          lives = [...lives, ...newLives];
+          render();
+          showToast(`Adicionada${newLives.length > 1 ? 's' : ''} ${newLives.length} nova${newLives.length > 1 ? 's' : ''} live${newLives.length > 1 ? 's' : ''} do grupo "${groupName}"`);
+        } else {
+          showToast(`Todas as lives de "${groupName}" já estão na tela`);
+        }
+
+        fechar();
+      };
+
+      grid.appendChild(card);
+    });
+  }
+
+    // ───────────────────────────────────────────────
   // 9. EVENTOS DE INTERFACE
   // ───────────────────────────────────────────────
 
@@ -825,78 +860,6 @@ function renderFeatured() {
   document.addEventListener('fullscreenchange', updateFullscreenIcon);
 
   // ───────────────────────────────────────────────
-  // TOAST - Novos destaques carregados!
-  // ───────────────────────────────────────────────
-  function showToast(message = "Novos destaques carregados! 🎉", duration = 4000) {
-    const toast = document.createElement('div');
-    toast.id = 'toast';
-    toast.textContent = message;
-    document.body.appendChild(toast);
-
-    setTimeout(() => toast.style.opacity = '1', 10);
-    setTimeout(() => {
-      toast.style.opacity = '0';
-      setTimeout(() => toast.remove(), 500);
-    }, duration);
-  }
-
-  // RenderFeatured atualizado e limpo
-  function renderFeatured() {
-    const grid = document.getElementById("featured-grid");
-    grid.innerHTML = '';
-
-    if (!Array.isArray(window.featuredLives) || window.featuredLives.length === 0) {
-      grid.innerHTML = '<p style="text-align:center;color:var(--text2);padding:40px 20px;">Nenhum destaque carregado ainda.</p>';
-      return;
-    }
-
-    const container = document.createElement('div');
-    container.style.display = 'grid';
-    container.style.gridTemplateColumns = 'repeat(auto-fit, minmax(220px, 1fr))';
-    container.style.gap = '16px';
-    container.style.padding = '16px';
-
-    window.featuredLives.forEach(group => {
-      const card = document.createElement("div");
-      card.style.background = "var(--bg2)";
-      card.style.border = "1px solid var(--border)";
-      card.style.borderRadius = "var(--radius)";
-      card.style.padding = "16px";
-      card.style.cursor = "pointer";
-      card.style.transition = "all 0.3s";
-
-      card.innerHTML = `
-        <h3 style="margin:0 0 8px 0;">${group.name}</h3>
-        <p style="margin:0;color:var(--text2);">${group.lives.length} live${group.lives.length !== 1 ? 's' : ''}</p>
-      `;
-
-      card.onclick = () => {
-        lives = [...lives, ...group.lives];
-        render();
-        fechar();
-      };
-
-      container.appendChild(card);
-    });
-
-    grid.appendChild(container);
-  }
-
-  // Atualiza os botões de destaque para recarregar dados
-  document.getElementById("featured-btn").onclick = () => {
-    renderFeatured();
-    abrir(el.featuredModal);
-    loadFeaturedFromSupabase();
-  };
-
-  document.getElementById("mobile-featured").onclick = () => {
-    renderFeatured();
-    abrir(el.featuredModal);
-    document.getElementById("mobile-menu").classList.remove("open");
-    loadFeaturedFromSupabase();
-  };
-
-// ───────────────────────────────────────────────
   // 10. EVENTOS DE BOTÕES E MODAIS
   // ───────────────────────────────────────────────
 
@@ -1039,9 +1002,26 @@ function renderFeatured() {
   window.el = el;
   window.renderFeatured = renderFeatured;
   window.featuredLives = featuredLives;
+
+  // Atualiza visibilidade inicial dos botões
+  updateFeaturedButtonVisibility();
+
+  // Nos eventos dos botões de destaque (já deve estar no seu código, só reforçando):
+  document.getElementById("featured-btn").onclick = () => {
+    renderFeatured();
+    abrir(el.featuredModal);
+    loadFeaturedFromSupabase();  // opcional: recarrega dados
+  };
+
+  document.getElementById("mobile-featured").onclick = () => {
+    renderFeatured();
+    abrir(el.featuredModal);
+    document.getElementById("mobile-menu").classList.remove("open");
+    loadFeaturedFromSupabase();
+  };
 </script>
 
-<!-- Supabase com Toast -->
+<!-- Supabase + Toast + Visibilidade -->
 <script type="module">
   import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
@@ -1060,20 +1040,21 @@ function renderFeatured() {
         .order('name');
 
       window.featuredLives = data || [];
-      
+
       if (window.featuredLives.length > 0) {
         showToast("Novos destaques carregados! 🎉");
       }
 
       renderFeatured();
+      updateFeaturedButtonVisibility();  // atualiza visibilidade dos botões
     } catch (e) {
       console.error(e);
+      updateFeaturedButtonVisibility();
     }
   }
 
   loadFeaturedFromSupabase();
 
-  // Realtime + Toast
   supabase
     .channel('featured-changes')
     .on('postgres_changes', { event: '*', schema: 'public', table: 'featured' }, () => {
