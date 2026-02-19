@@ -3,9 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin TELAZONA - Destaques</title>
+  <title>Admin TELAZONA - Gerenciar Destaques</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
       --bg: #000000;
@@ -25,108 +26,121 @@
       background: var(--bg);
       color: var(--text);
       min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
       padding: 20px;
+      line-height: 1.5;
     }
-    .container {
-      width: 100%;
-      max-width: 480px;
-      background: var(--surface);
-      border-radius: var(--radius);
-      padding: 32px 24px;
-      box-shadow: var(--shadow);
-      border: 1px solid var(--border);
+    .container { max-width: 720px; margin: 0 auto; }
+    header { text-align: center; margin-bottom: 40px; }
+    h1 { font-size: 28px; font-weight: 700; margin-bottom: 8px; }
+    .subtitle { color: var(--text2); font-size: 15px; }
+    .btn {
+      background: var(--accent);
+      color: #000;
+      border: none;
+      padding: 14px 24px;
+      border-radius: 14px;
+      font-weight: 600;
+      font-size: 15px;
+      cursor: pointer;
+      transition: all 0.25s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
     }
-    h1 {
-      text-align: center;
-      margin-bottom: 24px;
-      font-size: 24px;
-      font-weight: 700;
-    }
-    .form-group {
-      margin-bottom: 20px;
-    }
-    label {
-      display: block;
-      margin-bottom: 8px;
+    .btn:hover { opacity: 0.9; transform: translateY(-2px); }
+    .btn-danger { background: var(--danger); color: white; }
+    .btn-add-url {
+      background: var(--accent2);
+      color: white;
+      padding: 10px 16px;
       font-size: 14px;
-      font-weight: 500;
-      color: var(--text2);
     }
-    input {
+    input, textarea {
       width: 100%;
       padding: 14px;
       background: #000;
       border: 1px solid var(--border);
       border-radius: 10px;
       color: white;
-      font-size: 16px;
+      font-size: 15px;
+      margin: 8px 0;
     }
-    .btn {
-      width: 100%;
-      padding: 16px;
+    textarea { min-height: 120px; resize: vertical; }
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      margin-bottom: 24px;
+      box-shadow: var(--shadow);
+    }
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+    .card-title { font-size: 18px; font-weight: 600; }
+    .url-item {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    .url-item input { flex: 1; }
+    .url-item button {
+      background: var(--danger);
+      color: white;
+      border: none;
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      font-size: 18px;
+      cursor: pointer;
+    }
+    .actions { display: flex; gap: 12px; margin-top: 24px; justify-content: flex-end; }
+    #toast {
+      position: fixed;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
       background: var(--accent);
       color: #000;
-      border: none;
-      border-radius: 12px;
-      font-size: 16px;
+      padding: 14px 32px;
+      border-radius: 999px;
       font-weight: 600;
-      cursor: pointer;
-      transition: all 0.25s;
+      box-shadow: 0 12px 40px rgba(0,255,157,0.4);
+      opacity: 0;
+      transition: all 0.5s ease;
+      z-index: 9999;
+      pointer-events: none;
     }
-    .btn:hover { opacity: 0.9; transform: translateY(-1px); }
-    .btn:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-    .error {
-      color: var(--danger);
-      font-size: 14px;
-      margin-top: 8px;
-      text-align: center;
-    }
-    #admin-content { display: none; }
-    #login-form { display: block; }
+    #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
   </style>
 </head>
 <body>
 
-  <div class="container" id="login-form">
-    <h1>Área Administrativa</h1>
-    
-    <div class="form-group">
-      <label for="email">E-mail</label>
-      <input type="email" id="email" placeholder="seu@email.com" required>
-    </div>
-
-    <div class="form-group">
-      <label for="password">Senha</label>
-      <input type="password" id="password" placeholder="••••••••" required>
-    </div>
-
-    <button class="btn" id="login-btn">Entrar</button>
-
-    <div id="login-error" class="error"></div>
-  </div>
-
-  <div class="container" id="admin-content">
-    <header style="text-align:center; margin-bottom:32px;">
+  <div class="container">
+    <header>
       <h1>Gerenciar Destaques</h1>
-      <p style="color:var(--text2); font-size:14px;">Adicione, edite ou remova cards</p>
+      <p class="subtitle">Crie, edite ou remova cards de lives em destaque</p>
     </header>
-
-    <div style="text-align:right; margin:24px 0;">
-      <button class="btn" id="add-new">+ Novo Card</button>
-    </div>
 
     <div id="groups-list"></div>
 
-    <div style="margin-top:40px; text-align:center;">
+    <div style="text-align:center; margin:40px 0;">
+      <button class="btn" id="add-new">
+        <i class="ph ph-plus-circle" style="font-size:20px;"></i>
+        Novo Card
+      </button>
+    </div>
+
+    <div style="text-align:center;">
       <button class="btn btn-danger" id="logout-btn">Sair</button>
     </div>
   </div>
+
+  <div id="toast"></div>
 
   <script type="module">
     import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
@@ -136,52 +150,14 @@
       'sb_publishable_QKG5wJZ-qqPrXzZo8wmrFg_LEsjBGff'
     );
 
-    const loginForm = document.getElementById('login-form');
-    const adminContent = document.getElementById('admin-content');
-    const loginError = document.getElementById('login-error');
+    const toastEl = document.getElementById('toast');
 
-    // Verifica se já está logado
-    supabase.auth.getSession().then(({ data }) => {
-      if (data.session) {
-        loginForm.style.display = 'none';
-        adminContent.style.display = 'block';
-        loadGroups();
-      }
-    });
+    function showToast(msg, dur = 3500) {
+      toastEl.textContent = msg;
+      toastEl.classList.add('show');
+      setTimeout(() => toastEl.classList.remove('show'), dur);
+    }
 
-    // Login
-    document.getElementById('login-btn').onclick = async () => {
-      const email = document.getElementById('email').value.trim();
-      const password = document.getElementById('password').value;
-
-      if (!email || !password) {
-        loginError.textContent = 'Preencha e-mail e senha';
-        return;
-      }
-
-      loginError.textContent = '';
-      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-
-      if (error) {
-        loginError.textContent = error.message.includes('Invalid login credentials')
-          ? 'E-mail ou senha incorretos'
-          : 'Erro ao entrar: ' + error.message;
-      } else {
-        loginForm.style.display = 'none';
-        adminContent.style.display = 'block';
-        loadGroups();
-      }
-    };
-
-    // Logout
-    document.getElementById('logout-btn').onclick = async () => {
-      await supabase.auth.signOut();
-      loginForm.style.display = 'block';
-      adminContent.style.display = 'none';
-      loginError.textContent = 'Você saiu da conta.';
-    };
-
-    // Carregar grupos
     async function loadGroups() {
       const list = document.getElementById('groups-list');
       list.innerHTML = '<p style="text-align:center; color:#666; padding:80px 0;">Carregando...</p>';
@@ -193,6 +169,7 @@
 
       if (error) {
         list.innerHTML = `<p style="color:var(--danger); text-align:center;">Erro: ${error.message}</p>`;
+        console.error(error);
         return;
       }
 
@@ -200,13 +177,21 @@
 
       data.forEach(group => {
         const card = document.createElement('div');
+        card.className = 'card';
         card.innerHTML = `
-          <div style="padding:16px; background:#000; border-radius:12px; margin-bottom:12px;">
-            <strong>${group.name}</strong><br>
-            <small style="color:#888;">${group.lives.length} lives</small>
+          <div class="card-header">
+            <div class="card-title">${group.name}</div>
+            <div class="card-count">${group.lives.length} lives</div>
           </div>
-          <div style="display:flex; gap:12px; justify-content:flex-end;">
-            <button class="btn" onclick="editGroup('${group.id}')">Editar</button>
+          <div class="url-list">
+            ${group.lives.map(url => `
+              <div class="url-item">
+                <input type="text" value="${url}" readonly />
+              </div>
+            `).join('')}
+          </div>
+          <div class="actions">
+            <button class="btn" onclick="editGroup('${group.id}', '${group.name.replace(/'/g,"\\'")}', '${group.lives.join('\\n').replace(/'/g,"\\'")}')">Editar</button>
             <button class="btn btn-danger" onclick="deleteGroup('${group.id}', '${group.name.replace(/'/g,"\\'")}')">Excluir</button>
           </div>
         `;
@@ -214,38 +199,109 @@
       });
     }
 
-    document.getElementById('add-new').onclick = async () => {
-      const name = prompt('Nome do novo card:');
-      if (!name?.trim()) return;
-
-      const { error } = await supabase.from('featured').insert([{ name: name.trim(), lives: [] }]);
-      if (error) alert('Erro: ' + error.message);
-      else loadGroups();
+    document.getElementById('add-new').onclick = () => {
+      showGroupForm(null, '', []);
     };
 
-    window.editGroup = async (id) => {
-      const { data: group } = await supabase.from('featured').select('*').eq('id', id).single();
-      if (!group) return;
-
-      const name = prompt('Nome:', group.name);
-      if (name === null) return;
-
-      const livesText = prompt('URLs (uma por linha):', group.lives.join('\n'));
-      if (livesText === null) return;
-
-      const lives = livesText.split('\n').map(u => u.trim()).filter(u => u);
-
-      const { error } = await supabase.from('featured').update({ name, lives }).eq('id', id);
-      if (error) alert(error.message);
-      else loadGroups();
+    window.editGroup = (id, name, livesText) => {
+      const lives = livesText.split('\\n');
+      showGroupForm(id, name, lives);
     };
 
     window.deleteGroup = async (id, name) => {
-      if (!confirm(`Excluir "${name}"?`)) return;
+      if (!confirm(`Excluir o card "${name}"?`)) return;
       const { error } = await supabase.from('featured').delete().eq('id', id);
-      if (error) alert(error.message);
-      else loadGroups();
+      if (error) showToast('Erro ao excluir: ' + error.message, 5000);
+      else {
+        showToast('Card excluído com sucesso', 3000);
+        loadGroups();
+      }
     };
+
+    function showGroupForm(id = null, name = '', lives = []) {
+      const modal = document.createElement('div');
+      modal.style.position = 'fixed';
+      modal.style.inset = '0';
+      modal.style.background = 'rgba(0,0,0,0.85)';
+      modal.style.backdropFilter = 'blur(8px)';
+      modal.style.display = 'flex';
+      modal.style.alignItems = 'center';
+      modal.style.justifyContent = 'center';
+      modal.style.zIndex = '9999';
+
+      modal.innerHTML = `
+        <div style="background:var(--surface); border-radius:var(--radius); width:90%; max-width:600px; padding:32px; max-height:90vh; overflow-y:auto;">
+          <h2 style="margin-bottom:24px;">${id ? 'Editar' : 'Novo'} Card</h2>
+          
+          <div class="form-group">
+            <label>Nome do Card</label>
+            <input type="text" id="form-name" value="${name}" placeholder="Ex: Lives de CS2" required>
+          </div>
+
+          <label>URLs das Lives (uma por campo)</label>
+          <div id="url-fields" style="margin:16px 0;"></div>
+
+          <button class="btn btn-outline" id="add-url-btn" style="margin-bottom:24px;">
+            + Adicionar URL
+          </button>
+
+          <div style="display:flex; gap:12px; justify-content:flex-end;">
+            <button class="btn btn-danger" onclick="this.closest('.modal').remove()">Cancelar</button>
+            <button class="btn" id="save-group">Salvar</button>
+          </div>
+        </div>
+      `;
+
+      document.body.appendChild(modal);
+
+      const fieldsContainer = modal.querySelector('#url-fields');
+      const addUrlBtn = modal.querySelector('#add-url-btn');
+
+      function addUrlField(value = '') {
+        const div = document.createElement('div');
+        div.className = 'url-item';
+        div.innerHTML = `
+          <input type="text" value="${value}" placeholder="https://youtu.be/..." />
+          <button class="btn btn-danger" style="width:40px;height:40px;font-size:20px;" onclick="this.parentElement.remove()">×</button>
+        `;
+        fieldsContainer.appendChild(div);
+      }
+
+      // Carrega URLs existentes ao editar
+      lives.forEach(url => addUrlField(url));
+      // Se novo, já adiciona um campo vazio
+      if (!id) addUrlField();
+
+      addUrlBtn.onclick = () => addUrlField();
+
+      modal.querySelector('#save-group').onclick = async () => {
+        const newName = modal.querySelector('#form-name').value.trim();
+        if (!newName) return alert('O nome do card é obrigatório');
+
+        const inputs = modal.querySelectorAll('#url-fields input');
+        const newLives = Array.from(inputs)
+          .map(i => i.value.trim())
+          .filter(u => u && u.startsWith('http'));
+
+        let error;
+        if (id) {
+          ({ error } = await supabase.from('featured').update({ name: newName, lives: newLives }).eq('id', id));
+        } else {
+          ({ error } = await supabase.from('featured').insert([{ name: newName, lives: newLives }]));
+        }
+
+        if (error) {
+          showToast('Erro ao salvar: ' + error.message, 5000);
+        } else {
+          showToast(id ? 'Card atualizado!' : 'Card criado com sucesso!', 3000);
+          modal.remove();
+          loadGroups();
+        }
+      };
+    }
+
+    // Carrega ao abrir (assumindo que já está logado)
+    loadGroups();
   </script>
 </body>
 </html>
