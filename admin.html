@@ -10,15 +10,16 @@
   <style>
     :root {
       --bg: #000000;
-      --surface: #111111;
-      --border: rgba(255,255,255,0.08);
+      --surface: rgba(17, 17, 17, 0.92);
+      --border: rgba(255, 255, 255, 0.08);
       --accent: #00ff9d;
       --accent2: #7c3aed;
       --danger: #ff3b5c;
       --text: #ffffff;
       --text2: #bbbbbb;
-      --radius: 16px;
-      --shadow: 0 10px 40px rgba(0,0,0,0.6);
+      --radius: 20px;
+      --shadow: 0 20px 60px rgba(0, 0, 0, 0.65);
+      --transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
     * { margin:0; padding:0; box-sizing:border-box; }
     body {
@@ -26,85 +27,142 @@
       background: var(--bg);
       color: var(--text);
       min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       padding: 20px;
-      line-height: 1.5;
     }
-    .container { max-width: 720px; margin: 0 auto; }
-    header { text-align: center; margin-bottom: 40px; }
-    h1 { font-size: 28px; font-weight: 700; margin-bottom: 8px; }
-    .subtitle { color: var(--text2); font-size: 15px; }
+    .container {
+      width: 100%;
+      max-width: 720px;
+      background: var(--surface);
+      backdrop-filter: blur(24px);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+    .header {
+      padding: 32px 32px 24px;
+      border-bottom: 1px solid var(--border);
+      text-align: center;
+    }
+    h1 {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .subtitle {
+      color: var(--text2);
+      font-size: 15px;
+    }
+    .content {
+      padding: 32px;
+    }
     .btn {
       background: var(--accent);
       color: #000;
       border: none;
-      padding: 14px 24px;
+      padding: 14px 28px;
       border-radius: 14px;
       font-weight: 600;
       font-size: 15px;
       cursor: pointer;
-      transition: all 0.25s;
+      transition: var(--transition);
       display: inline-flex;
       align-items: center;
       gap: 8px;
     }
-    .btn:hover { opacity: 0.9; transform: translateY(-2px); }
-    .btn-danger { background: var(--danger); color: white; }
-    .btn-add-url {
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 32px rgba(0,255,157,0.3);
+    }
+    .btn-danger {
+      background: var(--danger);
+      color: white;
+    }
+    .btn-add {
       background: var(--accent2);
       color: white;
       padding: 10px 16px;
       font-size: 14px;
+      margin: 16px 0;
     }
-    input, textarea {
-      width: 100%;
-      padding: 14px;
-      background: #000;
+    .group-card {
+      background: rgba(30,30,30,0.6);
       border: 1px solid var(--border);
-      border-radius: 10px;
-      color: white;
-      font-size: 15px;
-      margin: 8px 0;
-    }
-    textarea { min-height: 120px; resize: vertical; }
-    .card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
+      border-radius: 16px;
       padding: 20px;
-      margin-bottom: 24px;
-      box-shadow: var(--shadow);
+      margin-bottom: 20px;
+      transition: var(--transition);
+      cursor: pointer;
     }
-    .card-header {
+    .group-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-4px);
+    }
+    .group-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 16px;
+      margin-bottom: 12px;
     }
-    .card-title { font-size: 18px; font-weight: 600; }
+    .group-title {
+      font-size: 18px;
+      font-weight: 600;
+    }
+    .group-count {
+      color: var(--text2);
+      font-size: 14px;
+    }
+    .url-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin: 12px 0;
+    }
     .url-item {
       display: flex;
       gap: 12px;
       align-items: center;
-      margin-bottom: 8px;
+      background: #000;
+      padding: 12px 16px;
+      border-radius: 10px;
+      font-size: 14px;
     }
-    .url-item input { flex: 1; }
-    .url-item button {
+    .url-item input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: white;
+      outline: none;
+      font-family: inherit;
+    }
+    .url-item .remove-btn {
       background: var(--danger);
       color: white;
       border: none;
       width: 36px;
       height: 36px;
       border-radius: 8px;
-      font-size: 18px;
+      font-size: 20px;
       cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
-    .actions { display: flex; gap: 12px; margin-top: 24px; justify-content: flex-end; }
+    .actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 20px;
+      justify-content: flex-end;
+    }
     #toast {
       position: fixed;
       bottom: 40px;
       left: 50%;
       transform: translateX(-50%);
-      background: var(--accent);
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
       color: #000;
       padding: 14px 32px;
       border-radius: 999px;
@@ -121,21 +179,23 @@
 <body>
 
   <div class="container">
-    <header>
+    <div class="header">
       <h1>Gerenciar Destaques</h1>
       <p class="subtitle">Crie, edite ou remova cards de lives em destaque</p>
-    </header>
-
-    <div id="groups-list"></div>
-
-    <div style="text-align:center; margin:40px 0;">
-      <button class="btn" id="add-new">
-        <i class="ph ph-plus-circle" style="font-size:20px;"></i>
-        Novo Card
-      </button>
     </div>
 
-    <div style="text-align:center;">
+    <div class="content">
+      <div style="text-align:center; margin-bottom:32px;">
+        <button class="btn" id="add-new">
+          <i class="ph ph-plus-circle" style="font-size:20px;"></i>
+          Novo Card
+        </button>
+      </div>
+
+      <div id="groups-list"></div>
+    </div>
+
+    <div style="padding:24px; border-top:1px solid var(--border); text-align:center;">
       <button class="btn btn-danger" id="logout-btn">Sair</button>
     </div>
   </div>
@@ -160,7 +220,7 @@
 
     async function loadGroups() {
       const list = document.getElementById('groups-list');
-      list.innerHTML = '<p style="text-align:center; color:#666; padding:80px 0;">Carregando...</p>';
+      list.innerHTML = '<p style="text-align:center; color:#666; padding:80px 0;">Carregando cards...</p>';
 
       const { data, error } = await supabase
         .from('featured')
@@ -169,7 +229,6 @@
 
       if (error) {
         list.innerHTML = `<p style="color:var(--danger); text-align:center;">Erro: ${error.message}</p>`;
-        console.error(error);
         return;
       }
 
@@ -179,19 +238,12 @@
         const card = document.createElement('div');
         card.className = 'card';
         card.innerHTML = `
-          <div class="card-header">
-            <div class="card-title">${group.name}</div>
-            <div class="card-count">${group.lives.length} lives</div>
-          </div>
-          <div class="url-list">
-            ${group.lives.map(url => `
-              <div class="url-item">
-                <input type="text" value="${url}" readonly />
-              </div>
-            `).join('')}
+          <div class="group-header">
+            <div class="group-title">${group.name}</div>
+            <div class="group-count">${group.lives.length} lives</div>
           </div>
           <div class="actions">
-            <button class="btn" onclick="editGroup('${group.id}', '${group.name.replace(/'/g,"\\'")}', '${group.lives.join('\\n').replace(/'/g,"\\'")}')">Editar</button>
+            <button class="btn" onclick="editGroup('${group.id}')">Editar</button>
             <button class="btn btn-danger" onclick="deleteGroup('${group.id}', '${group.name.replace(/'/g,"\\'")}')">Excluir</button>
           </div>
         `;
@@ -199,13 +251,13 @@
       });
     }
 
-    document.getElementById('add-new').onclick = () => {
-      showGroupForm(null, '', []);
-    };
+    document.getElementById('add-new').onclick = () => showGroupForm(null, '', []);
 
-    window.editGroup = (id, name, livesText) => {
-      const lives = livesText.split('\\n');
-      showGroupForm(id, name, lives);
+    window.editGroup = async (id) => {
+      const { data: group } = await supabase.from('featured').select('*').eq('id', id).single();
+      if (!group) return showToast('Card não encontrado', 5000);
+
+      showGroupForm(id, group.name, group.lives);
     };
 
     window.deleteGroup = async (id, name) => {
@@ -219,88 +271,87 @@
     };
 
     function showGroupForm(id = null, name = '', lives = []) {
-      const modal = document.createElement('div');
-      modal.style.position = 'fixed';
-      modal.style.inset = '0';
-      modal.style.background = 'rgba(0,0,0,0.85)';
-      modal.style.backdropFilter = 'blur(8px)';
-      modal.style.display = 'flex';
-      modal.style.alignItems = 'center';
-      modal.style.justifyContent = 'center';
-      modal.style.zIndex = '9999';
+      const overlay = document.createElement('div');
+      overlay.style.position = 'fixed';
+      overlay.style.inset = '0';
+      overlay.style.background = 'rgba(0,0,0,0.85)';
+      overlay.style.backdropFilter = 'blur(8px)';
+      overlay.style.display = 'flex';
+      overlay.style.alignItems = 'center';
+      overlay.style.justifyContent = 'center';
+      overlay.style.zIndex = '9999';
 
-      modal.innerHTML = `
-        <div style="background:var(--surface); border-radius:var(--radius); width:90%; max-width:600px; padding:32px; max-height:90vh; overflow-y:auto;">
-          <h2 style="margin-bottom:24px;">${id ? 'Editar' : 'Novo'} Card</h2>
+      overlay.innerHTML = `
+        <div style="background:var(--surface); border-radius:var(--radius); width:90%; max-width:600px; padding:32px; max-height:90vh; overflow-y:auto; box-shadow:var(--shadow);">
+          <h2 style="margin-bottom:24px;">${id ? 'Editar' : 'Novo'} Card de Destaque</h2>
           
-          <div class="form-group">
-            <label>Nome do Card</label>
+          <div style="margin-bottom:24px;">
+            <label style="display:block; margin-bottom:8px; font-weight:500;">Nome do Card</label>
             <input type="text" id="form-name" value="${name}" placeholder="Ex: Lives de CS2" required>
           </div>
 
-          <label>URLs das Lives (uma por campo)</label>
+          <label style="display:block; margin-bottom:8px; font-weight:500;">URLs das Lives</label>
           <div id="url-fields" style="margin:16px 0;"></div>
 
-          <button class="btn btn-outline" id="add-url-btn" style="margin-bottom:24px;">
-            + Adicionar URL
+          <button class="btn btn-add" id="add-url-btn">
+            <i class="ph ph-plus"></i> Adicionar URL
           </button>
 
-          <div style="display:flex; gap:12px; justify-content:flex-end;">
-            <button class="btn btn-danger" onclick="this.closest('.modal').remove()">Cancelar</button>
-            <button class="btn" id="save-group">Salvar</button>
+          <div class="actions">
+            <button class="btn btn-danger" onclick="this.closest('div[style*=\'fixed\']').remove()">Cancelar</button>
+            <button class="btn" id="save-group">Salvar Card</button>
           </div>
         </div>
       `;
 
-      document.body.appendChild(modal);
+      document.body.appendChild(overlay);
 
-      const fieldsContainer = modal.querySelector('#url-fields');
-      const addUrlBtn = modal.querySelector('#add-url-btn');
+      const fields = overlay.querySelector('#url-fields');
+      const addBtn = overlay.querySelector('#add-url-btn');
 
-      function addUrlField(value = '') {
+      function addField(val = '') {
         const div = document.createElement('div');
         div.className = 'url-item';
         div.innerHTML = `
-          <input type="text" value="${value}" placeholder="https://youtu.be/..." />
+          <input type="text" value="${val}" placeholder="https://youtu.be/..." />
           <button class="btn btn-danger" style="width:40px;height:40px;font-size:20px;" onclick="this.parentElement.remove()">×</button>
         `;
-        fieldsContainer.appendChild(div);
+        fields.appendChild(div);
       }
 
-      // Carrega URLs existentes ao editar
-      lives.forEach(url => addUrlField(url));
-      // Se novo, já adiciona um campo vazio
-      if (!id) addUrlField();
+      // Carrega URLs existentes
+      lives.forEach(u => addField(u));
+      if (lives.length === 0) addField(); // pelo menos um vazio no novo
 
-      addUrlBtn.onclick = () => addUrlField();
+      addBtn.onclick = () => addField();
 
-      modal.querySelector('#save-group').onclick = async () => {
-        const newName = modal.querySelector('#form-name').value.trim();
-        if (!newName) return alert('O nome do card é obrigatório');
+      overlay.querySelector('#save-group').onclick = async () => {
+        const newName = overlay.querySelector('#form-name').value.trim();
+        if (!newName) return showToast('O nome do card é obrigatório', 4000);
 
-        const inputs = modal.querySelectorAll('#url-fields input');
-        const newLives = Array.from(inputs)
+        const inputs = overlay.querySelectorAll('#url-fields input');
+        const urls = Array.from(inputs)
           .map(i => i.value.trim())
           .filter(u => u && u.startsWith('http'));
 
         let error;
         if (id) {
-          ({ error } = await supabase.from('featured').update({ name: newName, lives: newLives }).eq('id', id));
+          ({ error } = await supabase.from('featured').update({ name: newName, lives: urls }).eq('id', id));
         } else {
-          ({ error } = await supabase.from('featured').insert([{ name: newName, lives: newLives }]));
+          ({ error } = await supabase.from('featured').insert([{ name: newName, lives: urls }]));
         }
 
         if (error) {
           showToast('Erro ao salvar: ' + error.message, 5000);
         } else {
-          showToast(id ? 'Card atualizado!' : 'Card criado com sucesso!', 3000);
-          modal.remove();
+          showToast(id ? 'Card atualizado!' : 'Novo card criado!', 3000);
+          overlay.remove();
           loadGroups();
         }
       };
     }
 
-    // Carrega ao abrir (assumindo que já está logado)
+    // Carrega ao abrir (assumindo login já feito)
     loadGroups();
   </script>
 </body>
