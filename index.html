@@ -14,7 +14,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/@phosphor-icons/web"></script>
 
-
   <style>
     :root {
       --bg: #0a0a0a;
@@ -235,9 +234,27 @@
 @media (max-width: 1100px) { #chat-selector {flex-direction: column;align-items: stretch;}
   #chat-selector select { flex: 1 1 auto;width: 100%;}
   #dual-chat-toggle { align-self: center;}}
+
+      #toast {
+      position: fixed;
+      bottom: 80px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--accent);
+      color: #000;
+      padding: 12px 28px;
+      border-radius: 12px;
+      font-weight: 600;
+      z-index: 99999;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.5);
+      opacity: 0;
+      transition: all 0.4s ease;
+      pointer-events: none;
+    }
   </style>
 </head>
 <body>
+
   <header id="header">
     <div class="logo silkscreen">TELAZONA</div>
     <button id="menu-btn"><i class="ph ph-list"></i></button>
@@ -255,6 +272,7 @@
       </div>
     </div>
   </header>
+
   <div id="mobile-menu">
     <button class="btn" id="mobile-add" data-t="addLive">+ Adicionar Live</button>
     <button class="btn" id="mobile-clear" data-t="clearLives"><i class="ph ph-trash"></i> Limpar Lives</button>
@@ -285,14 +303,14 @@
       <button class="btn" style="background:var(--accent);color:#000" id="confirm-add" data-t="add">Adicionar</button>
     </div>
   </div>
+
   <div id="featured-modal" class="modal">
-  <div class="modal-content">
     <h2 data-t="featuredTitle">Lives em Destaque</h2>
     <div id="featured-grid"></div>
     <button class="btn" id="close-featured" data-t="close">Fechar</button>
   </div>
-</div>
-  <div id="welcome-modal" class="modal">
+
+ <div id="welcome-modal" class="modal">
     <h1 class="silkscreen">TELAZONA</h1>
     <p style="text-align:center; font-size:1.4rem; margin:16px 0 32px;" data-t="welcomeText">Assista várias lives ao mesmo tempo!</p>
     <div class="steps">
@@ -338,6 +356,7 @@
       </div>
     </div>
   </footer>
+
 <script>
   const trad = {
     pt: {
@@ -806,6 +825,78 @@ function renderFeatured() {
   document.addEventListener('fullscreenchange', updateFullscreenIcon);
 
   // ───────────────────────────────────────────────
+  // TOAST - Novos destaques carregados!
+  // ───────────────────────────────────────────────
+  function showToast(message = "Novos destaques carregados! 🎉", duration = 4000) {
+    const toast = document.createElement('div');
+    toast.id = 'toast';
+    toast.textContent = message;
+    document.body.appendChild(toast);
+
+    setTimeout(() => toast.style.opacity = '1', 10);
+    setTimeout(() => {
+      toast.style.opacity = '0';
+      setTimeout(() => toast.remove(), 500);
+    }, duration);
+  }
+
+  // RenderFeatured atualizado e limpo
+  function renderFeatured() {
+    const grid = document.getElementById("featured-grid");
+    grid.innerHTML = '';
+
+    if (!Array.isArray(window.featuredLives) || window.featuredLives.length === 0) {
+      grid.innerHTML = '<p style="text-align:center;color:var(--text2);padding:40px 20px;">Nenhum destaque carregado ainda.</p>';
+      return;
+    }
+
+    const container = document.createElement('div');
+    container.style.display = 'grid';
+    container.style.gridTemplateColumns = 'repeat(auto-fit, minmax(220px, 1fr))';
+    container.style.gap = '16px';
+    container.style.padding = '16px';
+
+    window.featuredLives.forEach(group => {
+      const card = document.createElement("div");
+      card.style.background = "var(--bg2)";
+      card.style.border = "1px solid var(--border)";
+      card.style.borderRadius = "var(--radius)";
+      card.style.padding = "16px";
+      card.style.cursor = "pointer";
+      card.style.transition = "all 0.3s";
+
+      card.innerHTML = `
+        <h3 style="margin:0 0 8px 0;">${group.name}</h3>
+        <p style="margin:0;color:var(--text2);">${group.lives.length} live${group.lives.length !== 1 ? 's' : ''}</p>
+      `;
+
+      card.onclick = () => {
+        lives = [...lives, ...group.lives];
+        render();
+        fechar();
+      };
+
+      container.appendChild(card);
+    });
+
+    grid.appendChild(container);
+  }
+
+  // Atualiza os botões de destaque para recarregar dados
+  document.getElementById("featured-btn").onclick = () => {
+    renderFeatured();
+    abrir(el.featuredModal);
+    loadFeaturedFromSupabase();
+  };
+
+  document.getElementById("mobile-featured").onclick = () => {
+    renderFeatured();
+    abrir(el.featuredModal);
+    document.getElementById("mobile-menu").classList.remove("open");
+    loadFeaturedFromSupabase();
+  };
+
+// ───────────────────────────────────────────────
   // 10. EVENTOS DE BOTÕES E MODAIS
   // ───────────────────────────────────────────────
 
@@ -950,6 +1041,7 @@ function renderFeatured() {
   window.featuredLives = featuredLives;
 </script>
 
+<!-- Supabase com Toast -->
 <script type="module">
   import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
@@ -957,59 +1049,38 @@ function renderFeatured() {
   const supabaseAnonKey = 'sb_publishable_QKG5wJZ-qqPrXzZo8wmrFg_LEsjBGff';
 
   const supabase = createClient(supabaseUrl, supabaseAnonKey, {
-    auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false },
-    global: { headers: { 'apikey': supabaseAnonKey } }
+    auth: { persistSession: false }
   });
 
   async function loadFeaturedFromSupabase() {
-    console.log('Iniciando fetch featured...');
     try {
-      const { data, error, count } = await supabase
+      const { data } = await supabase
         .from('featured')
-        .select('*', { count: 'exact' })
-        .order('name', { ascending: true });
-
-      console.log('Resposta completa:', { dataLength: data?.length, count, error: error?.message || 'sem erro' });
-      console.log('Dados crus:', data);
-
-      if (error) throw error;
+        .select('*')
+        .order('name');
 
       window.featuredLives = data || [];
-      console.log('✅ Atribuído featuredLives:', window.featuredLives.length);
+      
+      if (window.featuredLives.length > 0) {
+        showToast("Novos destaques carregados! 🎉");
+      }
 
-      // Força renderização do modal mesmo se não estiver aberto ainda
-      // (útil se o usuário abrir depois do carregamento)
-      setTimeout(() => {
-        if (window.renderFeatured) {
-          console.log('Forçando renderFeatured() após carregamento');
-          window.renderFeatured();
-        }
-      }, 500);  // delay pequeno para garantir que o DOM está pronto
-
-    } catch (err) {
-      console.error('❌ Erro fetch:', err.message || err);
-      window.featuredLives = [];
+      renderFeatured();
+    } catch (e) {
+      console.error(e);
     }
   }
 
-  // Carrega imediatamente
   loadFeaturedFromSupabase();
 
-  // Recarrega quando o modal for aberto (via botão)
-  // Adicione isso no script principal (no final do <script> grande, após os eventos):
-  document.getElementById("featured-btn").onclick = () => {
-    renderFeatured();
-    abrir(el.featuredModal);
-    // Força reload dos dados se necessário
-    loadFeaturedFromSupabase();
-  };
-
-  document.getElementById("mobile-featured").onclick = () => {
-    renderFeatured();
-    abrir(el.featuredModal);
-    document.getElementById("mobile-menu").classList.remove("open");
-    loadFeaturedFromSupabase();
-  };
+  // Realtime + Toast
+  supabase
+    .channel('featured-changes')
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'featured' }, () => {
+      loadFeaturedFromSupabase();
+      showToast("Novos destaques carregados! 🎉");
+    })
+    .subscribe();
 </script>
 </body>
 </html>
