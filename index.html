@@ -886,16 +886,34 @@ function t() {
   // Carrega da URL e renderiza inicial
   loadFromURL();
   render();
+    // ───────────────────────────────────────────────
+  // EXPOR VARIÁVEIS PARA O SUPABASE (importante!)
+  // ───────────────────────────────────────────────
+  window.el = el;
+  window.renderFeatured = renderFeatured;
+  window.featuredLives = featuredLives;
 </script>
 
 <!-- Supabase – separado e com type="module" -->
+<!-- SUPABASE – VERSÃO CORRIGIDA (sem bloqueio de storage) -->
 <script type="module">
   import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
-  const supabaseUrl    = 'https://xygmdunlrbtyslvkqvyr.supabase.co';
-  const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh5Z21kdW5scmJ0eXNsdmtxdnlyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE0NjA2MTAsImV4cCI6MjA4NzAzNjYxMH0.F1WXVmQcrHylhBX8qg9LGwOAaPENhJbhl3wbI1PXP2o';
+  const supabaseUrl = 'https://xygmdunlrbtyslvkqvyr.supabase.co';
 
-  const supabase = createClient(supabaseUrl, supabaseAnonKey);
+  // === TENTE PRIMEIRO A PUBLISHABLE KEY (recomendada em 2026) ===
+  const supabaseAnonKey = 'sb_publishable_QKG5wJZ-qqPrXzZo8wmrFg_LEsjBGff';
+
+  // Se não funcionar, troque pela Legacy Anon Key abaixo (descomente e comente a de cima):
+  // const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh5Z21kdW5scmJ0eXNsdmtxdnlyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE0NjA2MTAsImV4cCI6MjA4NzAzNjYxMH0.F1WXVmQcrHylhBX8qg9LGwOAaPENhJbhl3wbI1PXP2o';
+
+  const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+    auth: {
+      persistSession: false,     // ← ESSENCIAL para evitar bloqueio de tracking/storage
+      autoRefreshToken: false,
+      detectSessionInUrl: false
+    }
+  });
 
   async function loadFeaturedFromSupabase() {
     try {
@@ -906,30 +924,28 @@ function t() {
 
       if (error) throw error;
 
-      featuredLives = data || [];
-      console.log('Featured lives do Supabase:', featuredLives.length, 'itens');
-      
+      window.featuredLives = data || [];
+      console.log('✅ Featured lives do Supabase carregadas:', window.featuredLives.length, 'itens');
+
       // Atualiza o modal se estiver aberto
-      if (el.featuredModal.classList.contains('active')) {
-        renderFeatured();
+      if (window.el && window.el.featuredModal.classList.contains('active')) {
+        window.renderFeatured();
       }
     } catch (err) {
-      console.error('Erro Supabase:', err.message);
-      featuredLives = [];
+      console.error('❌ Erro ao carregar do Supabase:', err.message);
+      window.featuredLives = [];
     }
   }
 
-  // Carrega ao iniciar
+  // Carrega ao abrir a página
   loadFeaturedFromSupabase();
 
-  // Realtime: atualiza automaticamente quando alguém edita no Supabase
+  // Realtime (atualiza sozinho quando você edita no Supabase)
   supabase
     .channel('featured-changes')
-    .on('postgres_changes', { event: '*', schema: 'public', table: 'featured' }, (payload) => {
-      console.log('Mudança em tempo real detectada!', payload);
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'featured' }, () => {
+      console.log('🔄 Atualização em tempo real detectada!');
       loadFeaturedFromSupabase();
-      // Aqui você pode adicionar o toast se quiser
-      // showUpdateNotification(payload.new?.name || 'um card');
     })
     .subscribe();
 </script>
