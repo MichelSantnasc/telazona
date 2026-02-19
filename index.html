@@ -900,54 +900,42 @@ function t() {
   import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
   const supabaseUrl = 'https://xygmdunlrbtyslvkqvyr.supabase.co';
-
-  // === TENTE PRIMEIRO A PUBLISHABLE KEY (recomendada em 2026) ===
-  const supabaseAnonKey = 'sb_publishable_QKG5wJZ-qqPrXzZo8wmrFg_LEsjBGff';
-
-  // Se não funcionar, troque pela Legacy Anon Key abaixo (descomente e comente a de cima):
-  // const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh5Z21kdW5scmJ0eXNsdmtxdnlyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE0NjA2MTAsImV4cCI6MjA4NzAzNjYxMH0.F1WXVmQcrHylhBX8qg9LGwOAaPENhJbhl3wbI1PXP2o';
+  const supabaseAnonKey = 'sb_publishable_QKG5wJZ-qqPrXzZo8wmrFg_LEsjBGff';  // publishable primeiro!
 
   const supabase = createClient(supabaseUrl, supabaseAnonKey, {
     auth: {
-      persistSession: false,     // ← ESSENCIAL para evitar bloqueio de tracking/storage
+      persistSession: false,
       autoRefreshToken: false,
       detectSessionInUrl: false
     }
   });
 
   async function loadFeaturedFromSupabase() {
+    console.log('Tentando carregar featured...');
     try {
-      const { data, error } = await supabase
+      const { data, error, count } = await supabase
         .from('featured')
-        .select('*')
-        .order('name', { ascending: true });
+        .select('*', { count: 'exact' })
+        .order('name');
+
+      console.log('Resposta Supabase:', { data, error, count });
 
       if (error) throw error;
 
       window.featuredLives = data || [];
-      console.log('✅ Featured lives do Supabase carregadas:', window.featuredLives.length, 'itens');
+      console.log('✅ Carregado:', window.featuredLives.length, 'itens');
 
-      // Atualiza o modal se estiver aberto
-      if (window.el && window.el.featuredModal.classList.contains('active')) {
+      if (window.el?.featuredModal.classList.contains('active')) {
         window.renderFeatured();
       }
     } catch (err) {
-      console.error('❌ Erro ao carregar do Supabase:', err.message);
+      console.error('❌ Erro detalhado Supabase:', err);
       window.featuredLives = [];
     }
   }
 
-  // Carrega ao abrir a página
   loadFeaturedFromSupabase();
-
-  // Realtime (atualiza sozinho quando você edita no Supabase)
-  supabase
-    .channel('featured-changes')
-    .on('postgres_changes', { event: '*', schema: 'public', table: 'featured' }, () => {
-      console.log('🔄 Atualização em tempo real detectada!');
-      loadFeaturedFromSupabase();
-    })
-    .subscribe();
 </script>
 </body>
 </html>
+
