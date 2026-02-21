@@ -886,49 +886,21 @@ document.addEventListener("click", e => {
 });
 
     // ==================== PARSE URL ====================
-function parseUrl(url) {
-  if (!url) return null;
+function extrair(u) {
+  if (!u) return null;
+  u = u.trim();
 
-  url = url.trim().toLowerCase();
+  // ===== YOUTUBE (melhorado) =====
+  let m = u.match(/(?:v=|youtu\.be\/|youtube\.com\/embed\/|\/live\/|\/shorts\/)([^&\n?#]+)/);
+  if (m) return { type: "youtube", id: m[1], name: "YouTube" };
 
-  try {
-    // ===== YOUTUBE =====
-    if (url.includes('youtube.com') || url.includes('youtu.be')) {
+  // ===== TWITCH =====
+  m = u.match(/twitch\.tv\/([a-zA-Z0-9_]+)/);
+  if (m) return { type: "twitch", id: m[1], name: m[1] };
 
-      // youtu.be/ID
-      if (url.includes('youtu.be/')) {
-        const id = url.split('youtu.be/')[1].split(/[?&/]/)[0];
-        return { type: 'youtube', id };
-      }
-
-      // watch?v=ID
-      if (url.includes('watch?v=')) {
-        const id = url.split('watch?v=')[1].split('&')[0];
-        return { type: 'youtube', id };
-      }
-
-      // youtube.com/live/ID
-      if (url.includes('/live/')) {
-        const id = url.split('/live/')[1].split(/[?&/]/)[0];
-        return { type: 'youtube', id };
-      }
-    }
-
-    // ===== TWITCH =====
-    if (url.includes('twitch.tv/')) {
-      const id = url.split('twitch.tv/')[1].split(/[?&/]/)[0];
-      return { type: 'twitch', id };
-    }
-
-    // ===== KICK =====
-    if (url.includes('kick.com/')) {
-      const id = url.split('kick.com/')[1].split(/[?&/]/)[0];
-      return { type: 'kick', id };
-    }
-
-  } catch (e) {
-    console.error('parseUrl error:', e);
-  }
+  // ===== KICK =====
+  m = u.match(/kick\.com\/([a-zA-Z0-9_]+)/);
+  if (m) return { type: "kick", id: m[1], name: m[1] };
 
   return null;
 }
@@ -979,18 +951,17 @@ if (!hasLives) {
     wrapper.setAttribute('data-id', live.id);
 
     // ===== EMBED =====
-let src = '';
-
-if (live.type === 'youtube') {
-  src = `https://www.youtube.com/embed/${live.id}?autoplay=1&mute=0`;   // ← MUDE AQUI
-}
-
-if (live.type === 'twitch') {
-  src = `https://player.twitch.tv/?channel=${live.id}&parent=${window.location.hostname}&autoplay=true&muted=true`;
-}
-
-if (live.type === 'kick') {
-  src = `https://player.kick.com/${live.id}?autoplay=true`;   // já estava bom
+function embed(d) {
+  if (d.type === "youtube") {
+    return `https://www.youtube.com/embed/${d.id}?autoplay=1&mute=1&playsinline=1&rel=0&modestbranding=1`;
+  }
+  if (d.type === "twitch") {
+    return `https://player.twitch.tv/?channel=${d.id}&parent=${FINAL_HOST}&autoplay=true&muted=true`;
+  }
+  if (d.type === "kick") {
+    return `https://player.kick.com/${d.id}?autoplay=true`;
+  }
+  return "";
 }
 
 wrapper.innerHTML = `
@@ -1003,8 +974,8 @@ wrapper.innerHTML = `
     src="${src}" 
     allowfullscreen 
     referrerpolicy="strict-origin-when-cross-origin"
-    allow="autoplay; encrypted-media; picture-in-picture; fullscreen; clipboard-write; gyroscope; accelerometer"
-    loading="lazy">
+    allow="autoplay; clipboard-write"           <!-- ← ADICIONE ESTA LINHA -->
+    sandbox="allow-scripts allow-same-origin allow-presentation allow-modals">
   </iframe>
 `;
 
@@ -1302,6 +1273,13 @@ const selText = t("chat_sel");
     // Doar
     el.donateBtn.onclick = () => window.open('https://linktr.ee/santnasc', '_blank');
 
+
+    // Força atualização do botão e grid após carregamento
+setTimeout(() => {
+  updateFeaturedButtonVisibility();
+  renderFeatured();
+}, 1200);
+
     // ==================== SUPABASE DESTAQUES (tempo real) ====================
     import('https://esm.sh/@supabase/supabase-js@2').then(({ createClient }) => {
       const supabase = createClient(
@@ -1369,4 +1347,3 @@ if (window.innerWidth <= 768) {
   </script>
 </body>
 </html>
-
