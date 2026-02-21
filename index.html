@@ -981,7 +981,7 @@ if (!hasLives) {
     let src = '';
 
 if (live.type === 'youtube') {
-  src = `https://www.youtube.com/embed/${live.id}?autoplay=1&mute=1&rel=0&playsinline=1&enablejsapi=0`;
+  src = `https://www.youtube.com/embed/${live.id}?autoplay=1&mute=1&rel=0&playsinline=1`;
 }
 
     if (live.type === 'twitch') {
@@ -992,18 +992,19 @@ if (live.type === 'youtube') {
       src = `https://player.kick.com/${live.id}?muted=true`;
     }
 
-    wrapper.innerHTML = `
-      <div class="live-controls">
-        <button class="btn btn-icon delete-live">
-          <i class="ph ph-x"></i>
-        </button>
-      </div>
-<iframe
-  src="${src}"
-  frameborder="0"
-  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-  allowfullscreen>
-</iframe>`;
+wrapper.innerHTML = `
+  <div class="live-controls">
+    <button class="btn btn-icon delete-live" data-index="${idx}">
+      <i class="ph ph-x"></i>
+    </button>
+  </div>
+  <iframe
+    src="${src}"
+    frameborder="0"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+    allowfullscreen>
+  </iframe>
+`;
 
     // ===== DRAG =====
     wrapper.draggable = true;
