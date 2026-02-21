@@ -981,7 +981,7 @@ if (!hasLives) {
     let src = '';
 
 if (live.type === 'youtube') {
-  src = `https://www.youtube.com/embed/${live.id}?enablejsapi=1&autoplay=1&mute=1&rel=0&origin=${window.location.origin}`;
+  src = `https://www.youtube.com/embed/${live.id}?autoplay=1&mute=1&rel=0&playsinline=1&origin=https://${window.location.hostname}`;
 }
 
     if (live.type === 'twitch') {
@@ -998,9 +998,10 @@ if (live.type === 'youtube') {
           <i class="ph ph-x"></i>
         </button>
       </div>
-<iframe 
+<iframe
   src="${src}"
-  allow="autoplay; fullscreen; picture-in-picture"
+  frameborder="0"
+  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
   allowfullscreen>
 </iframe>`;
 
