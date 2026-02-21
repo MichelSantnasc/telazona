@@ -1003,8 +1003,8 @@ wrapper.innerHTML = `
     src="${src}" 
     allowfullscreen 
     referrerpolicy="strict-origin-when-cross-origin"
-    allow="autoplay; clipboard-write"           <!-- ← ADICIONE ESTA LINHA -->
-    sandbox="allow-scripts allow-same-origin allow-presentation allow-modals">
+    allow="autoplay; encrypted-media; picture-in-picture; fullscreen; clipboard-write; gyroscope; accelerometer"
+    loading="lazy">
   </iframe>
 `;
 
@@ -1369,3 +1369,4 @@ if (window.innerWidth <= 768) {
   </script>
 </body>
 </html>
+
