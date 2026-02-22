@@ -34,7 +34,7 @@
     function toast(msg, error = false) {
       els.toast.textContent = msg;
       els.toast.className = `toast ${error ? 'error' : ''} show`;
-      setTimeout(() => els.toast.className = 'toast', 3200);
+      setTimeout(() => els.toast.className = 'toast', 2800);
     }
 
     async function checkAuth() {
@@ -74,6 +74,29 @@
       render();
     };
 
+    // ==================== THUMBNAIL GENERATOR ====================
+    function getThumbnailUrl(url) {
+      if (!url) return '';
+      const lower = url.toLowerCase();
+
+      if (lower.includes('youtube.com') || lower.includes('youtu.be')) {
+        const match = url.match(/(?:v=|youtu\.be\/|\/live\/|embed\/)([^"&?\/\s]{11})/i);
+        return match ? `https://img.youtube.com/vi/${match[1]}/hqdefault.jpg` : '';
+      }
+
+      if (lower.includes('twitch.tv/')) {
+        const match = lower.match(/twitch\.tv\/([a-z0-9_]+)/i);
+        return match ? `https://static-cdn.jtvnw.net/previews-ttv/live_user_${match[1]}-320x180.jpg` : '';
+      }
+
+      if (lower.includes('kick.com/')) {
+        const match = lower.match(/kick\.com\/([a-z0-9_]+)/i);
+        return match ? `https://kick.com/${match[1]}/thumbnail` : 'https://via.placeholder.com/120x68/111/aaa?text=Kick';
+      }
+
+      return '';
+    }
+
     async function loadGroups() {
       const container = document.getElementById('cards');
       container.innerHTML = '<div class="loading">Carregando destaques…</div>';
@@ -92,7 +115,7 @@
             <div class="count">${g.lives.length} live${g.lives.length !== 1 ? 's' : ''}</div>
           </div>
           <div class="preview">
-            ${g.lives.slice(0,4).map(u=>`<div class="url-line">${u.slice(0,60)}${u.length>60?'…':''}</div>`).join('')}
+            ${g.lives.slice(0,4).map(u=>`<div class="url-line">${u.slice(0,55)}${u.length>55?'…':''}</div>`).join('')}
             ${g.lives.length > 4 ? `<div class="more">+${g.lives.length-4} mais</div>` : ''}
           </div>
           <div class="actions">
@@ -111,8 +134,8 @@
         btn.addEventListener('click', () => {
           const id = btn.dataset.id;
           const name = btn.dataset.name;
-          let lives;
-          try { lives = JSON.parse(btn.dataset.lives); } catch(e) { lives = []; }
+          let lives = [];
+          try { lives = JSON.parse(btn.dataset.lives); } catch(e) {}
           editCard(id, name, lives);
         });
       });
@@ -129,15 +152,34 @@
       currentUrls.forEach((url, i) => {
         const row = document.createElement('div');
         row.className = 'url-row';
+        row.draggable = true;
+        row.dataset.index = i;
+
+        const thumbUrl = getThumbnailUrl(url);
+
         row.innerHTML = `
-          <input type="url" value="${url.replace(/"/g,'&quot;')}" class="url-in" />
+          <div class="drag-handle"><i class="ph ph-dots-six-vertical"></i></div>
+          <input type="url" class="url-in" value="${url.replace(/"/g,'&quot;')}" placeholder="Cole o link da live" />
+          <div class="thumbnail-preview">
+            <img src="${thumbUrl}" alt="preview" onerror="this.src='https://via.placeholder.com/80x45/222/eee?text=?'" />
+          </div>
           <button type="button" class="remove-btn">×</button>
         `;
 
-        row.querySelector('input').addEventListener('input', e => {
-          currentUrls[i] = e.target.value;
+        // Atualiza thumbnail em tempo real
+        const input = row.querySelector('input');
+        let timeout;
+        input.addEventListener('input', () => {
+          clearTimeout(timeout);
+          timeout = setTimeout(() => {
+            currentUrls[i] = input.value.trim();
+            const img = row.querySelector('img');
+            img.src = getThumbnailUrl(input.value);
+            img.style.display = 'block';
+          }, 500);
         });
 
+        // Remover linha
         row.querySelector('.remove-btn').addEventListener('click', () => {
           currentUrls.splice(i, 1);
           renderUrls();
@@ -145,6 +187,53 @@
 
         list.appendChild(row);
       });
+
+      // Ativa drag & drop
+      makeSortable(list);
+    }
+
+    function makeSortable(list) {
+      let dragged;
+
+      list.addEventListener('dragstart', e => {
+        dragged = e.target.closest('.url-row');
+        if (!dragged) return;
+        dragged.style.opacity = 0.4;
+      });
+
+      list.addEventListener('dragend', e => {
+        if (dragged) dragged.style.opacity = 1;
+        dragged = null;
+      });
+
+      list.addEventListener('dragover', e => {
+        e.preventDefault();
+        const afterElement = getDragAfterElement(list, e.clientY);
+        if (afterElement == null) {
+          list.appendChild(dragged);
+        } else {
+          list.insertBefore(dragged, afterElement);
+        }
+      });
+
+      list.addEventListener('drop', () => {
+        // Atualiza o array na nova ordem visual
+        currentUrls = Array.from(list.querySelectorAll('.url-row input')).map(input => input.value.trim()).filter(Boolean);
+      });
+    }
+
+    function getDragAfterElement(container, y) {
+      const draggableElements = [...container.querySelectorAll('.url-row:not(.dragging)')];
+
+      return draggableElements.reduce((closest, child) => {
+        const box = child.getBoundingClientRect();
+        const offset = y - box.top - box.height / 2;
+        if (offset < 0 && offset > closest.offset) {
+          return { offset: offset, element: child };
+        } else {
+          return closest;
+        }
+      }, { offset: Number.NEGATIVE_INFINITY }).element;
     }
 
     window.newCard = () => {
@@ -152,8 +241,7 @@
       currentUrls = [''];
       document.getElementById('modal-title').textContent = 'Novo Destaque';
       document.getElementById('name').value = '';
-      const modal = document.getElementById('modal');
-      modal.showModal();
+      document.getElementById('modal').showModal();
       setTimeout(renderUrls, 100);
     };
 
@@ -162,8 +250,7 @@
       currentUrls = Array.isArray(lives) ? [...lives] : [''];
       document.getElementById('modal-title').textContent = 'Editar Destaque';
       document.getElementById('name').value = name || '';
-      const modal = document.getElementById('modal');
-      modal.showModal();
+      document.getElementById('modal').showModal();
       setTimeout(renderUrls, 100);
     };
 
@@ -234,28 +321,19 @@
       min-height: 100vh;
     }
 
-    .silkscreen { font-family: 'Silkscreen', cursive; font-weight: 400; }
+    .silkscreen { font-family: 'Silkscreen', cursive; }
 
     header {
-      background: rgba(0,0,0,0.8);
-      backdrop-filter: blur(12px);
+      background: var(--surface);
       border-bottom: 1px solid var(--border);
       padding: 16px 24px;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
-
-    .header-inner {
-      max-width: 1400px;
-      margin: 0 auto;
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
 
     .logo {
-      font-size: clamp(32px, 6vw, 48px);
+      font-size: 32px;
       letter-spacing: 4px;
       color: var(--accent);
     }
@@ -417,18 +495,52 @@
 
     .url-row {
       display: flex;
-      gap: 12px;
-      margin-bottom: 12px;
       align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+      background: #0a0a0a;
+      padding: 8px 12px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      cursor: grab;
+    }
+
+    .url-row:active {
+      cursor: grabbing;
+    }
+
+    .drag-handle {
+      color: #666;
+      font-size: 22px;
+      padding: 4px 6px;
+      cursor: grab;
     }
 
     .url-in {
       flex: 1;
-      padding: 12px;
-      background: #0a0a0a;
-      border: 1px solid var(--border);
-      border-radius: 10px;
+      background: transparent;
+      border: none;
       color: white;
+      font-size: 15px;
+      outline: none;
+    }
+
+    .thumbnail-preview {
+      width: 80px;
+      height: 45px;
+      background: #000;
+      border-radius: 6px;
+      overflow: hidden;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .thumbnail-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
 
     .remove-btn {
@@ -438,8 +550,11 @@
       width: 36px;
       height: 36px;
       border-radius: 50%;
-      font-size: 18px;
+      font-size: 20px;
       cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .add-url {
@@ -490,11 +605,35 @@
       transform: translateX(-50%) translateY(-16px);
     }
 
+    .toast.error {
+      background: rgba(255,77,77,0.2);
+      border-color: var(--danger);
+      color: #ffdddd;
+    }
+
     .loading, .empty, .error {
       text-align: center;
       padding: 80px 20px;
       color: var(--text2);
       font-size: 18px;
+    }
+
+    /* Responsivo para celular */
+    @media (max-width: 600px) {
+      .url-row {
+        padding: 10px;
+        gap: 8px;
+      }
+      .thumbnail-preview {
+        width: 64px;
+        height: 36px;
+      }
+      .drag-handle {
+        font-size: 20px;
+      }
+      .modal-content {
+        padding: 24px 16px;
+      }
     }
   </style>
 </head>
@@ -539,10 +678,10 @@
       <label>Nome do grupo</label>
       <input type="text" id="name" placeholder="Ex: Top Lives do Momento" />
 
-      <label>Links das transmissões (um por linha)</label>
-      <div id="url-list" style="max-height: 280px; overflow-y: auto; margin-bottom: 24px;"></div>
+      <label>Links das transmissões (arraste para reordenar)</label>
+      <div id="url-list" style="max-height: 420px; overflow-y: auto; margin-bottom: 20px;"></div>
 
-      <button id="add-url" class="btn secondary" style="width: 100%; margin-bottom: 32px;">
+      <button id="add-url" class="btn secondary" style="width: 100%; margin-bottom: 24px;">
         + Adicionar URL
       </button>
 
