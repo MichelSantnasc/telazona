@@ -443,7 +443,7 @@ border-bottom: 1px solid rgba(255,255,255,0.05);
 
  #chat-sidebar.open {
   display: flex;
-  min-height: 420px;
+  min-height: 900px;
 }
 
   #chat-content iframe {
@@ -692,6 +692,118 @@ border-bottom: 1px solid rgba(255,255,255,0.05);
   height: 20px;
   accent-color: var(--accent);
 }
+
+
+
+/* ==================== SETA FLUTUANTE E BOTÃO INTERNO - SÓ CELULAR ==================== */
+/* Toggle dentro do float */
+.float-toggle {
+  display: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #000;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform .3s ease;
+}
+
+
+
+/* MOBILE ONLY */
+@media (max-width: 768px) {
+
+  .float-toggle {
+    display: flex;
+  }
+ #float-bar {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    opacity: 1;
+    pointer-events: auto;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+} 
+
+
+
+
+  #float-bar.closed .icon-circle {
+    display: none;
+  }
+
+  #float-bar.closed .float-toggle i {
+    transform: rotate(180deg);
+  }
+  #float-content {
+    display: flex;
+    gap: 10px;
+    transition: all 0.3s ease;
+  }
+
+  /* Quando fechado */
+  #float-bar.closed #float-content {
+    transform: translateX(150%);
+    opacity: 0;
+    pointer-events: none;
+  }
+}
+
+
+/* ================= FLOAT BAR FIX DEFINITIVO ================= */
+
+
+#float-bar {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  z-index: 1000;
+  transition: all 0.35s ease;
+}
+
+/* Conteúdo */
+#float-content {
+  display: flex;
+  gap: 10px;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+/* ================= ESTADO FECHADO ================= */
+
+#float-bar.closed {
+width: auto;
+  left: auto;
+  right: 0;
+  transform: none;
+  padding-right: 10px;
+}
+
+/* Esconde só os botões */
+#float-bar.closed #float-content {
+  transform: translateX(120%);
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* MOBILE apenas ajusta tamanho */
+@media (max-width: 768px) {
+  #float-bar {
+    bottom: 15px;
+  }
+}
   </style>
 
   <script type="application/ld+json">
@@ -805,13 +917,38 @@ border-bottom: 1px solid rgba(255,255,255,0.05);
     </aside>
   </main>
 
-  <!-- Float Bar -->
-  <div id="float-bar" class="hidden">
-    <div class="icon-circle" id="ctrl-add"><i class="ph ph-plus-circle"></i></div>
-    <div class="icon-circle" id="ctrl-eye"><i class="ph ph-eye-slash"></i></div>
-    <div class="icon-circle" id="ctrl-chat" style="display:none;"><i class="ph ph-chat-centered-text"></i></div>
-    <div class="icon-circle" id="ctrl-expand"><i class="ph ph-corners-out"></i></div>
+<!-- Float Bar -->
+<div id="float-bar" class="hidden">
+
+  <!-- CONTEÚDO QUE VAI ESCONDER -->
+  <div id="float-content">
+
+    <div class="icon-circle" id="ctrl-add">
+      <i class="ph ph-plus-circle"></i>
+    </div>
+
+    <div class="icon-circle" id="ctrl-eye">
+      <i class="ph ph-eye-slash"></i>
+    </div>
+
+    <div class="icon-circle" id="ctrl-chat">
+      <i class="ph ph-chat-centered-text"></i>
+    </div>
+
+    <div class="icon-circle" id="ctrl-expand">
+      <i class="ph ph-corners-out"></i>
+    </div>
+
   </div>
+
+  <!-- SETA SEMPRE VISÍVEL -->
+  <div class="float-toggle" id="float-toggle">
+    <i class="ph ph-caret-right" id="float-toggle-icon"></i>
+  </div>
+
+</div>
+
+
 
   <div id="toast"></div>
 
@@ -1757,7 +1894,9 @@ async function loadYouTubeSearchLib() {
   return window.youtubesearchapi;
 }
 
-// Função principal de busca
+
+
+// ==================== BUSCA FINAL (YouTube + Twitch + Kick fallback) ====================
 async function performSearch(query) {
   const resultsDiv = el.searchResults;
   resultsDiv.innerHTML = `<p style="text-align:center; color:var(--text-dim); padding:40px 0;">${t('searching')}</p>`;
@@ -1767,67 +1906,40 @@ async function performSearch(query) {
     return;
   }
 
-  const results = [];
-  const proxy = 'https://corsproxy.io/?'; // ou troque por outro: https://api.allorigins.win/raw?url=
-
   try {
-    // Endpoint interno de busca do YouTube (sem key, retorna JSON com lives/canais)
-    const searchUrl = `https://www.youtube.com/results?search_query=${encodeURIComponent(query)}&sp=EgJAAQ%253D%253D`; // sp= filtra por "live"
-    const response = await fetch(proxy + encodeURIComponent(searchUrl));
-    const html = await response.text();
+    // URL do seu Worker (já está funcionando)
+    const workerUrl = 'https://telazona-api-proxy.tartarugavolt.workers.dev/search?q=' + encodeURIComponent(query);
+    const response = await fetch(workerUrl);
 
-    // Extrai o JSON embutido no HTML (padrão do YouTube results page)
-    const jsonMatch = html.match(/var ytInitialData = ({.*?});<\/script>/s);
-    if (!jsonMatch) throw new Error('No JSON found');
+    if (!response.ok) {
+      throw new Error(`Erro no Worker: ${response.status}`);
+    }
 
-    const data = JSON.parse(jsonMatch[1]);
-    const contents = data.contents?.twoColumnSearchResultsRenderer?.primaryContents?.sectionListRenderer?.contents?.[0]?.itemSectionRenderer?.contents || [];
+    const results = await response.json();
 
-    contents.forEach(item => {
-      const video = item.videoRenderer || item.channelRenderer;
-      if (!video) return;
-
-      const isLive = !!video.badges?.find(b => b.liveBroadcastBadge || b.metadataBadgeRenderer?.style === 'LIVE');
-      const id = video.videoId || video.channelId;
-      const title = video.title?.runs?.[0]?.text || video.title?.simpleText || 'Sem título';
-      const thumb = video.thumbnail?.thumbnails?.[video.thumbnail.thumbnails.length-1]?.url || '';
-
-      if (id && title) {
-        results.push({
-          platform: video.channelId ? 'youtube_channel' : 'youtube',
-          name: title + (isLive ? ' 🔥 LIVE' : ''),
-          id: id,
-          live: isLive,
-          thumb: thumb || `https://img.youtube.com/vi/${id}/hqdefault.jpg`
-        });
-      }
-    });
-  } catch (e) {
-    console.error('Busca YouTube falhou:', e);
-    resultsDiv.innerHTML = `<p style="text-align:center; color:var(--text-dim);">${t('search-error')}</p>`;
-    return;
-  }
-
-  // Render resultados
-  if (results.length === 0) {
-    resultsDiv.innerHTML = `<p style="text-align:center; color:var(--text-dim);">${t('noResults', { query })}</p>`;
-  } else {
-    resultsDiv.innerHTML = results.slice(0, 10).map(r => `
-      <div onclick="addFromSearch('${r.platform.includes('channel') ? 'youtube' : r.platform}', '${r.id}', '${r.name.replace(/'/g, "\\'")}')" 
-           style="display:flex; align-items:center; gap:12px; padding:12px; border-bottom:1px solid var(--border); cursor:pointer; border-radius:8px; hover {background: rgba(0,255,163,0.1)};">
-        <img src="${r.thumb}" loading="lazy" 
-             style="width:80px; height:45px; object-fit:cover; border-radius:6px; background:#000;"
-             onerror="this.src='https://via.placeholder.com/80x45/222/fff?text=YT';">
-        <div style="flex:1;">
-          <strong style="font-size:14px;">${r.name}</strong><br>
-          <small style="color:var(--accent);">${r.platform.toUpperCase()} ${r.live ? '• AO VIVO AGORA' : ''}</small>
+    if (results.length === 0) {
+      resultsDiv.innerHTML = `<p style="text-align:center; color:var(--text-dim);">${t('noResults', { query })}</p>`;
+    } else {
+      resultsDiv.innerHTML = results.map(r => `
+        <div onclick="addFromSearch('${r.platform}', '${r.id}', '${r.name.replace(/'/g, "\\'")}')" 
+             style="display:flex; align-items:center; gap:12px; padding:12px; border-bottom:1px solid var(--border); cursor:pointer; border-radius:8px;">
+          <img src="${r.thumb}" loading="lazy" 
+               style="width:80px; height:45px; object-fit:cover; border-radius:6px; background:#000;"
+               onerror="this.src='https://via.placeholder.com/80x45/222/fff?text=${r.platform.toUpperCase()}';">
+          <div style="flex:1;">
+            <strong style="font-size:14px;">${r.name}</strong><br>
+            <small style="color:var(--accent);">${r.platform.toUpperCase()} ${r.live ? '• AO VIVO AGORA' : ''}</small>
+          </div>
         </div>
-      </div>
-    `).join('');
+      `).join('');
+    }
+  } catch (error) {
+    console.error('Erro na busca via Worker:', error);
+    resultsDiv.innerHTML = `<p style="text-align:center; color:var(--text-dim);">${t('search-error')}</p>`;
   }
 }
 
-// addFromSearch continua igual (já tem no código anterior)
+// addFromSearch continua igual ()
 window.addFromSearch = (platform, id, name = '') => {
   const data = { type: platform === 'youtube_channel' ? 'youtube' : platform, id }; // canal vira embed normal se for live
   
@@ -1854,6 +1966,27 @@ function toggleSearch(show) {
     el.searchResults.innerHTML = '';
   }
 }
+
+// ======================================
+// EVENTOS DO FLOAT BAR
+// ======================================
+
+const floatBar = document.getElementById('float-bar');
+const floatToggle = document.getElementById('float-toggle');
+const floatToggleIcon = document.getElementById('float-toggle-icon');
+
+floatToggle.addEventListener('click', () => {
+
+  floatBar.classList.toggle('closed');
+
+  if (floatBar.classList.contains('closed')) {
+    floatToggleIcon.className = 'ph ph-caret-left';
+  } else {
+    floatToggleIcon.className = 'ph ph-caret-right';
+  }
+
+});
+
 
 // ==================== EVENTOS DA BUSCA ====================
 
@@ -1933,37 +2066,11 @@ if (!localStorage.getItem('welcome_seen')) {
 }
 
     // Mostrar float-bar inicialmente se houver lives
-    if (lives.length > 0) {
-      el.floatBar.classList.remove('hidden');
-    }
-
-     // ==================== scroll float bar ====================
-if (window.innerWidth <= 768) {
-
-  let floatTimeout;
-
-  const showFloatBar = () => {
-    el.floatBar.classList.add("show");
-
-    clearTimeout(floatTimeout);
-    floatTimeout = setTimeout(() => {
-      el.floatBar.classList.remove("show");
-    }, 2500);
-  };
-
-  // Mostrar ao rolar
-  window.addEventListener("scroll", () => {
-    if (lives.length > 0) showFloatBar();
-  });
-
-  // Mostrar ao tocar na tela
-  document.addEventListener("touchstart", (e) => {
-    // Evita ativar se tocar dentro do próprio float bar
-    if (!e.target.closest("#float-bar") && lives.length > 0) {
-      showFloatBar();
-    }
-  });
-
+if (lives.length > 0) {
+  const floatBar = document.getElementById('float-bar');
+  if (floatBar) {
+    floatBar.classList.remove('hidden');
+  }
 }
   </script>
 </body>
